@@ -1,0 +1,1958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diversia Health — Client Registration Preview</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #eef2f6; min-height: 100vh; }
+
+.preview-tabs { display: flex; gap: 0; background: #1B3A5C; padding: 0 24px; overflow-x: auto; }
+.preview-tab { padding: 14px 18px; color: #A8C8D8; cursor: pointer; font-size: 13px; font-weight: 600; border-bottom: 3px solid transparent; transition: all 0.2s; white-space: nowrap; }
+.preview-tab:hover { color: #fff; }
+.preview-tab.active { color: #fff; border-bottom-color: #2E86AB; }
+
+.preview-screen { display: none; padding: 32px 20px; }
+.preview-screen.active { display: block; }
+
+/* ===== DCO Styles ===== */
+:root {
+  --dco-navy: #1B3A5C; --dco-teal: #2E86AB; --dco-teal-light: #A8C8D8;
+  --dco-bg: #f4f7f9; --dco-white: #ffffff; --dco-border: #d6e0ea;
+  --dco-text: #2c3e50; --dco-muted: #6b7e8f;
+  --dco-success: #27ae60; --dco-error: #e74c3c; --dco-warning: #f39c12;
+  --dco-radius: 8px; --dco-shadow: 0 2px 12px rgba(27,58,92,0.10);
+}
+
+.dco-wrapper { max-width: 700px; margin: 0 auto; padding: 0 16px 40px; color: var(--dco-text); }
+
+/* Language bar */
+.dco-lang-bar { display: flex; justify-content: flex-end; margin-bottom: 12px; }
+.dco-lang-toggle { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; background: var(--dco-white); border: 1.5px solid var(--dco-border); border-radius: 20px; color: var(--dco-muted); font-size: 13px; font-weight: 600; cursor: pointer; transition: border-color 0.2s, color 0.2s, background 0.2s; font-family: inherit; }
+.dco-lang-toggle:hover { border-color: var(--dco-teal); color: var(--dco-teal); background: rgba(46,134,171,0.05); }
+.dco-lang-toggle.active { background: var(--dco-navy); border-color: var(--dco-navy); color: #fff; }
+
+/* Steps */
+.dco-steps { display: flex; justify-content: center; margin-bottom: 32px; position: relative; }
+.dco-steps::before { content: ''; position: absolute; top: 20px; left: 15%; right: 15%; height: 2px; background: var(--dco-border); z-index: 0; }
+.dco-step { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; position: relative; z-index: 1; }
+.dco-step__num { width: 40px; height: 40px; border-radius: 50%; background: var(--dco-border); color: var(--dco-muted); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 15px; }
+.dco-step.active .dco-step__num, .dco-step.done .dco-step__num { background: var(--dco-teal); color: #fff; }
+.dco-step__label { font-size: 11px; color: var(--dco-muted); text-align: center; font-weight: 500; }
+.dco-step.active .dco-step__label { color: var(--dco-teal); font-weight: 700; }
+
+/* Panel */
+.dco-panel { background: var(--dco-white); border-radius: var(--dco-radius); box-shadow: var(--dco-shadow); border: 1px solid var(--dco-border); padding: 36px 40px; }
+.dco-panel__header { margin-bottom: 28px; text-align: center; }
+.dco-panel__title { font-size: 22px; font-weight: 700; color: var(--dco-navy); margin: 0 0 8px; }
+.dco-panel__subtitle { color: var(--dco-muted); margin: 0; font-size: 14px; line-height: 1.6; }
+
+/* Fields */
+.dco-field { margin-bottom: 20px; }
+.dco-form__row--2col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.dco-label { display: block; font-size: 13px; font-weight: 600; color: var(--dco-navy); margin-bottom: 6px; }
+.dco-required { color: var(--dco-error); margin-left: 2px; }
+.dco-input { width: 100%; padding: 10px 14px; border: 1.5px solid var(--dco-border); border-radius: 6px; font-size: 14px; color: var(--dco-text); background: #fff; outline: none; font-family: inherit; transition: border-color 0.2s, box-shadow 0.2s; }
+.dco-input:focus { border-color: var(--dco-teal); box-shadow: 0 0 0 3px rgba(46,134,171,0.15); }
+.dco-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7e8f' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; }
+.dco-textarea { min-height: 100px; resize: vertical; }
+.dco-hint { display: block; font-size: 12px; color: var(--dco-muted); margin-top: 4px; }
+.dco-hint--center { text-align: center; }
+.dco-char-count { display: block; font-size: 11px; color: var(--dco-muted); text-align: right; margin-top: 4px; }
+.dco-checkboxes { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; margin-top: 8px; }
+.dco-checkbox-label { display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; }
+.dco-checkbox-label input { width: 16px; height: 16px; accent-color: var(--dco-teal); }
+.dco-input--suggested { color: var(--dco-muted) !important; font-style: italic; }
+.dco-input--error { border-color: var(--dco-error) !important; box-shadow: 0 0 0 3px rgba(231,76,60,0.12) !important; }
+.dco-field-error { display: block; font-size: 12px; color: var(--dco-error); margin-top: 5px; }
+.dco-confirm-match { display: block; font-size: 12px; margin-top: 5px; }
+.dco-password-strength { height: 4px; background: var(--dco-border); border-radius: 2px; margin-top: 8px; overflow: hidden; }
+.dco-password-strength__fill { height: 100%; border-radius: 2px; }
+
+/* Buttons */
+.dco-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 28px; border-radius: 6px; border: none; cursor: pointer; font-size: 15px; font-weight: 600; text-decoration: none; transition: background 0.2s; line-height: 1; font-family: inherit; }
+.dco-btn--primary { background: var(--dco-teal); color: #fff; }
+.dco-btn--primary:hover { background: #2573a0; }
+.dco-btn--secondary { background: transparent; color: var(--dco-navy); border: 2px solid var(--dco-border); }
+.dco-btn--secondary:hover { border-color: var(--dco-teal); color: var(--dco-teal); }
+.dco-btn--large { padding: 16px 36px; font-size: 16px; }
+.dco-form__actions { margin-top: 28px; display: flex; justify-content: flex-end; }
+.dco-form__actions--spaced { justify-content: space-between; }
+
+/* Loading */
+.dco-loading { text-align: center; padding: 48px 20px; }
+.dco-loading__spinner { width: 60px; height: 60px; margin: 0 auto 24px; }
+.dco-loading__spinner svg { width: 100%; height: 100%; }
+.dco-loading__title { font-size: 22px; font-weight: 700; color: var(--dco-navy); margin: 0 0 16px; }
+.dco-loading__body { font-size: 14px; color: var(--dco-muted); line-height: 1.7; margin: 0 0 24px; }
+.dco-loading__dots { display: flex; justify-content: center; gap: 8px; }
+.dco-loading__dots span { width: 10px; height: 10px; border-radius: 50%; background: var(--dco-teal-light); animation: dco-bounce 1.2s infinite; }
+.dco-loading__dots span:nth-child(2) { animation-delay: 0.2s; }
+.dco-loading__dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes dco-bounce { 0%,80%,100%{transform:scale(0.7);opacity:0.5} 40%{transform:scale(1);opacity:1} }
+
+/* Results */
+.dco-result { text-align: center; padding: 16px 0; }
+.dco-result__icon { width: 72px; height: 72px; margin: 0 auto 20px; color: var(--dco-success); }
+.dco-result__icon--neutral { color: var(--dco-warning); }
+.dco-result__icon svg { width: 100%; height: 100%; }
+.dco-result__title { font-size: 24px; font-weight: 700; color: var(--dco-navy); margin: 0 0 8px; }
+.dco-result__subtitle { font-size: 15px; color: var(--dco-muted); margin: 0 0 24px; }
+.dco-result__reasoning { background: var(--dco-bg); border-radius: 6px; padding: 20px 24px; text-align: left; font-size: 14px; line-height: 1.7; margin: 0 0 28px; border-left: 4px solid var(--dco-teal); }
+.dco-result__cta-text { color: var(--dco-muted); font-size: 14px; line-height: 1.6; margin: 0 0 16px; }
+.dco-result__contact { margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--dco-border); font-size: 14px; color: var(--dco-muted); line-height: 1.6; }
+.dco-result__security { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 12px; color: var(--dco-muted); margin-top: 12px; }
+
+/* Payment gate summary */
+.dco-summary { background: var(--dco-bg); border-radius: 6px; padding: 20px 24px; margin: 24px 0; }
+.dco-summary__title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--dco-muted); margin: 0 0 12px; }
+.dco-summary__table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.dco-summary__table th { text-align: left; padding: 6px 0; color: var(--dco-muted); font-weight: 500; width: 45%; }
+.dco-summary__table td { padding: 6px 0; color: var(--dco-text); font-weight: 500; }
+
+/* Admin */
+.dco-admin { font-family: inherit; max-width: 900px; margin: 0 auto; background: #f0f0f1; padding: 20px; border-radius: 8px; }
+.dco-admin-header { background: var(--dco-navy); color: #fff; padding: 16px 24px; border-radius: 6px 6px 0 0; }
+.dco-admin-header h1 { font-size: 20px; margin: 0; }
+.dco-admin-body { background: #fff; border: 1px solid #c3c4c7; border-top: none; padding: 24px; border-radius: 0 0 6px 6px; }
+.dco-admin-section { margin-bottom: 32px; }
+.dco-admin-section h2 { font-size: 14px; font-weight: 700; color: var(--dco-navy); text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 16px; padding-bottom: 8px; border-bottom: 2px solid var(--dco-border); }
+.dco-admin-table { width: 100%; border-collapse: collapse; }
+.dco-admin-table tr { border-bottom: 1px solid #f0f0f0; }
+.dco-admin-table th { text-align: left; padding: 12px 16px 12px 0; font-size: 13px; font-weight: 600; color: var(--dco-navy); width: 220px; vertical-align: top; }
+.dco-admin-table td { padding: 10px 0; }
+.dco-admin-input { padding: 7px 10px; border: 1px solid #c3c4c7; border-radius: 4px; font-size: 13px; width: 300px; font-family: monospace; }
+.dco-admin-select { padding: 7px 10px; border: 1px solid #c3c4c7; border-radius: 4px; font-size: 13px; }
+.dco-admin-desc { font-size: 12px; color: #666; margin-top: 4px; display: block; }
+.dco-admin-save { background: var(--dco-teal); color: #fff; border: none; padding: 10px 24px; border-radius: 4px; font-size: 14px; font-weight: 600; cursor: pointer; }
+.dco-webhook-box { background: #f6f7f7; border: 1px solid #c3c4c7; border-radius: 4px; padding: 12px 16px; margin-top: 16px; font-size: 13px; }
+.dco-webhook-box code { background: #e0e0e0; padding: 4px 8px; border-radius: 3px; font-family: monospace; font-size: 13px; }
+
+/* ACH info panel */
+.dco-ach-info { margin: 16px 0 4px; background: #eaf4fb; border: 1px solid #a9d4ea; border-radius: var(--dco-radius); overflow: hidden; display: none; }
+.dco-ach-info.visible { display: block; }
+.dco-ach-info__header { display: flex; align-items: center; gap: 8px; padding: 12px 18px; background: rgba(46,134,171,0.12); border-bottom: 1px solid #a9d4ea; font-size: 13px; font-weight: 700; color: var(--dco-navy); }
+.dco-ach-info__steps { margin: 0; padding: 14px 18px 14px 36px; display: flex; flex-direction: column; gap: 10px; }
+.dco-ach-info__steps li { font-size: 13px; color: var(--dco-text); line-height: 1.55; padding-left: 4px; }
+
+/* AI Suggestions (Rejected screen) */
+.dco-suggestions { margin: 24px 0; border: 1px solid rgba(243,156,18,0.35); border-radius: var(--dco-radius); overflow: hidden; text-align: left; }
+.dco-suggestions__header { display: flex; align-items: flex-start; gap: 14px; padding: 20px 24px; background: rgba(243,156,18,0.07); border-bottom: 1px solid rgba(243,156,18,0.2); }
+.dco-suggestions__icon { flex-shrink: 0; color: var(--dco-warning); margin-top: 2px; }
+.dco-suggestions__title { font-size: 15px; font-weight: 700; color: var(--dco-navy); margin: 0 0 4px; }
+.dco-suggestions__subtitle { font-size: 13px; color: var(--dco-muted); margin: 0; line-height: 1.5; }
+.dco-suggestions__list { list-style: none; margin: 0; padding: 0; }
+.dco-suggestions__item { padding: 16px 24px; border-top: 1px solid var(--dco-border); display: flex; flex-direction: column; gap: 8px; }
+.dco-suggestions__item:first-child { border-top: none; }
+.dco-suggestions__item-issue { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; font-weight: 600; color: #922b21; margin: 0; line-height: 1.5; }
+.dco-suggestions__item-issue::before { content: '✕'; flex-shrink: 0; font-size: 11px; font-weight: 700; background: var(--dco-error); color: #fff; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-top: 1px; }
+.dco-suggestions__item-fix { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; font-weight: 500; color: #1e6d3b; margin: 0; line-height: 1.5; }
+.dco-suggestions__item-fix::before { content: '→'; flex-shrink: 0; font-size: 12px; font-weight: 700; background: var(--dco-success); color: #fff; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-top: 1px; }
+.dco-revise-cta { margin: 20px 0 8px; padding: 22px 24px; background: rgba(46,134,171,0.05); border: 1px dashed var(--dco-teal-light); border-radius: var(--dco-radius); text-align: center; }
+
+/* What's Included */
+.dco-includes { margin: 24px 0; padding: 24px; background: linear-gradient(135deg, rgba(46,134,171,0.06) 0%, rgba(27,58,92,0.04) 100%); border: 1px solid rgba(46,134,171,0.2); border-radius: var(--dco-radius); }
+.dco-includes__title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--dco-navy); margin: 0 0 16px; }
+.dco-includes__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.dco-includes__item { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: var(--dco-text); line-height: 1.5; }
+.dco-includes__check { flex-shrink: 0; color: var(--dco-success); margin-top: 1px; }
+
+/* Payment Method Cards */
+.dco-pay-method-section { margin: 24px 0; }
+.dco-pay-method-section__title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--dco-muted); margin: 0 0 12px; }
+.dco-pay-method-section__hint { margin: 10px 0 0; font-size: 13px; color: var(--dco-error); font-weight: 500; }
+.dco-pay-method-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.dco-pay-method-card { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 18px 20px; background: #fff; border: 2px solid var(--dco-border); border-radius: var(--dco-radius); cursor: pointer; text-align: left; transition: border-color 0.2s, background 0.2s, box-shadow 0.2s; font-family: inherit; }
+.dco-pay-method-card:hover { border-color: var(--dco-teal-light); background: rgba(46,134,171,0.03); }
+.dco-pay-method-card.selected { border-color: var(--dco-teal); background: rgba(46,134,171,0.06); box-shadow: 0 0 0 3px rgba(46,134,171,0.15); }
+.dco-pay-method-card__icon { color: var(--dco-teal); margin-bottom: 6px; }
+.dco-pay-method-card.selected .dco-pay-method-card__icon { color: var(--dco-navy); }
+.dco-pay-method-card__title { font-size: 14px; font-weight: 700; color: var(--dco-navy); line-height: 1.3; }
+.dco-pay-method-card__desc { font-size: 12px; color: var(--dco-muted); line-height: 1.4; }
+.dco-pay-method-card__check { position: absolute; top: 12px; right: 12px; width: 22px; height: 22px; border-radius: 50%; background: var(--dco-teal); color: #fff; display: flex; align-items: center; justify-content: center; opacity: 0; transform: scale(0.6); transition: opacity 0.2s, transform 0.2s; }
+.dco-pay-method-card.selected .dco-pay-method-card__check { opacity: 1; transform: scale(1); }
+.dco-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Custom dropdown */
+.dco-custom-select { position: relative; }
+.dco-custom-select__btn { width: 100%; padding: 10px 14px; border: 1.5px solid var(--dco-border); border-radius: 6px; font-size: 14px; color: var(--dco-text); background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7e8f' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 14px center; text-align: left; cursor: pointer; font-family: inherit; transition: border-color 0.2s, box-shadow 0.2s; appearance: none; outline: none; }
+.dco-custom-select__btn:focus, .dco-custom-select.open .dco-custom-select__btn { border-color: var(--dco-teal); box-shadow: 0 0 0 3px rgba(46,134,171,0.15); }
+.dco-custom-select__btn.placeholder { color: var(--dco-muted); }
+.dco-custom-select__list { display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: #fff; border: 1.5px solid var(--dco-teal); border-radius: 6px; box-shadow: 0 6px 24px rgba(27,58,92,0.14); z-index: 300; max-height: 320px; overflow-y: auto; list-style: none; padding: 4px 0; margin: 0; }
+.dco-custom-select.open .dco-custom-select__list { display: block; }
+.dco-custom-select__item { padding: 9px 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px; cursor: pointer; font-size: 14px; color: var(--dco-text); }
+.dco-custom-select__item:hover { background: rgba(46,134,171,0.07); }
+.dco-custom-select__item.selected { background: rgba(46,134,171,0.1); color: var(--dco-teal); font-weight: 600; }
+.dco-custom-select__item--sep { padding: 6px 14px 4px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--dco-muted); cursor: default; border-top: 1px solid var(--dco-border); margin-top: 4px; pointer-events: none; }
+.dco-rare-badge { font-size: 10px; font-weight: 700; background: #fff8e1; color: #7d5a00; border: 1px solid #f0c040; border-radius: 10px; padding: 2px 7px; letter-spacing: 0.3px; flex-shrink: 0; white-space: nowrap; }
+
+/* Media / Promotional Content */
+.dco-media-tabs { display: flex; gap: 0; border-bottom: 2px solid var(--dco-border); margin-bottom: 14px; }
+.dco-media-tab { padding: 8px 18px; font-size: 13px; font-weight: 600; color: var(--dco-muted); cursor: pointer; border: none; background: none; border-bottom: 2px solid transparent; margin-bottom: -2px; font-family: inherit; transition: color 0.2s, border-color 0.2s; display: flex; align-items: center; gap: 6px; }
+.dco-media-tab.active { color: var(--dco-teal); border-bottom-color: var(--dco-teal); }
+.dco-media-pane { display: none; }
+.dco-media-pane.active { display: block; }
+.dco-media-drop { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 28px 20px; border: 2px dashed var(--dco-border); border-radius: 8px; cursor: pointer; background: #f8fafc; transition: border-color 0.2s, background 0.2s; text-align: center; }
+.dco-media-drop:hover { border-color: var(--dco-teal); background: rgba(46,134,171,0.04); }
+.dco-media-drop__icon { color: var(--dco-teal-light); }
+.dco-media-drop__label { font-size: 13px; color: var(--dco-muted); }
+.dco-media-drop__label u { color: var(--dco-teal); }
+.dco-media-drop__sub { font-size: 11px; color: #aab8c2; }
+.dco-media-thumbs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.dco-media-thumb-wrap { position: relative; }
+.dco-media-thumb { width: 80px; height: 80px; border-radius: 6px; object-fit: cover; border: 2px solid var(--dco-border); display: block; }
+.dco-media-thumb-rm { position: absolute; top: -6px; right: -6px; width: 18px; height: 18px; border-radius: 50%; background: var(--dco-error); color: #fff; border: none; cursor: pointer; font-size: 10px; display: flex; align-items: center; justify-content: center; line-height: 1; font-weight: 700; }
+.dco-video-list { display: flex; flex-direction: column; gap: 8px; }
+.dco-video-row { display: flex; gap: 8px; align-items: center; }
+.dco-video-row .dco-input { flex: 1; }
+.dco-video-remove { width: 36px; height: 40px; border: 1.5px solid var(--dco-border); border-radius: 6px; background: none; cursor: pointer; color: var(--dco-muted); font-size: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: border-color 0.2s, color 0.2s; font-family: inherit; }
+.dco-video-remove:hover { border-color: var(--dco-error); color: var(--dco-error); }
+.dco-add-video-btn { margin-top: 8px; width: 100%; padding: 9px; border: 1.5px dashed var(--dco-border); border-radius: 6px; background: none; font-size: 13px; font-weight: 600; color: var(--dco-teal); cursor: pointer; font-family: inherit; transition: border-color 0.2s, background 0.2s; }
+.dco-add-video-btn:hover { border-color: var(--dco-teal); background: rgba(46,134,171,0.04); }
+.dco-or-divider { display: flex; align-items: center; gap: 12px; margin: 16px 0; }
+.dco-or-divider::before, .dco-or-divider::after { content: ''; flex: 1; height: 1px; background: var(--dco-border); }
+.dco-or-divider span { font-size: 11px; font-weight: 700; color: var(--dco-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.dco-video-file-list { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+.dco-video-file-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: #f8fafc; border: 1.5px solid var(--dco-border); border-radius: 6px; }
+.dco-video-file-item__icon { color: var(--dco-teal); flex-shrink: 0; }
+.dco-video-file-item__info { flex: 1; min-width: 0; }
+.dco-video-file-item__name { font-size: 13px; font-weight: 600; color: var(--dco-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dco-video-file-item__size { font-size: 11px; color: var(--dco-muted); margin-top: 2px; }
+.dco-video-file-item__rm { width: 28px; height: 28px; border: 1.5px solid var(--dco-border); border-radius: 6px; background: none; cursor: pointer; color: var(--dco-muted); font-size: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: border-color 0.2s, color 0.2s; font-family: inherit; }
+.dco-video-file-item__rm:hover { border-color: var(--dco-error); color: var(--dco-error); }
+
+/* =====================================================
+   LIQUID GLASS THEME
+   ===================================================== */
+
+/* ── Body: deep navy mesh gradient ── */
+body {
+  background:
+    radial-gradient(ellipse 70% 55% at 12% 8%,  rgba(46,134,171,0.50) 0%, transparent 62%),
+    radial-gradient(ellipse 55% 65% at 88% 88%,  rgba(10,28,58,0.75)  0%, transparent 62%),
+    radial-gradient(ellipse 45% 40% at 58% 25%,  rgba(0,90,145,0.22)  0%, transparent 68%),
+    linear-gradient(168deg, #050d1b 0%, #091b33 28%, #0c2d50 58%, #050f20 100%);
+  background-attachment: fixed;
+}
+
+/* ── Preview tab bar ── */
+.preview-tabs {
+  background: rgba(4,10,22,0.82);
+  backdrop-filter: blur(28px) saturate(1.6);
+  -webkit-backdrop-filter: blur(28px) saturate(1.6);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.preview-tab { color: rgba(168,200,216,0.52); }
+.preview-tab:hover { color: rgba(255,255,255,0.88); background: rgba(255,255,255,0.04); }
+.preview-tab.active { color: #fff; border-bottom-color: #2E86AB; }
+
+/* ── Screen padding ── */
+.preview-screen { padding: 36px 20px; }
+
+/* ── Wrapper ── */
+.dco-wrapper { background: transparent; }
+
+/* ── Language toggle ── */
+.dco-lang-toggle {
+  background: rgba(255,255,255,0.10);
+  backdrop-filter: blur(24px) saturate(1.5);
+  -webkit-backdrop-filter: blur(24px) saturate(1.5);
+  border: 1px solid rgba(255,255,255,0.17);
+  color: rgba(255,255,255,0.75);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.17);
+}
+.dco-lang-toggle:hover {
+  background: rgba(255,255,255,0.18);
+  border-color: rgba(255,255,255,0.30);
+  color: #fff;
+}
+.dco-lang-toggle.active {
+  background: rgba(46,134,171,0.48);
+  border-color: rgba(46,134,171,0.55);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(46,134,171,0.38), inset 0 1px 0 rgba(255,255,255,0.25);
+}
+
+/* ── Step indicators ── */
+.dco-steps::before { background: rgba(255,255,255,0.10); }
+.dco-step__num {
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.42);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.22);
+}
+.dco-step.active .dco-step__num,
+.dco-step.done  .dco-step__num {
+  background: rgba(46,134,171,0.62);
+  border: 1px solid rgba(255,255,255,0.34);
+  color: #fff;
+  box-shadow: 0 4px 20px rgba(46,134,171,0.55), inset 0 1px 0 rgba(255,255,255,0.35);
+}
+.dco-step__label { color: rgba(255,255,255,0.36); }
+.dco-step.active .dco-step__label { color: rgba(160,220,255,0.92); font-weight: 700; }
+.dco-step.done  .dco-step__label { color: rgba(255,255,255,0.48); }
+
+/* ── Glass panel ── */
+.dco-panel {
+  background: rgba(255,255,255,0.76);
+  backdrop-filter: blur(56px) saturate(2.2);
+  -webkit-backdrop-filter: blur(56px) saturate(2.2);
+  border: 1px solid rgba(255,255,255,0.58);
+  border-top-color: rgba(255,255,255,0.92);
+  border-radius: 26px;
+  box-shadow:
+    0 52px 100px rgba(0,0,0,0.42),
+    0 18px 36px  rgba(0,0,0,0.22),
+    inset 0 1px 0 rgba(255,255,255,0.96),
+    inset 0 -1px 0 rgba(0,0,0,0.04);
+}
+
+/* ── All buttons: pill shape + glass ── */
+.dco-btn {
+  border-radius: 50px;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.15s, border-color 0.2s;
+}
+.dco-btn--primary {
+  background: linear-gradient(150deg, rgba(46,155,190,0.92) 0%, rgba(18,86,128,0.96) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.32);
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.14);
+  box-shadow:
+    0 8px 26px rgba(46,134,171,0.52),
+    0 2px 8px  rgba(0,0,0,0.22),
+    inset 0 1px 0 rgba(255,255,255,0.44),
+    inset 0 -1px 0 rgba(0,0,0,0.09);
+}
+.dco-btn--primary:hover {
+  background: linear-gradient(150deg, rgba(60,170,208,0.95) 0%, rgba(26,102,150,0.98) 100%);
+  box-shadow:
+    0 14px 38px rgba(46,134,171,0.62),
+    0 4px 14px  rgba(0,0,0,0.26),
+    inset 0 1px 0 rgba(255,255,255,0.52);
+  transform: translateY(-2px);
+}
+.dco-btn--primary:active { transform: translateY(0); }
+.dco-btn--secondary {
+  background: rgba(255,255,255,0.32);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1.5px solid rgba(27,58,92,0.20);
+  color: var(--dco-navy);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.72);
+}
+.dco-btn--secondary:hover {
+  background: rgba(46,134,171,0.10);
+  border-color: rgba(46,134,171,0.36);
+  color: var(--dco-teal);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(46,134,171,0.18), inset 0 1px 0 rgba(255,255,255,0.72);
+}
+.dco-btn:disabled { opacity: 0.45; transform: none !important; }
+
+/* ── Inputs ── */
+.dco-input {
+  background: rgba(255,255,255,0.60);
+  border: 1.5px solid rgba(27,58,92,0.13);
+  border-radius: 10px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.05), 0 1px 0 rgba(255,255,255,0.88);
+}
+.dco-input:focus {
+  background: rgba(255,255,255,0.90);
+  border-color: rgba(46,134,171,0.46);
+  box-shadow: 0 0 0 3px rgba(46,134,171,0.13), inset 0 1px 3px rgba(0,0,0,0.04);
+}
+
+/* ── Custom dropdown button ── */
+.dco-custom-select__btn {
+  background: rgba(255,255,255,0.60) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7e8f' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 14px center;
+  border: 1.5px solid rgba(27,58,92,0.13);
+  border-radius: 10px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.05), 0 1px 0 rgba(255,255,255,0.88);
+}
+.dco-custom-select.open .dco-custom-select__btn,
+.dco-custom-select__btn:focus {
+  background-color: rgba(255,255,255,0.90);
+  border-color: rgba(46,134,171,0.46);
+  box-shadow: 0 0 0 3px rgba(46,134,171,0.13);
+}
+.dco-custom-select__list {
+  background: rgba(250,253,255,0.88);
+  backdrop-filter: blur(32px) saturate(1.8);
+  -webkit-backdrop-filter: blur(32px) saturate(1.8);
+  border: 1px solid rgba(255,255,255,0.68);
+  border-top-color: rgba(255,255,255,0.96);
+  border-radius: 14px;
+  box-shadow: 0 22px 52px rgba(0,0,0,0.24), inset 0 1px 0 rgba(255,255,255,0.92);
+}
+.dco-custom-select__item:hover  { background: rgba(46,134,171,0.08); }
+.dco-custom-select__item.selected { background: rgba(46,134,171,0.12); }
+
+/* ── Internal info boxes ── */
+.dco-summary {
+  background: rgba(27,58,92,0.04);
+  border: 1px solid rgba(27,58,92,0.08);
+  border-radius: 12px;
+}
+.dco-result__reasoning {
+  background: rgba(27,58,92,0.04);
+  border-left-color: rgba(46,134,171,0.55);
+  border-radius: 0 10px 10px 0;
+}
+.dco-includes {
+  background: rgba(46,134,171,0.05);
+  border-color: rgba(46,134,171,0.14);
+  border-radius: 12px;
+}
+.dco-ach-info {
+  background: rgba(46,134,171,0.06);
+  border-color: rgba(46,134,171,0.18);
+  border-radius: 12px;
+}
+.dco-suggestions        { border-color: rgba(243,156,18,0.28); border-radius: 12px; }
+.dco-suggestions__header { background: rgba(243,156,18,0.06); }
+.dco-revise-cta          { background: rgba(46,134,171,0.04); border-color: rgba(46,134,171,0.22); border-radius: 12px; }
+.dco-result__contact     { border-top-color: rgba(27,58,92,0.10); }
+.dco-webhook-box         { background: rgba(255,255,255,0.38); border-radius: 8px; backdrop-filter: blur(8px); }
+
+/* ── Payment method cards ── */
+.dco-pay-method-card {
+  background: rgba(255,255,255,0.68);
+  border: 2px solid rgba(27,58,92,0.10);
+  border-radius: 18px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 2px 14px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.88);
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s, transform 0.15s;
+}
+.dco-pay-method-card:hover {
+  background: rgba(255,255,255,0.88);
+  border-color: rgba(46,134,171,0.28);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.11), inset 0 1px 0 rgba(255,255,255,0.92);
+}
+.dco-pay-method-card.selected {
+  background: rgba(46,134,171,0.10);
+  border-color: rgba(46,134,171,0.48);
+  box-shadow: 0 0 0 3px rgba(46,134,171,0.14), 0 8px 24px rgba(46,134,171,0.22);
+}
+
+/* ── Media drop zones ── */
+.dco-media-drop {
+  background: rgba(255,255,255,0.38);
+  border-color: rgba(27,58,92,0.16);
+  border-radius: 14px;
+}
+.dco-media-drop:hover {
+  background: rgba(46,134,171,0.07);
+  border-color: rgba(46,134,171,0.36);
+}
+
+/* ── Video file list cards ── */
+.dco-video-file-item {
+  background: rgba(255,255,255,0.52);
+  border-color: rgba(27,58,92,0.11);
+  border-radius: 10px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* ── Add video / OR divider ── */
+.dco-add-video-btn {
+  background: rgba(255,255,255,0.28);
+  border-color: rgba(27,58,92,0.16);
+  border-radius: 10px;
+}
+.dco-add-video-btn:hover {
+  background: rgba(46,134,171,0.07);
+  border-color: rgba(46,134,171,0.32);
+}
+.dco-or-divider::before,
+.dco-or-divider::after { background: rgba(27,58,92,0.14); }
+
+/* ── Media tabs ── */
+.dco-media-tabs { border-bottom-color: rgba(27,58,92,0.12); }
+
+/* ── RARE badge ── */
+.dco-rare-badge {
+  background: rgba(255,248,225,0.82);
+  border-color: rgba(240,192,64,0.52);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+/* ── Admin panel ── */
+.dco-admin {
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-radius: 14px;
+}
+.dco-admin-header {
+  background: rgba(27,58,92,0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 12px 12px 0 0;
+}
+.dco-admin-body {
+  background: rgba(255,255,255,0.84);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+.dco-admin-save {
+  border-radius: 22px;
+  box-shadow: 0 4px 16px rgba(46,134,171,0.40);
+}
+
+/* ── Unit toggle (Months / Days) ── */
+.dco-input-unit-wrap { display: flex; gap: 8px; align-items: stretch; }
+.dco-input-unit-wrap .dco-input--unit { flex: 1; min-width: 0; }
+.dco-unit-toggle {
+  display: inline-flex;
+  flex-shrink: 0;
+  background: rgba(255,255,255,0.32);
+  backdrop-filter: blur(14px) saturate(1.6);
+  -webkit-backdrop-filter: blur(14px) saturate(1.6);
+  border: 1.5px solid rgba(27,58,92,0.13);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.7), 0 1px 4px rgba(0,0,0,0.06);
+}
+.dco-unit-btn {
+  padding: 0 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--dco-muted);
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  white-space: nowrap;
+  line-height: 1;
+}
+.dco-unit-btn.active {
+  background: linear-gradient(150deg, rgba(46,155,190,0.90) 0%, rgba(18,86,128,0.94) 100%);
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.14);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.36), 0 2px 8px rgba(46,134,171,0.35);
+}
+.dco-unit-btn:hover:not(.active) {
+  background: rgba(46,134,171,0.10);
+  color: var(--dco-teal);
+}
+
+/* ── Loading dots ── */
+.dco-loading__dots span { background: rgba(46,134,171,0.65); }
+
+/* ── Password strength bar bg ── */
+.dco-password-strength { background: rgba(27,58,92,0.10); }
+
+/* Email */
+.email-preview-wrapper { max-width: 640px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.12); }
+.email-preview-bar { background: #2d2d2d; padding: 10px 16px; display: flex; align-items: center; gap: 8px; }
+.email-preview-bar span { width: 12px; height: 12px; border-radius: 50%; }
+.email-preview-bar span:nth-child(1){background:#ff5f57} .email-preview-bar span:nth-child(2){background:#febc2e} .email-preview-bar span:nth-child(3){background:#28c840}
+.email-subject { background: #3a3a3a; color: #ccc; font-size: 12px; padding: 6px 16px; font-family: monospace; }
+</style>
+</head>
+<body>
+
+<div class="preview-tabs">
+  <div class="preview-tab active" onclick="showScreen('step1',this)">Step 1 — Account</div>
+  <div class="preview-tab" onclick="showScreen('step2',this)">Step 2 — Requirements</div>
+  <div class="preview-tab" onclick="showScreen('loading',this)">Step 3 — Loading</div>
+  <div class="preview-tab" onclick="showScreen('qualified',this)">Step 4a — Qualified ✓</div>
+  <div class="preview-tab" onclick="showScreen('rejected',this)">Step 4b — Rejected</div>
+  <div class="preview-tab" onclick="showScreen('payment',this)">Payment Gate</div>
+  <div class="preview-tab" onclick="showScreen('admin',this)">Admin Settings</div>
+  <div class="preview-tab" onclick="showScreen('email',this)">Welcome Email</div>
+</div>
+
+<!-- ====== STEP 1 ====== -->
+<div class="preview-screen active" id="screen-step1">
+  <div class="dco-wrapper" data-lang="en">
+    <div class="dco-lang-bar">
+      <button class="dco-lang-toggle" id="lang-btn-1" onclick="toggleLang(this, 1)">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        <span class="lang-label">Ver en Español</span>
+      </button>
+    </div>
+    <div class="dco-steps">
+      <div class="dco-step active"><span class="dco-step__num">1</span><span class="dco-step__label lang-text" data-en="Account" data-es="Cuenta">Account</span></div>
+      <div class="dco-step"><span class="dco-step__num">2</span><span class="dco-step__label lang-text" data-en="Requirements" data-es="Necesidades">Requirements</span></div>
+      <div class="dco-step"><span class="dco-step__num">3</span><span class="dco-step__label lang-text" data-en="Evaluation" data-es="Evaluación">Evaluation</span></div>
+    </div>
+    <div class="dco-panel">
+      <div class="dco-panel__header">
+        <h2 class="dco-panel__title lang-text" data-en="Account Information" data-es="Información de Cuenta">Account Information</h2>
+        <p class="dco-panel__subtitle lang-text" data-en="Create your account to begin the application process." data-es="Crea tu cuenta para comenzar el proceso de solicitud.">Create your account to begin the application process.</p>
+      </div>
+      <div class="dco-form__row dco-form__row--2col" style="margin-bottom:20px">
+        <div class="dco-field" style="margin-bottom:0">
+          <label class="dco-label"><span class="lang-text" data-en="First Name" data-es="Nombre">First Name</span> <span class="dco-required">*</span></label>
+          <input id="s1-firstname" class="dco-input" type="text" placeholder="María">
+        </div>
+        <div class="dco-field" style="margin-bottom:0">
+          <label class="dco-label"><span class="lang-text" data-en="Last Name" data-es="Apellido">Last Name</span> <span class="dco-required">*</span></label>
+          <input id="s1-lastname" class="dco-input" type="text" placeholder="García">
+        </div>
+      </div>
+      <div class="dco-field">
+        <label class="dco-label"><span class="lang-text" data-en="Email Address" data-es="Correo Electrónico">Email Address</span> <span class="dco-required">*</span></label>
+        <input id="s1-email" class="dco-input" type="email" data-placeholder-en="maria@organization.com" data-placeholder-es="maria@organización.com" placeholder="maria@organization.com">
+      </div>
+      <div class="dco-field">
+        <label class="dco-label"><span class="lang-text" data-en="Organization Name" data-es="Nombre de la Organización">Organization Name</span> <span class="dco-required">*</span></label>
+        <input id="s1-org" class="dco-input" type="text" placeholder="MedResearch Inc.">
+      </div>
+      <div class="dco-form__row dco-form__row--2col">
+        <div class="dco-field" style="margin-bottom:0">
+          <label class="dco-label"><span class="lang-text" data-en="Password" data-es="Contraseña">Password</span> <span class="dco-required">*</span></label>
+          <input id="dco-pw-input" class="dco-input" type="password" data-placeholder-en="Minimum 8 characters" data-placeholder-es="Mínimo 8 caracteres" placeholder="Minimum 8 characters" oninput="updatePasswordStrength(this)">
+          <div class="dco-password-strength"><div id="dco-pw-fill" class="dco-password-strength__fill" style="width:0%;background:#e74c3c;transition:width 0.35s ease,background 0.35s ease"></div></div>
+          <span id="dco-pw-hint" class="dco-hint lang-text" data-en="" data-es=""></span>
+        </div>
+        <div class="dco-field" style="margin-bottom:0">
+          <label class="dco-label"><span class="lang-text" data-en="Confirm Password" data-es="Confirmar Contraseña">Confirm Password</span> <span class="dco-required">*</span></label>
+          <input id="s1-confirm-pw" class="dco-input" type="password" data-placeholder-en="Repeat your password" data-placeholder-es="Repita su contraseña" placeholder="Repeat your password" oninput="checkConfirmMatch()">
+        </div>
+      </div>
+      <div class="dco-form__actions">
+        <button id="s1-continue-btn" class="dco-btn dco-btn--primary" onclick="validateAndContinue()"><span class="lang-text" data-en="Continue" data-es="Continuar">Continue</span> →</button>
+      </div>
+      <p class="dco-hint dco-hint--center" style="margin-top:16px"><span class="lang-text" data-en="By continuing, you agree to our terms of service." data-es="Al continuar, acepta nuestros términos de servicio.">By continuing, you agree to our terms of service.</span></p>
+    </div>
+  </div>
+</div>
+
+<!-- ====== STEP 2 ====== -->
+<div class="preview-screen" id="screen-step2">
+  <div class="dco-wrapper" data-lang="en">
+    <div class="dco-lang-bar">
+      <button class="dco-lang-toggle" id="lang-btn-2" onclick="toggleLang(this, 2)">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        <span class="lang-label">Ver en Español</span>
+      </button>
+    </div>
+    <div class="dco-steps">
+      <div class="dco-step done"><span class="dco-step__num">1</span><span class="dco-step__label lang-text" data-en="Account" data-es="Cuenta">Account</span></div>
+      <div class="dco-step active"><span class="dco-step__num">2</span><span class="dco-step__label lang-text" data-en="Requirements" data-es="Necesidades">Requirements</span></div>
+      <div class="dco-step"><span class="dco-step__num">3</span><span class="dco-step__label lang-text" data-en="Evaluation" data-es="Evaluación">Evaluation</span></div>
+    </div>
+    <div class="dco-panel">
+      <div class="dco-panel__header">
+        <h2 class="dco-panel__title lang-text" data-en="Trial Requirements" data-es="Necesidades del Ensayo">Trial Requirements</h2>
+        <p class="dco-panel__subtitle lang-text" data-en="Tell us about your clinical trial so we can evaluate your application." data-es="Cuéntenos sobre su ensayo clínico para que podamos evaluar su solicitud.">Tell us about your clinical trial so we can evaluate your application.</p>
+      </div>
+      <div class="dco-field">
+        <label class="dco-label"><span class="lang-text" data-en="Trial Type" data-es="Tipo de Ensayo">Trial Type</span> <span class="dco-required">*</span></label>
+        <div class="dco-custom-select" id="trial-type-wrap">
+          <button type="button" class="dco-custom-select__btn placeholder" id="trial-type-btn" onclick="toggleDropdown('trial-type-wrap')">
+            <span id="trial-type-display" class="lang-text" data-en="— Select disease area —" data-es="— Seleccione área de enfermedad —">— Select disease area —</span>
+          </button>
+          <ul class="dco-custom-select__list" id="trial-type-list">
+
+            <!-- ── Metabolic & Weight ── -->
+            <li class="dco-custom-select__item--sep" style="border-top:none;margin-top:0">Metabolic &amp; Weight</li>
+            <li class="dco-custom-select__item" onclick="selectTrialType(this,'obesity','Obesity / Overweight','Obesidad / Sobrepeso',false)"><span>Obesity / Overweight</span></li>
+            <li class="dco-custom-select__item" onclick="selectTrialType(this,'prediabetes','Prediabetes','Prediabetes',false)"><span>Prediabetes</span></li>
+            <li class="dco-custom-select__item" onclick="selectTrialType(this,'diabetes','Type 2 Diabetes','Diabetes Tipo 2',false)"><span>Type 2 Diabetes</span></li>
+            <li class="dco-custom-select__item" onclick="selectTrialType(this,'metabolic','Metabolic Syndrome','Síndrome Metabólico',false)"><span>Metabolic Syndrome</span></li>
+            <li class="dco-custom-select__item" onclick="selectTrialType(this,'cholesterol','High Cholesterol','Colesterol Alto',false)"><span>High Cholesterol</span></li>
+            <li class="dco-custom-select__item" onclick="selectTrialType(this,'thyroid','Thyroid Disease / Hypothyroidism','Enfermedad Tiroidea / Hipotiroidismo',false)"><span>Thyroid Disease / Hypothyroidism</span></li>
+            <li class="dco-custom-select__item" onclick="selectTrialType(this,'pcos','PCOS (Polycystic Ovary Syndrome)','SOP (Síndrome de Ovario Poliquístico)',false)"><span>PCOS (Polycystic Ovary Syndrome)</span></li>
+
+            <!-- ── Cardiovascular ── -->
+            <li class="dco-custom-select__item--sep">Cardiovascular</li>
+            <li class="dco-custom-select__item" onclick="selectTrialType(this,'cardiovascular','Cardiovascular Disease (CVD)','Enfermedad Cardiovascular (CVD)',false)"><span>Cardiovascular Disease (CVD)</span></li>
+            <li class="dco-custom-select__item" onclick="selectTrialType(this,'hypertension','Hypertension','Hipertensión',false)"><span>Hypertension</span></li>
+            <li class="dco-custom-select__item" onclick="selectTrialType(this,'heart-failure','Heart Failure','Insuficiencia Cardíaca',false)"><span>Heart Failure</span></li>
+            <li class="dco-custom-select__item" onclick="selectTrialType(this,'afib','Atrial Fibrillation','Fibrilación Auricular',false)"><span>Atrial Fibrillation</span></li>
+
+            <!-- ── Respiratory ── -->
+            <li class="dco-custom-select__item--sep">Respiratory</li>
+            <li class="dco-custom-select__item" onclick="selectTrialType(this,'asthma','Asthma / COPD','Asma (activo) / EPOC',false)"><span>Asthma / COPD</span></li>
+            <li class="dco-custom-select__item" onclick="selectTrialType(this,'sleep-apnea','Sleep Apnea','Apnea del Sueño',false)"><span>Sleep Apnea</span></li>
+
+            <!-- ── Mental Health ── -->
+            <li class="dco-custom-select__item--sep">Mental Health</li>
+            <li class="dco-custom-select__item" onclick="selectTrialType(this,'anxiety','Anxiety','Ansiedad',false)"><span>Anxiety</span></li>
+            <li class="dco-custom-select__item" onclick="selectTrialType(this,'depression','Depression','Depresión',false)"><span>Depression</span></li>
+            <li class="dco-custom-select__item" onclick="selectTrialType(this,'adhd','ADHD','TDAH',false)"><span>ADHD</span></li>
+
+            <!-- ── Neurological ── -->
+            <li class="dco-custom-select__item--sep">Neurological</li>
+            <li class="dco-custom-select__item" onclick="selectTrialType(this,'alzheimers','Alzheimer\'s / Dementia','Alzheimer / Demencia',true)"><span>Alzheimer's / Dementia</span><span class="dco-rare-badge">RARE</span></li>
+            <li class="dco-custom-select__item" onclick="selectTrialType(this,'parkinsons','Parkinson\'s Disease','Enfermedad de Parkinson',true)"><span>Parkinson's Disease</span><span class="dco-rare-badge">RARE</span></li>
+            <li class="dco-custom-select__item" onclick="selectTrialType(this,'migraine','Migraine','Migraña',false)"><span>Migraine</span></li>
+            <li class="dco-custom-select__item" onclick="selectTrialType(this,'cognitive','Cognitive Impairment (non-Alzheimer\'s)','Deterioro Cognitivo (no Alzheimer)',false)"><span>Cognitive Impairment (non-Alzheimer's)</span></li>
+
+            <!-- ── Autoimmune & Musculoskeletal ── -->
+            <li class="dco-custom-select__item--sep">Autoimmune &amp; Musculoskeletal</li>
+            <li class="dco-custom-select__item" onclick="selectTrialType(this,'lupus','Lupus / SLE','Lupus / LES',true)"><span>Lupus / SLE</span><span class="dco-rare-badge">RARE</span></li>
+            <li class="dco-custom-select__item" onclick="selectTrialType(this,'arthritis','Arthritis','Artritis',false)"><span>Arthritis</span></li>
+            <li class="dco-custom-select__item" onclick="selectTrialType(this,'autoimmune','Autoimmune / Rheumatology (Other)','Autoinmune / Reumatología (Otro)',false)"><span>Autoimmune / Rheumatology (Other)</span></li>
+
+            <!-- ── Oncology ── -->
+            <li class="dco-custom-select__item--sep">Oncology</li>
+            <li class="dco-custom-select__item" onclick="selectTrialType(this,'oncology','Oncology / Cancer','Oncología / Cáncer',false)"><span>Oncology / Cancer</span></li>
+            <li class="dco-custom-select__item" onclick="selectTrialType(this,'rare-cancer','Rare Cancer / Hematology','Cáncer Raro / Hematología',true)"><span>Rare Cancer / Hematology</span><span class="dco-rare-badge">RARE</span></li>
+
+            <!-- ── Chronic Conditions ── -->
+            <li class="dco-custom-select__item--sep">Chronic Conditions</li>
+            <li class="dco-custom-select__item" onclick="selectTrialType(this,'ckd','Chronic Kidney Disease (CKD)','Enfermedad Crónica Renal (ERC)',false)"><span>Chronic Kidney Disease (CKD)</span></li>
+            <li class="dco-custom-select__item" onclick="selectTrialType(this,'liver','Liver Disease','Enfermedad Hepática',false)"><span>Liver Disease</span></li>
+            <li class="dco-custom-select__item" onclick="selectTrialType(this,'chronic-pain','Chronic Pain','Dolor Crónico',false)"><span>Chronic Pain</span></li>
+            <li class="dco-custom-select__item" onclick="selectTrialType(this,'gerd','GERD / Acid Reflux','ERGE / Reflujo',false)"><span>GERD / Acid Reflux</span></li>
+            <li class="dco-custom-select__item" onclick="selectTrialType(this,'osteoporosis','Osteoporosis','Osteoporosis',false)"><span>Osteoporosis</span></li>
+            <li class="dco-custom-select__item" onclick="selectTrialType(this,'diabetic-neuropathy','Diabetic Neuropathy','Neuropatía Diabética',false)"><span>Diabetic Neuropathy</span></li>
+            <li class="dco-custom-select__item" onclick="selectTrialType(this,'glaucoma','Glaucoma / Cataracts','Glaucoma / Cataratas',false)"><span>Glaucoma / Cataracts</span></li>
+
+            <!-- ── Infectious Disease ── -->
+            <li class="dco-custom-select__item--sep">Infectious Disease</li>
+            <li class="dco-custom-select__item" onclick="selectTrialType(this,'hiv','HIV / AIDS','VIH / SIDA',false)"><span>HIV / AIDS</span></li>
+            <li class="dco-custom-select__item" onclick="selectTrialType(this,'infectious','Infectious Disease (Other)','Enfermedad Infecciosa (Otro)',false)"><span>Infectious Disease (Other)</span></li>
+
+            <!-- ── Rare & Genetic ── -->
+            <li class="dco-custom-select__item--sep">Rare &amp; Genetic</li>
+            <li class="dco-custom-select__item" onclick="selectTrialType(this,'rare-genetic','Rare Genetic Disorders','Trastornos Genéticos Raros',true)"><span>Rare Genetic Disorders</span><span class="dco-rare-badge">RARE</span></li>
+            <li class="dco-custom-select__item" onclick="selectTrialType(this,'rare-pediatric','Rare Pediatric Conditions','Condiciones Pediátricas Raras',true)"><span>Rare Pediatric Conditions</span><span class="dco-rare-badge">RARE</span></li>
+
+            <!-- ── Other ── -->
+            <li class="dco-custom-select__item--sep">Other</li>
+            <li class="dco-custom-select__item" onclick="selectTrialType(this,'other','Other — specify below','Otro — especifique abajo',false)"><span>Other — specify below</span></li>
+
+          </ul>
+        </div>
+        <input id="trial-type-other-input" class="dco-input" type="text" placeholder="Describe your trial disease area..." style="display:none;margin-top:8px">
+      </div>
+      <div class="dco-field">
+        <label class="dco-label"><span class="lang-text" data-en="Target Population" data-es="Población Objetivo">Target Population</span> <span class="dco-required">*</span></label>
+        <p class="dco-hint lang-text" data-en="Select all that apply." data-es="Seleccione todos los que apliquen.">Select all that apply.</p>
+        <div class="dco-checkboxes" id="s2-target-pop">
+          <label class="dco-checkbox-label"><input type="checkbox" checked> <span class="lang-text" data-en="Latino/Hispanic (General)" data-es="Latino/Hispano (General)">Latino/Hispanic (General)</span></label>
+          <label class="dco-checkbox-label"><input type="checkbox"> <span class="lang-text" data-en="Other" data-es="Otro">Other</span></label>
+        </div>
+      </div>
+      <div class="dco-field">
+        <label class="dco-label"><span class="lang-text" data-en="Organization" data-es="Organización">Organization</span> <span class="dco-required">*</span></label>
+        <select class="dco-input dco-select" id="s2-org-type" onchange="toggleOrgOther(this); updateSuggestions();">
+          <option value="" class="lang-text" data-en="— Select —" data-es="— Seleccione —">— Select —</option>
+          <option value="researcher" class="lang-text" data-en="Researcher" data-es="Investigador">Researcher</option>
+          <option value="cro" class="lang-text" data-en="CRO" data-es="ORC">CRO</option>
+          <option value="university" class="lang-text" data-en="University" data-es="Universidad">University</option>
+          <option value="pharmaceutical" class="lang-text" data-en="Pharmaceutical" data-es="Farmacéutica">Pharmaceutical</option>
+          <option value="other" class="lang-text" data-en="Other" data-es="Otro">Other</option>
+        </select>
+        <input id="s2-org-other" class="dco-input" type="text" placeholder="Describe your organization..." style="display:none;margin-top:8px">
+      </div>
+      <div class="dco-field">
+        <label class="dco-label"><span class="lang-text" data-en="Estimated Budget (USD)" data-es="Presupuesto Estimado (USD)">Estimated Budget (USD)</span> <span class="dco-required">*</span></label>
+        <div class="dco-form__row dco-form__row--2col" style="margin-top:6px;">
+          <div class="dco-field dco-field--no-margin">
+            <label class="dco-label dco-label--sub"><span class="lang-text" data-en="Minimum" data-es="Mínimo">Minimum</span></label>
+            <div class="dco-input-prefix-wrap">
+              <span class="dco-input-prefix">$</span>
+              <input id="s2-budget-min" class="dco-input dco-input--prefixed" type="number" placeholder="e.g. 500" oninput="updateSuggestions()">
+            </div>
+          </div>
+          <div class="dco-field dco-field--no-margin">
+            <label class="dco-label dco-label--sub"><span class="lang-text" data-en="Maximum" data-es="Máximo">Maximum</span></label>
+            <div class="dco-input-prefix-wrap">
+              <span class="dco-input-prefix">$</span>
+              <input id="s2-budget-max" class="dco-input dco-input--prefixed" type="number" placeholder="e.g. 200,000" oninput="updateSuggestions()">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="dco-form__row dco-form__row--2col">
+        <div class="dco-field" style="margin-bottom:0">
+          <label class="dco-label"><span class="lang-text" data-en="Enrollment Goal" data-es="Meta de Participantes">Enrollment Goal</span> <span class="dco-required">*</span></label>
+          <input id="s2-enrollment" class="dco-input" type="number" placeholder="e.g. 150">
+        </div>
+        <div class="dco-field" style="margin-bottom:0">
+          <label class="dco-label"><span class="lang-text" data-en="Timeline" data-es="Duración">Timeline</span> <span class="dco-required">*</span></label>
+          <div class="dco-input-unit-wrap">
+            <input id="s2-timeline" class="dco-input dco-input--unit" type="number" placeholder="e.g. 18">
+            <div class="dco-unit-toggle">
+              <button type="button" class="dco-unit-btn active" id="unit-btn-months"
+                      onclick="setTimelineUnit('months',this)"
+                      data-en="Months" data-es="Meses">Months</button>
+              <button type="button" class="dco-unit-btn" id="unit-btn-days"
+                      onclick="setTimelineUnit('days',this)"
+                      data-en="Days" data-es="Días">Days</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="dco-field" style="margin-top:20px">
+        <label class="dco-label"><span class="lang-text" data-en="Organization Website" data-es="Sitio Web de la Organización">Organization Website</span></label>
+        <input class="dco-input" type="url" value="https://medresearch.com">
+      </div>
+      <div class="dco-field">
+        <label class="dco-label"><span class="lang-text" data-en="Additional Notes" data-es="Notas Adicionales">Additional Notes</span></label>
+        <textarea class="dco-input dco-textarea" rows="3">Seeking to recruit Latino participants for a cardiovascular Phase II study across Puerto Rico.</textarea>
+        <span class="dco-char-count">89 / 1000</span>
+      </div>
+
+      <!-- Promotional Content -->
+      <div class="dco-field">
+        <label class="dco-label">
+          <span class="lang-text" data-en="Promotional Content" data-es="Contenido Promocional">Promotional Content</span>
+          <span style="font-size:12px;font-weight:400;color:var(--dco-muted);margin-left:4px" class="lang-text" data-en="(optional)" data-es="(opcional)">(optional)</span>
+        </label>
+        <span class="dco-hint" style="margin-bottom:12px;display:block">
+          <span class="lang-text" data-en="Upload images or add video links to help attract participants to your trial." data-es="Sube imágenes o agrega enlaces de video para atraer participantes a su ensayo.">Upload images or add video links to help attract participants to your trial.</span>
+        </span>
+
+        <!-- Tab switcher -->
+        <div class="dco-media-tabs">
+          <button type="button" class="dco-media-tab active" onclick="switchMediaTab('images', this)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <span class="lang-text" data-en="Images" data-es="Imágenes">Images</span>
+          </button>
+          <button type="button" class="dco-media-tab" onclick="switchMediaTab('videos', this)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+            <span class="lang-text" data-en="Videos" data-es="Videos">Videos</span>
+          </button>
+        </div>
+
+        <!-- Images pane -->
+        <div class="dco-media-pane active" id="media-pane-images">
+          <label class="dco-media-drop" for="media-img-input">
+            <span class="dco-media-drop__icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            </span>
+            <span class="dco-media-drop__label">
+              <span class="lang-text" data-en="Drop images here or" data-es="Arrastra imágenes aquí o">Drop images here or</span>
+              <u style="color:var(--dco-teal);cursor:pointer"><span class="lang-text" data-en="browse files" data-es="selecciona archivos">browse files</span></u>
+            </span>
+            <span class="dco-media-drop__sub lang-text" data-en="JPG, PNG, GIF · Max 5 MB each · Up to 10 images" data-es="JPG, PNG, GIF · Máx 5 MB cada una · Hasta 10 imágenes">JPG, PNG, GIF · Max 5 MB each · Up to 10 images</span>
+          </label>
+          <input type="file" id="media-img-input" accept="image/*" multiple style="display:none" onchange="previewImages(this)">
+          <div class="dco-media-thumbs" id="media-thumbs"></div>
+        </div>
+
+        <!-- Videos pane -->
+        <div class="dco-media-pane" id="media-pane-videos">
+
+          <!-- Link section -->
+          <p class="dco-hint" style="font-weight:600;color:var(--dco-navy);margin-bottom:8px">
+            <span class="lang-text" data-en="Paste a video link" data-es="Pegar enlace de video">Paste a video link</span>
+          </p>
+          <div class="dco-video-list" id="video-url-list">
+            <div class="dco-video-row">
+              <input class="dco-input" type="url" placeholder="https://youtube.com/watch?v=... or https://vimeo.com/...">
+              <button type="button" class="dco-video-remove" onclick="removeVideoRow(this)" title="Remove">✕</button>
+            </div>
+          </div>
+          <button type="button" class="dco-add-video-btn" onclick="addVideoRow()">
+            + <span class="lang-text" data-en="Add another video link" data-es="Agregar otro enlace de video">Add another video link</span>
+          </button>
+
+          <!-- Divider -->
+          <div class="dco-or-divider"><span class="lang-text" data-en="or" data-es="o">or</span></div>
+
+          <!-- Upload section -->
+          <p class="dco-hint" style="font-weight:600;color:var(--dco-navy);margin-bottom:8px">
+            <span class="lang-text" data-en="Upload video files" data-es="Subir archivos de video">Upload video files</span>
+          </p>
+          <label class="dco-media-drop" for="media-video-input">
+            <span class="dco-media-drop__icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+            </span>
+            <span class="dco-media-drop__label">
+              <span class="lang-text" data-en="Drop videos here or" data-es="Arrastra videos aquí o">Drop videos here or</span>
+              <u style="color:var(--dco-teal);cursor:pointer"><span class="lang-text" data-en="browse files" data-es="selecciona archivos">browse files</span></u>
+            </span>
+            <span class="dco-media-drop__sub lang-text" data-en="MP4, MOV, AVI, WebM · Max 500 MB each" data-es="MP4, MOV, AVI, WebM · Máx 500 MB cada uno">MP4, MOV, AVI, WebM · Max 500 MB each</span>
+          </label>
+          <input type="file" id="media-video-input" accept="video/*" multiple style="display:none" onchange="previewVideos(this)">
+          <div class="dco-video-file-list" id="video-file-list"></div>
+
+        </div>
+      </div>
+
+      <div class="dco-form__actions dco-form__actions--spaced">
+        <button class="dco-btn dco-btn--secondary">← <span class="lang-text" data-en="Back" data-es="Atrás">Back</span></button>
+        <button class="dco-btn dco-btn--primary" onclick="validateStep2()"><span class="lang-text" data-en="Submit Application" data-es="Enviar Solicitud">Submit Application</span></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== LOADING ====== -->
+<div class="preview-screen" id="screen-loading">
+  <div class="dco-wrapper" data-lang="en">
+    <div class="dco-lang-bar">
+      <button class="dco-lang-toggle" id="lang-btn-3" onclick="toggleLang(this, 3)">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        <span class="lang-label">Ver en Español</span>
+      </button>
+    </div>
+    <div class="dco-steps">
+      <div class="dco-step done"><span class="dco-step__num">1</span><span class="dco-step__label lang-text" data-en="Account" data-es="Cuenta">Account</span></div>
+      <div class="dco-step done"><span class="dco-step__num">2</span><span class="dco-step__label lang-text" data-en="Requirements" data-es="Necesidades">Requirements</span></div>
+      <div class="dco-step active"><span class="dco-step__num">3</span><span class="dco-step__label lang-text" data-en="Evaluation" data-es="Evaluación">Evaluation</span></div>
+    </div>
+    <div class="dco-panel">
+      <div class="dco-loading">
+        <div class="dco-loading__spinner">
+          <svg viewBox="0 0 50 50"><circle cx="25" cy="25" r="20" fill="none" stroke="#2E86AB" stroke-width="4" stroke-dasharray="80 40" stroke-linecap="round"><animateTransform attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="1s" repeatCount="indefinite"/></circle></svg>
+        </div>
+        <h2 class="dco-loading__title lang-text" data-en="Evaluating your application..." data-es="Evaluando su solicitud...">Evaluating your application...</h2>
+        <p class="dco-loading__body lang-text" data-en="Our AI system is reviewing your profile. This may take a few seconds." data-es="Nuestro sistema de inteligencia artificial está revisando su perfil. Esto puede tardar unos segundos.">Our AI system is reviewing your profile. This may take a few seconds.</p>
+        <div class="dco-loading__dots"><span></span><span></span><span></span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== QUALIFIED ====== -->
+<div class="preview-screen" id="screen-qualified">
+  <div class="dco-wrapper" data-lang="en">
+    <div class="dco-lang-bar">
+      <button class="dco-lang-toggle" id="lang-btn-4" onclick="toggleLang(this, 4)">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        <span class="lang-label">Ver en Español</span>
+      </button>
+    </div>
+    <div class="dco-steps">
+      <div class="dco-step done"><span class="dco-step__num">1</span><span class="dco-step__label">Account</span></div>
+      <div class="dco-step done"><span class="dco-step__num">2</span><span class="dco-step__label">Requirements</span></div>
+      <div class="dco-step done"><span class="dco-step__num">3</span><span class="dco-step__label">Evaluation</span></div>
+    </div>
+    <div class="dco-panel">
+      <div class="dco-result">
+        <div class="dco-result__icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+        <h2 class="dco-result__title lang-text" data-en="Congratulations — you have been qualified!" data-es="¡Felicitaciones, ha sido calificado(a)!">Congratulations — you have been qualified!</h2>
+        <p class="dco-result__subtitle lang-text" data-en="You are approved to join Diversia Health as a client." data-es="Ha sido aprobado(a) para unirse a Diversia Health como cliente.">You are approved to join Diversia Health as a client.</p>
+        <div class="dco-result__reasoning" id="reasoning-qualified-preview">
+          <p class="lang-text" data-en="Your pharmaceutical organization presents a strong profile with an adequate budget and clear focus on the Latino community. The Phase II cardiovascular trial is well-defined and the recruitment goal is realistic." data-es="Su organización farmacéutica muestra un perfil sólido con presupuesto adecuado y un enfoque claro en la comunidad latina. El ensayo cardiovascular de Fase II está bien definido y la meta de reclutamiento es realista.">Your pharmaceutical organization presents a strong profile with an adequate budget and clear focus on the Latino community. The Phase II cardiovascular trial is well-defined and the recruitment goal is realistic.</p>
+        </div>
+        <div class="dco-result__cta">
+          <p class="dco-result__cta-text lang-text" data-en="The next step is to complete your payment to activate your client account." data-es="El siguiente paso es completar su pago para activar su cuenta de cliente.">The next step is to complete your payment to activate your client account.</p>
+          <button class="dco-btn dco-btn--primary dco-btn--large"><span class="lang-text" data-en="Proceed to Payment" data-es="Proceder al Pago">Proceed to Payment</span> →</button>
+        </div>
+        <div class="dco-result__security">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <span class="lang-text" data-en="Payments securely processed by Stripe" data-es="Pagos procesados de forma segura por Stripe">Payments securely processed by Stripe</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== REJECTED ====== -->
+<div class="preview-screen" id="screen-rejected">
+  <div class="dco-wrapper" data-lang="en">
+    <div class="dco-lang-bar">
+      <button class="dco-lang-toggle" id="lang-btn-5" onclick="toggleLang(this, 5)">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        <span class="lang-label">Ver en Español</span>
+      </button>
+    </div>
+    <div class="dco-steps">
+      <div class="dco-step done"><span class="dco-step__num">1</span><span class="dco-step__label">Account</span></div>
+      <div class="dco-step done"><span class="dco-step__num">2</span><span class="dco-step__label">Requirements</span></div>
+      <div class="dco-step done"><span class="dco-step__num">3</span><span class="dco-step__label">Evaluation</span></div>
+    </div>
+    <div class="dco-panel">
+      <div class="dco-result">
+
+        <!-- Icon + headline -->
+        <div class="dco-result__icon dco-result__icon--neutral"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+        <h2 class="dco-result__title lang-text" data-en="Thank You for Your Interest" data-es="Gracias por su Interés">Thank You for Your Interest</h2>
+        <p class="dco-result__subtitle lang-text" data-en="We have carefully reviewed your application." data-es="Hemos revisado su solicitud cuidadosamente.">We have carefully reviewed your application.</p>
+
+        <!-- AI reasoning -->
+        <div class="dco-result__reasoning">
+          <p class="lang-text" data-en="Thank you for your interest in Diversia Health. After reviewing your application, we have determined that the estimated budget and project scope do not meet the current minimum requirements for our recruitment platform." data-es="Gracias por su interés en Diversia Health. Tras revisar su solicitud, hemos determinado que el presupuesto estimado y el alcance del proyecto no cumplen con los requisitos mínimos actuales para nuestra plataforma.">Thank you for your interest in Diversia Health. After reviewing your application, we have determined that the estimated budget and project scope do not meet the current minimum requirements for our recruitment platform.</p>
+        </div>
+
+        <!-- AI Analysis & Suggestions -->
+        <div class="dco-suggestions">
+          <div class="dco-suggestions__header">
+            <div class="dco-suggestions__icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </div>
+            <div>
+              <h3 class="dco-suggestions__title lang-text" data-en="What Our AI Flagged" data-es="Lo Que Señaló Nuestra IA">What Our AI Flagged</h3>
+              <p class="dco-suggestions__subtitle lang-text" data-en="Addressing these specific points may help your application qualify on resubmission." data-es="Abordar estos puntos específicos puede ayudar a que su solicitud califique al volver a presentarla.">Addressing these specific points may help your application qualify on resubmission.</p>
+            </div>
+          </div>
+          <ul class="dco-suggestions__list">
+            <li class="dco-suggestions__item">
+              <p class="dco-suggestions__item-issue lang-text" data-en="Your stated budget ($5,000–$10,000) falls below our minimum threshold for viable trial recruitment." data-es="Su presupuesto declarado ($5,000–$10,000) está por debajo de nuestro umbral mínimo para reclutamiento viable.">Your stated budget ($5,000–$10,000) falls below our minimum threshold for viable trial recruitment.</p>
+              <p class="dco-suggestions__item-fix lang-text" data-en="Consider revising your budget to at least $50,000–$200,000 to meet our service requirements." data-es="Considere revisar su presupuesto a al menos $50,000–$200,000 para cumplir con nuestros requisitos.">Consider revising your budget to at least $50,000–$200,000 to meet our service requirements.</p>
+            </li>
+            <li class="dco-suggestions__item">
+              <p class="dco-suggestions__item-issue lang-text" data-en="Your target population does not include Latino or Hispanic communities." data-es="Su población objetivo no incluye comunidades latinas o hispanas.">Your target population does not include Latino or Hispanic communities.</p>
+              <p class="dco-suggestions__item-fix lang-text" data-en="Specify Latino or Hispanic communities as part of your target enrollment population to align with Diversia Health's mission." data-es="Especifique comunidades latinas o hispanas como parte de su población objetivo de inscripción.">Specify Latino or Hispanic communities as part of your target enrollment population to align with Diversia Health's mission.</p>
+            </li>
+            <li class="dco-suggestions__item">
+              <p class="dco-suggestions__item-issue lang-text" data-en="Your enrollment goal of 15 participants appears low relative to a Phase III trial scope." data-es="Su meta de inscripción de 15 participantes parece baja en relación con el alcance de un ensayo de Fase III.">Your enrollment goal of 15 participants appears low relative to a Phase III trial scope.</p>
+              <p class="dco-suggestions__item-fix lang-text" data-en="Review your enrollment goal — Phase III trials typically require 100+ participants. Adjust the goal or clarify your trial phase." data-es="Revise su meta de inscripción — los ensayos de Fase III típicamente requieren 100+ participantes. Ajuste la meta o aclare la fase del ensayo.">Review your enrollment goal — Phase III trials typically require 100+ participants. Adjust the goal or clarify your trial phase.</p>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Revise & Resubmit CTA -->
+        <div class="dco-revise-cta">
+          <button class="dco-btn dco-btn--primary" style="gap:10px">
+            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            <span class="lang-text" data-en="Revise My Application" data-es="Revisar Mi Solicitud">Revise My Application</span>
+          </button>
+          <p class="dco-hint dco-hint--center" style="margin-top:10px">
+            <span class="lang-text" data-en="Update the flagged information in Step 2 and resubmit for a new evaluation." data-es="Actualice la información señalada en el Paso 2 y vuelva a enviar para una nueva evaluación.">Update the flagged information in Step 2 and resubmit for a new evaluation.</span>
+          </p>
+        </div>
+
+        <!-- Contact fallback -->
+        <div class="dco-result__contact">
+          <p class="lang-text" data-en="If you believe there has been an error or have additional questions, please don't hesitate to contact us." data-es="Si cree que ha ocurrido un error o tiene preguntas adicionales, no dude en contactarnos.">If you believe there has been an error or have additional questions, please don't hesitate to contact us.</p>
+          <a href="#" class="dco-btn dco-btn--secondary" style="margin-top:16px;display:inline-flex"><span class="lang-text" data-en="Contact Us" data-es="Contáctenos">Contact Us</span></a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== PAYMENT GATE ====== -->
+<div class="preview-screen" id="screen-payment">
+  <div class="dco-wrapper" data-lang="en">
+    <div class="dco-lang-bar">
+      <button class="dco-lang-toggle" id="lang-btn-6" onclick="toggleLang(this, 6)">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        <span class="lang-label">Ver en Español</span>
+      </button>
+    </div>
+    <div class="dco-panel">
+
+      <!-- Approval Header -->
+      <div class="dco-panel__header" style="text-align:center">
+        <div class="dco-result__icon" style="color:var(--dco-success);margin:0 auto 16px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+        <h2 class="dco-panel__title lang-text" data-en="You Have Been Approved!" data-es="¡Ha sido aprobado(a)!">You Have Been Approved!</h2>
+        <p class="dco-panel__subtitle lang-text" data-en="Complete your payment to activate your Diversia Health client account." data-es="Complete su pago para activar su cuenta de cliente Diversia Health.">Complete your payment to activate your Diversia Health client account.</p>
+      </div>
+
+      <!-- Application Summary -->
+      <div class="dco-summary">
+        <h3 class="dco-summary__title lang-text" data-en="Your Application Summary" data-es="Resumen de su Solicitud">Your Application Summary</h3>
+        <table class="dco-summary__table">
+          <tr><th class="lang-text" data-en="Organization" data-es="Organización">Organization</th><td>MedResearch Inc.</td></tr>
+          <tr><th class="lang-text" data-en="Trial Type" data-es="Tipo de Ensayo">Trial Type</th><td>Phase II — Efficacy</td></tr>
+          <tr><th class="lang-text" data-en="Budget" data-es="Presupuesto">Budget</th><td>$50,000–$200,000</td></tr>
+          <tr><th class="lang-text" data-en="Organization Type" data-es="Tipo de Organización">Organization Type</th><td>Pharma</td></tr>
+          <tr><th class="lang-text" data-en="AI Score" data-es="Calificación AI">AI Score</th><td><strong>84.5/100</strong></td></tr>
+        </table>
+      </div>
+
+      <!-- What's Included -->
+      <div class="dco-includes">
+        <h3 class="dco-includes__title lang-text" data-en="What's Included" data-es="Qué Está Incluido">What's Included</h3>
+        <ul class="dco-includes__list">
+          <li class="dco-includes__item">
+            <span class="dco-includes__check"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+            <span class="lang-text" data-en="Full access to the Clinical Trial Dashboard" data-es="Acceso completo al Panel de Ensayos Clínicos">Full access to the Clinical Trial Dashboard</span>
+          </li>
+          <li class="dco-includes__item">
+            <span class="dco-includes__check"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+            <span class="lang-text" data-en="Access to Diversia's Latino participant recruitment network" data-es="Acceso a la red de reclutamiento de participantes latinos de Diversia">Access to Diversia's Latino participant recruitment network</span>
+          </li>
+          <li class="dco-includes__item">
+            <span class="dco-includes__check"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+            <span class="lang-text" data-en="AI-powered patient matching and eligibility screening" data-es="Concordancia de pacientes impulsada por IA y evaluación de elegibilidad">AI-powered patient matching and eligibility screening</span>
+          </li>
+          <li class="dco-includes__item">
+            <span class="dco-includes__check"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+            <span class="lang-text" data-en="Bilingual patient outreach &amp; community engagement (EN &amp; ES)" data-es="Difusión bilingüe a pacientes y participación comunitaria (EN y ES)">Bilingual patient outreach &amp; community engagement (EN &amp; ES)</span>
+          </li>
+          <li class="dco-includes__item">
+            <span class="dco-includes__check"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+            <span class="lang-text" data-en="Real-time enrollment tracking and trial progress reports" data-es="Seguimiento de inscripción en tiempo real e informes de progreso">Real-time enrollment tracking and trial progress reports</span>
+          </li>
+          <li class="dco-includes__item">
+            <span class="dco-includes__check"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+            <span class="lang-text" data-en="Dedicated account manager for your trial" data-es="Gerente de cuenta dedicado para su ensayo">Dedicated account manager for your trial</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Payment Method Selector -->
+      <div class="dco-pay-method-section">
+        <h3 class="dco-pay-method-section__title lang-text" data-en="Select Payment Method" data-es="Seleccione Método de Pago">Select Payment Method</h3>
+        <div class="dco-pay-method-grid" id="preview-pay-grid">
+
+          <button class="dco-pay-method-card" onclick="selectPayMethod(this,'card')">
+            <span class="dco-pay-method-card__icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            </span>
+            <span class="dco-pay-method-card__title lang-text" data-en="Credit / Debit Card" data-es="Tarjeta de Crédito / Débito">Credit / Debit Card</span>
+            <span class="dco-pay-method-card__desc lang-text" data-en="Visa, Mastercard, Amex" data-es="Visa, Mastercard, Amex">Visa, Mastercard, Amex</span>
+            <span class="dco-pay-method-card__check"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+          </button>
+
+          <button class="dco-pay-method-card" onclick="selectPayMethod(this,'us_bank_account')">
+            <span class="dco-pay-method-card__icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="15" rx="2"/><polyline points="16 2 12 6 8 2"/><line x1="12" y1="12" x2="12" y2="17"/><line x1="9" y1="14.5" x2="15" y2="14.5"/></svg>
+            </span>
+            <span class="dco-pay-method-card__title lang-text" data-en="eCheck / ACH Transfer" data-es="Cheque Electrónico / ACH">eCheck / ACH Transfer</span>
+            <span class="dco-pay-method-card__desc lang-text" data-en="US bank account — no card fees" data-es="Cuenta bancaria EE.UU. — sin cargos">US bank account — no card fees</span>
+            <span class="dco-pay-method-card__check"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+          </button>
+
+        </div>
+      </div>
+
+      <!-- eCheck ACH Info Panel (shown when eCheck selected) -->
+      <div class="dco-ach-info" id="preview-ach-info">
+        <div class="dco-ach-info__header">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="15" rx="2"/><polyline points="16 2 12 6 8 2"/><line x1="12" y1="12" x2="12" y2="17"/><line x1="9" y1="14.5" x2="15" y2="14.5"/></svg>
+          <span class="lang-text" data-en="How eCheck / ACH works" data-es="Cómo funciona el Cheque Electrónico / ACH">How eCheck / ACH works</span>
+        </div>
+        <ol class="dco-ach-info__steps">
+          <li><span class="lang-text" data-en="You will be redirected to Stripe's secure page to enter your US bank account details (routing number &amp; account number)." data-es="Será redirigido a la página segura de Stripe para ingresar los datos de su cuenta bancaria (número de ruta y número de cuenta).">You will be redirected to Stripe's secure page to enter your US bank account details (routing number &amp; account number).</span></li>
+          <li><span class="lang-text" data-en="Stripe will instantly verify your bank, or send micro-deposits (1–2 business days) if instant verification is unavailable." data-es="Stripe verificará su banco de forma instantánea o enviará micro-depósitos (1–2 días hábiles) si la verificación instantánea no está disponible.">Stripe will instantly verify your bank, or send micro-deposits (1–2 business days) if instant verification is unavailable.</span></li>
+          <li><span class="lang-text" data-en="Once verified, your payment will be debited and your client account activated within 2–5 business days." data-es="Una vez verificado, su pago será debitado y su cuenta de cliente activada en 2–5 días hábiles.">Once verified, your payment will be debited and your client account activated within 2–5 business days.</span></li>
+        </ol>
+      </div>
+
+      <!-- Pay button -->
+      <div style="text-align:center;margin-top:16px">
+        <button class="dco-btn dco-btn--primary dco-btn--large" id="preview-pay-btn" disabled>
+          <span class="lang-text" id="preview-pay-label" data-en="Complete Payment" data-es="Completar Pago">Complete Payment</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+        <p class="dco-hint dco-hint--center" style="margin-top:12px">
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" style="vertical-align:middle;margin-right:4px"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <span class="lang-text" id="preview-pay-hint" data-en="Secure payment via Stripe" data-es="Pago seguro via Stripe">Secure payment via Stripe</span>
+        </p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ====== ADMIN SETTINGS ====== -->
+<div class="preview-screen" id="screen-admin">
+  <div class="dco-admin">
+    <div class="dco-admin-header"><h1>⚙ Client Onboarding Settings</h1></div>
+    <div class="dco-admin-body">
+      <div class="dco-admin-section">
+        <h2>API Keys</h2>
+        <table class="dco-admin-table">
+          <tr><th>OpenAI API Key</th><td><input class="dco-admin-input" type="password" value="sk-proj-••••••••••••3a9f"><span class="dco-admin-desc">Your OpenAI API key from platform.openai.com</span></td></tr>
+          <tr><th>OpenAI Model</th><td><select class="dco-admin-select"><option selected>GPT-4o (Recommended)</option><option>GPT-4o Mini</option></select></td></tr>
+        </table>
+      </div>
+      <div class="dco-admin-section">
+        <h2>Stripe Configuration</h2>
+        <table class="dco-admin-table">
+          <tr><th>Secret Key</th><td><input class="dco-admin-input" type="password" value="sk_live_••••••••••••"></td></tr>
+          <tr><th>Publishable Key</th><td><input class="dco-admin-input" type="text" value="pk_live_51Abc..."></td></tr>
+          <tr><th>Webhook Secret</th><td><input class="dco-admin-input" type="password" value="whsec_••••••••••••"></td></tr>
+          <tr><th>Price ID</th><td><input class="dco-admin-input" type="text" value="price_1Abc123XYZ"><span class="dco-admin-desc">The Stripe Price ID for the onboarding fee.</span></td></tr>
+          <tr><th>Success URL</th><td><input class="dco-admin-input" type="url" value="https://diversiahealth.com/client-welcome/"></td></tr>
+          <tr><th>Cancel URL</th><td><input class="dco-admin-input" type="url" value="https://diversiahealth.com/client-registration/"></td></tr>
+        </table>
+      </div>
+      <div class="dco-admin-section">
+        <h2>Qualification Criteria</h2>
+        <table class="dco-admin-table">
+          <tr><th>Custom Criteria (JSON)</th><td><textarea class="dco-admin-input" style="width:420px;height:72px;font-family:monospace">{"require_latino_focus": true, "minimum_enrollment_goal": 50}</textarea></td></tr>
+          <tr><th>Minimum Budget Threshold</th><td><select class="dco-admin-select"><option>&lt;$10,000</option><option selected>$10,000–$50,000</option><option>$50,000–$200,000</option></select></td></tr>
+          <tr><th>Allowed Org Types</th><td>
+            <label style="display:block;margin:3px 0;font-size:13px"><input type="checkbox" checked> Pharma</label>
+            <label style="display:block;margin:3px 0;font-size:13px"><input type="checkbox" checked> CRO</label>
+            <label style="display:block;margin:3px 0;font-size:13px"><input type="checkbox" checked> Academic Institution</label>
+            <label style="display:block;margin:3px 0;font-size:13px"><input type="checkbox" checked> Hospital/Healthcare System</label>
+            <label style="display:block;margin:3px 0;font-size:13px"><input type="checkbox" checked> Biotech</label>
+          </td></tr>
+        </table>
+      </div>
+      <div class="dco-admin-section">
+        <h2>Security & Notifications</h2>
+        <table class="dco-admin-table">
+          <tr><th>Token TTL (hours)</th><td><input class="dco-admin-input" type="number" value="24" style="width:80px"> hours</td></tr>
+          <tr><th>Rate Limit (per hour)</th><td><input class="dco-admin-input" type="number" value="5" style="width:80px"> attempts</td></tr>
+          <tr><th>Admin Email</th><td><input class="dco-admin-input" type="email" value="admin@diversiahealth.com"></td></tr>
+        </table>
+      </div>
+      <button class="dco-admin-save">Save Settings</button>
+      <div class="dco-webhook-box">
+        <strong>Stripe Webhook URL</strong><br>
+        Configure in Stripe Dashboard → Developers → Webhooks:<br><br>
+        <code>https://diversiahealth.com/wp-json/dco/v1/stripe-webhook</code><br><br>
+        Event: <strong>checkout.session.completed</strong>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== WELCOME EMAIL ====== -->
+<div class="preview-screen" id="screen-email">
+  <div class="email-preview-wrapper">
+    <div class="email-preview-bar"><span></span><span></span><span></span></div>
+    <div class="email-subject">Subject: ¡Bienvenido(a) a Diversia Health! / Welcome to Diversia Health!</div>
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f7f9;padding:30px 0;">
+      <tr><td align="center">
+        <table width="540" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,0.08);">
+          <tr><td style="background:#1B3A5C;padding:32px 40px;text-align:center;"><h1 style="color:#fff;margin:0;font-size:24px;">Diversia Health</h1><p style="color:#A8C8D8;margin:6px 0 0;font-size:12px;text-transform:uppercase;letter-spacing:1px;">Clinical Trial Recruitment Platform</p></td></tr>
+          <tr><td style="padding:36px 40px 20px;">
+            <div style="border-left:4px solid #2E86AB;padding-left:14px;margin-bottom:20px;"><span style="color:#2E86AB;font-size:11px;font-weight:bold;text-transform:uppercase;letter-spacing:1px;">ESPAÑOL</span></div>
+            <h2 style="color:#1B3A5C;margin:0 0 14px;font-size:20px;">¡Bienvenida a Diversia Health, María!</h2>
+            <p style="color:#444;line-height:1.7;margin:0 0 16px;">Es un placer darle la bienvenida. Su organización, <strong>MedResearch Inc.</strong>, ha completado el proceso de incorporación y su cuenta de cliente ya está activa.</p>
+            <div style="background:#f0f7fb;border-radius:6px;padding:18px;margin-bottom:20px;">
+              <p style="margin:0 0 8px;color:#666;font-size:12px;font-weight:bold;text-transform:uppercase;">Sus credenciales de acceso</p>
+              <table width="100%" cellpadding="0" cellspacing="0" style="font-size:13px;">
+                <tr><td style="padding:3px 0;color:#444;width:100px;">Correo:</td><td style="color:#1B3A5C;font-weight:bold;">maria@medresearch.com</td></tr>
+              </table>
+            </div>
+            <div style="text-align:center;margin-bottom:4px;"><a href="#" style="display:inline-block;background:#2E86AB;color:#fff;padding:13px 28px;border-radius:6px;text-decoration:none;font-size:14px;font-weight:bold;">Acceder al Panel →</a></div>
+          </td></tr>
+          <tr><td style="padding:0 40px;"><hr style="border:none;border-top:2px dashed #e0e8ef;"></td></tr>
+          <tr><td style="padding:20px 40px 36px;">
+            <div style="border-left:4px solid #1B3A5C;padding-left:14px;margin-bottom:20px;"><span style="color:#1B3A5C;font-size:11px;font-weight:bold;text-transform:uppercase;letter-spacing:1px;">ENGLISH</span></div>
+            <h2 style="color:#1B3A5C;margin:0 0 14px;font-size:20px;">Welcome to Diversia Health, María!</h2>
+            <p style="color:#444;line-height:1.7;margin:0 0 16px;">We are delighted to welcome <strong>MedResearch Inc.</strong> to the Diversia Health platform. Your client account is now fully active.</p>
+            <div style="background:#f0f7fb;border-radius:6px;padding:18px;margin-bottom:20px;">
+              <p style="margin:0 0 8px;color:#666;font-size:12px;font-weight:bold;text-transform:uppercase;">Your Login Credentials</p>
+              <table width="100%" cellpadding="0" cellspacing="0" style="font-size:13px;">
+                <tr><td style="padding:3px 0;color:#444;width:100px;">Email:</td><td style="color:#1B3A5C;font-weight:bold;">maria@medresearch.com</td></tr>
+              </table>
+              <p style="margin:10px 0 0;color:#888;font-size:11px;">Please change your password after first login.</p>
+            </div>
+            <div style="text-align:center;"><a href="#" style="display:inline-block;background:#1B3A5C;color:#fff;padding:13px 28px;border-radius:6px;text-decoration:none;font-size:14px;font-weight:bold;">Access Your Dashboard →</a></div>
+          </td></tr>
+          <tr><td style="background:#f4f7f9;padding:18px 40px;text-align:center;border-top:1px solid #e0e8ef;"><p style="color:#999;font-size:11px;margin:0;">© 2026 Diversia Health. All rights reserved.</p></td></tr>
+        </table>
+      </td></tr>
+    </table>
+  </div>
+</div>
+
+<script>
+// ── Step 1 validation ────────────────────────────────────────────
+function currentLang() {
+  var w = document.querySelector('#screen-step1 .dco-wrapper');
+  return w ? (w.dataset.lang || 'en') : 'en';
+}
+
+function s1ShowError(input, msgEn, msgEs) {
+  input.classList.add('dco-input--error');
+  // Remove any existing error for this input first
+  var existing = input.closest('.dco-field').querySelector('.dco-field-error');
+  if (existing) existing.remove();
+  var err = document.createElement('span');
+  err.className = 'dco-field-error';
+  err.textContent = currentLang() === 'es' ? msgEs : msgEn;
+  input.closest('.dco-field').appendChild(err);
+}
+
+function s1ClearError(input) {
+  input.classList.remove('dco-input--error');
+  var existing = input.closest('.dco-field') && input.closest('.dco-field').querySelector('.dco-field-error');
+  if (existing) existing.remove();
+}
+
+// Clear error as soon as user starts correcting a field
+document.addEventListener('DOMContentLoaded', function() {
+  ['s1-firstname','s1-lastname','s1-email','s1-org','dco-pw-input','s1-confirm-pw'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener('input', function() { s1ClearError(this); });
+  });
+  // Step 2 — clear errors on correction
+  ['s2-enrollment','s2-timeline','s2-budget-min'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener('input', function() {
+      this.classList.remove('dco-input--error');
+      var field = this.closest('.dco-field');
+      if (field) { var e = field.querySelector('.dco-field-error'); if (e) e.remove(); }
+    });
+  });
+  var orgSel = document.getElementById('s2-org-type');
+  if (orgSel) orgSel.addEventListener('change', function() {
+    this.classList.remove('dco-input--error');
+    var field = this.closest('.dco-field');
+    if (field) { var e = field.querySelector('.dco-field-error'); if (e) e.remove(); }
+  });
+  var targetPop = document.getElementById('s2-target-pop');
+  if (targetPop) targetPop.addEventListener('change', function() {
+    var field = this.closest('.dco-field');
+    if (field) { var e = field.querySelector('.dco-field-error'); if (e) e.remove(); }
+  });
+});
+
+function validateAndContinue() {
+  var lang   = currentLang();
+  var ok     = true;
+
+  var firstName = document.getElementById('s1-firstname');
+  var lastName  = document.getElementById('s1-lastname');
+  var email     = document.getElementById('s1-email');
+  var org       = document.getElementById('s1-org');
+  var pw        = document.getElementById('dco-pw-input');
+  var confirmPw = document.getElementById('s1-confirm-pw');
+
+  // Clear all previous errors
+  [firstName, lastName, email, org, pw, confirmPw].forEach(s1ClearError);
+
+  // First name
+  if (!firstName.value.trim()) {
+    s1ShowError(firstName, 'First name is required.', 'El nombre es obligatorio.');
+    ok = false;
+  }
+
+  // Last name
+  if (!lastName.value.trim()) {
+    s1ShowError(lastName, 'Last name is required.', 'El apellido es obligatorio.');
+    ok = false;
+  }
+
+  // Email
+  if (!email.value.trim()) {
+    s1ShowError(email, 'Email address is required.', 'El correo electrónico es obligatorio.');
+    ok = false;
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
+    s1ShowError(email, 'Please enter a valid email address.', 'Por favor ingrese un correo electrónico válido.');
+    ok = false;
+  }
+
+  // Organization
+  if (!org.value.trim()) {
+    s1ShowError(org, 'Organization name is required.', 'El nombre de la organización es obligatorio.');
+    ok = false;
+  }
+
+  // Password — must be at least 8 chars and reach "Good" strength
+  if (!pw.value) {
+    s1ShowError(pw, 'Password is required.', 'La contraseña es obligatoria.');
+    ok = false;
+  } else if (pw.value.length < 8) {
+    s1ShowError(pw, 'Password must be at least 8 characters.', 'La contraseña debe tener al menos 8 caracteres.');
+    ok = false;
+  } else {
+    var score = 0;
+    if (pw.value.length >= 8)            score++;
+    if (pw.value.length >= 12)           score++;
+    if (/[A-Z]/.test(pw.value))         score++;
+    if (/[0-9]/.test(pw.value))         score++;
+    if (/[^A-Za-z0-9]/.test(pw.value))  score++;
+    if (score < 2) {
+      s1ShowError(pw,
+        'Password is too weak — add uppercase letters, numbers, or symbols.',
+        'La contraseña es muy débil — agregue mayúsculas, números o símbolos.');
+      ok = false;
+    }
+  }
+
+  // Confirm password
+  if (!confirmPw.value) {
+    s1ShowError(confirmPw, 'Please confirm your password.', 'Por favor confirme su contraseña.');
+    ok = false;
+  } else if (confirmPw.value !== pw.value) {
+    s1ShowError(confirmPw, 'Passwords do not match.', 'Las contraseñas no coinciden.');
+    ok = false;
+  }
+
+  if (!ok) {
+    // Scroll to first error
+    var firstErr = document.querySelector('#screen-step1 .dco-input--error');
+    if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  // All valid — advance to Step 2
+  var step2Tab = document.querySelector('.preview-tab[onclick*="step2"]');
+  showScreen('step2', step2Tab);
+}
+
+// Live confirm-password match indicator
+function checkConfirmMatch() {
+  var pw        = document.getElementById('dco-pw-input');
+  var confirmPw = document.getElementById('s1-confirm-pw');
+  // Remove any old match hint
+  var old = confirmPw.parentNode.querySelector('.dco-confirm-match');
+  if (old) old.remove();
+  if (!confirmPw.value || !pw.value) return;
+  var match = document.createElement('span');
+  match.className = 'dco-confirm-match';
+  if (confirmPw.value === pw.value) {
+    match.style.color = '#27ae60';
+    match.textContent = currentLang() === 'es' ? 'Las contraseñas coinciden.' : 'Passwords match.';
+    confirmPw.classList.remove('dco-input--error');
+  } else {
+    match.style.color = '#e74c3c';
+    match.textContent = currentLang() === 'es' ? 'Las contraseñas no coinciden.' : 'Passwords do not match.';
+  }
+  confirmPw.parentNode.appendChild(match);
+}
+
+// Tab switching
+function showScreen(name, tab) {
+  document.querySelectorAll('.preview-screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.preview-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+  tab.classList.add('active');
+}
+
+// Language toggle — scoped to each screen's wrapper
+var langStates = {};
+
+function toggleLang(btn, screenNum) {
+  langStates[screenNum] = langStates[screenNum] === 'es' ? 'en' : 'es';
+  var lang = langStates[screenNum];
+  var wrapper = btn.closest('.dco-wrapper');
+
+  // Toggle button style + label
+  if (lang === 'es') {
+    btn.classList.add('active');
+  } else {
+    btn.classList.remove('active');
+  }
+  btn.querySelector('.lang-label').textContent = lang === 'es' ? 'View in English' : 'Ver en Español';
+
+  // Swap all text nodes
+  wrapper.querySelectorAll('.lang-text').forEach(function(el) {
+    var text = el.dataset[lang];
+    if (text !== undefined) el.textContent = text;
+  });
+
+  // Swap placeholders
+  wrapper.querySelectorAll('[data-placeholder-' + lang + ']').forEach(function(el) {
+    el.placeholder = el.dataset['placeholder' + lang.charAt(0).toUpperCase() + lang.slice(1)];
+  });
+}
+
+// Payment method card selection (preview only)
+var btnLabels = {
+  card:            { en: 'Proceed to Secure Payment',      es: 'Proceder al Pago Seguro' },
+  us_bank_account: { en: 'Proceed to Bank Verification',  es: 'Proceder a Verificación Bancaria' }
+};
+var hintLabels = {
+  card:            { en: 'Secure payment via Stripe',                              es: 'Pago seguro via Stripe' },
+  us_bank_account: { en: "You'll enter your bank details on Stripe's secure page", es: 'Ingresará sus datos bancarios en la página segura de Stripe' }
+};
+
+// ── Tracked selections ──────────────────────────────────────────
+var selectedDisease = { value: null, labelEn: '', labelEs: '' };
+var currentTimelineUnit = 'months'; // 'months' | 'days'
+
+// ── Base enrollment suggestions (participants) ───────────────────
+// Enrollment goal suggestions by disease
+var enrollmentSuggestions = {
+  'obesity':             120,
+  'prediabetes':         150,
+  'diabetes':            200,
+  'metabolic':           150,
+  'cholesterol':         200,
+  'thyroid':             100,
+  'pcos':                 80,
+  'cardiovascular':      250,
+  'hypertension':        200,
+  'heart-failure':       150,
+  'afib':                180,
+  'asthma':              150,
+  'sleep-apnea':         100,
+  'anxiety':             200,
+  'depression':          200,
+  'adhd':                150,
+  'alzheimers':           50,
+  'parkinsons':           60,
+  'migraine':            150,
+  'cognitive':            80,
+  'lupus':                40,
+  'arthritis':           150,
+  'autoimmune':          100,
+  'oncology':            200,
+  'rare-cancer':          30,
+  'ckd':                 150,
+  'liver':               100,
+  'chronic-pain':        150,
+  'gerd':                100,
+  'osteoporosis':        150,
+  'diabetic-neuropathy': 100,
+  'glaucoma':            100,
+  'hiv':                 200,
+  'infectious':          200,
+  'rare-genetic':         25,
+  'rare-pediatric':       25
+};
+
+// ── Base timeline suggestions (months) ───────────────────────────
+var timelineSuggestions = {
+  'obesity':              12,
+  'prediabetes':          18,
+  'diabetes':             24,
+  'metabolic':            18,
+  'cholesterol':          12,
+  'thyroid':              12,
+  'pcos':                 18,
+  'cardiovascular':       36,
+  'hypertension':         24,
+  'heart-failure':        36,
+  'afib':                 30,
+  'asthma':               18,
+  'sleep-apnea':          12,
+  'anxiety':              12,
+  'depression':           18,
+  'adhd':                 12,
+  'alzheimers':           48,
+  'parkinsons':           36,
+  'migraine':             12,
+  'cognitive':            24,
+  'lupus':                30,
+  'arthritis':            24,
+  'autoimmune':           24,
+  'oncology':             36,
+  'rare-cancer':          48,
+  'ckd':                  36,
+  'liver':                30,
+  'chronic-pain':         18,
+  'gerd':                 12,
+  'osteoporosis':         24,
+  'diabetic-neuropathy':  18,
+  'glaucoma':             18,
+  'hiv':                  36,
+  'infectious':           24,
+  'rare-genetic':         48,
+  'rare-pediatric':       48
+};
+
+// ── Master recalculation hub ─────────────────────────────────────
+// Called whenever disease, budget, or org changes
+function updateSuggestions() {
+  if (!selectedDisease.value) return;
+
+  var lang = currentLang2();
+
+  // Budget multiplier (based on min budget)
+  var budgetMin = parseFloat(document.getElementById('s2-budget-min') && document.getElementById('s2-budget-min').value) || 0;
+  var budgetMult;
+  if      (budgetMin < 1000)   budgetMult = 0.50;
+  else if (budgetMin < 5000)   budgetMult = 0.70;
+  else if (budgetMin < 20000)  budgetMult = 0.85;
+  else if (budgetMin < 100000) budgetMult = 1.00;
+  else                         budgetMult = 1.30;
+
+  // Org multiplier
+  var orgSel  = document.getElementById('s2-org-type');
+  var orgVal  = orgSel ? orgSel.value : '';
+  var orgEnrollMult = { researcher: 0.70, cro: 1.00, university: 0.85, pharmaceutical: 1.20 }[orgVal] || 1.00;
+  var orgTimeMult   = { researcher: 0.80, cro: 1.00, university: 1.20, pharmaceutical: 1.20 }[orgVal] || 1.00;
+
+  // --- Enrollment ---
+  var baseEnroll = enrollmentSuggestions[selectedDisease.value];
+  if (baseEnroll) {
+    var suggested = Math.round(baseEnroll * budgetMult * orgEnrollMult);
+    suggested = Math.max(5, suggested); // floor of 5 participants
+    _applyEnrollmentSuggestion(suggested, lang);
+  }
+
+  // --- Timeline ---
+  var baseMonths = timelineSuggestions[selectedDisease.value];
+  if (baseMonths) {
+    var suggestedMonths = Math.round(baseMonths * orgTimeMult);
+    suggestedMonths = Math.max(1, suggestedMonths);
+    var displayVal   = currentTimelineUnit === 'days' ? suggestedMonths * 30 : suggestedMonths;
+    var unitLabel    = currentTimelineUnit === 'days'
+      ? (lang === 'es' ? 'días' : 'days')
+      : (lang === 'es' ? 'meses' : 'months');
+    var diseaseLabel = lang === 'es' ? selectedDisease.labelEs : selectedDisease.labelEn;
+    _applyTimelineSuggestion(displayVal, diseaseLabel, unitLabel, lang);
+  }
+}
+
+// ── Internal: apply enrollment suggestion ────────────────────────
+// Stored silently for admin/AI — not displayed to client
+function _applyEnrollmentSuggestion(suggested, lang) {
+  var input = document.getElementById('s2-enrollment');
+  if (!input) return;
+  input.dataset.aiSuggestion = suggested;
+}
+
+// ── Internal: apply timeline suggestion ──────────────────────────
+// Stored silently for admin/AI — not displayed to client
+function _applyTimelineSuggestion(displayVal, diseaseLabel, unitLabel, lang) {
+  var input = document.getElementById('s2-timeline');
+  if (!input) return;
+  input.dataset.aiSuggestion = displayVal;
+  input.dataset.aiUnit = unitLabel;
+}
+
+// ── Timeline unit toggle ─────────────────────────────────────────
+function setTimelineUnit(unit, btn) {
+  var prevUnit = currentTimelineUnit;
+  currentTimelineUnit = unit;
+
+  // Update button active state
+  document.getElementById('unit-btn-months').classList.toggle('active', unit === 'months');
+  document.getElementById('unit-btn-days').classList.toggle('active', unit === 'days');
+
+  // Convert displayed value if there is one
+  var input = document.getElementById('s2-timeline');
+  if (input && input.value) {
+    var val = parseFloat(input.value);
+    if (!isNaN(val)) {
+      if (prevUnit === 'months' && unit === 'days')   input.value = Math.round(val * 30);
+      if (prevUnit === 'days'   && unit === 'months') input.value = Math.max(1, Math.round(val / 30));
+    }
+    // Update placeholder to match unit
+    input.placeholder = unit === 'days' ? 'e.g. 360' : 'e.g. 18';
+  }
+  updateSuggestions();
+}
+
+
+function currentLang2() {
+  var w = document.querySelector('#screen-step2 .dco-wrapper');
+  return w ? (w.dataset.lang || 'en') : 'en';
+}
+
+// ── Step 2 validation ────────────────────────────────────────────
+function validateStep2() {
+  var lang = currentLang2();
+  var ok   = true;
+
+  function clearFieldErr(field) {
+    var e = field.querySelector('.dco-field-error');
+    if (e) e.remove();
+  }
+  function showFieldErr(field, msgEn, msgEs) {
+    clearFieldErr(field);
+    var e = document.createElement('span');
+    e.className = 'dco-field-error';
+    e.textContent = lang === 'es' ? msgEs : msgEn;
+    field.appendChild(e);
+    ok = false;
+  }
+
+  // 1 ── Trial Type (custom dropdown)
+  var trialBtn   = document.getElementById('trial-type-btn');
+  var trialField = trialBtn.closest('.dco-field');
+  trialBtn.classList.remove('dco-input--error');
+  clearFieldErr(trialField);
+  if (!selectedDisease.value) {
+    trialBtn.classList.add('dco-input--error');
+    showFieldErr(trialField,
+      'Please select a trial disease area.',
+      'Por favor seleccione el área de enfermedad del ensayo.');
+  }
+
+  // 2 ── Target Population (at least one checkbox)
+  var targetPop   = document.getElementById('s2-target-pop');
+  var targetField = targetPop.closest('.dco-field');
+  clearFieldErr(targetField);
+  var anyChecked  = Array.from(targetPop.querySelectorAll('input[type=checkbox]')).some(function(cb) { return cb.checked; });
+  if (!anyChecked) {
+    showFieldErr(targetField,
+      'Please select at least one target population.',
+      'Por favor seleccione al menos una población objetivo.');
+  }
+
+  // 3 ── Organization
+  var orgSel   = document.getElementById('s2-org-type');
+  var orgField = orgSel.closest('.dco-field');
+  orgSel.classList.remove('dco-input--error');
+  clearFieldErr(orgField);
+  if (!orgSel.value) {
+    orgSel.classList.add('dco-input--error');
+    showFieldErr(orgField,
+      'Please select your organization type.',
+      'Por favor seleccione el tipo de organización.');
+  }
+
+  // 4 ── Budget minimum
+  var budgetMin   = document.getElementById('s2-budget-min');
+  var budgetField = budgetMin.closest('.dco-field');
+  budgetMin.classList.remove('dco-input--error');
+  clearFieldErr(budgetField);
+  if (!budgetMin.value || parseFloat(budgetMin.value) <= 0) {
+    budgetMin.classList.add('dco-input--error');
+    showFieldErr(budgetField,
+      'Please enter a minimum budget.',
+      'Por favor ingrese un presupuesto mínimo.');
+  }
+
+  // 5 ── Enrollment Goal
+  var enrollment   = document.getElementById('s2-enrollment');
+  var enrollField  = enrollment.closest('.dco-field');
+  enrollment.classList.remove('dco-input--error');
+  clearFieldErr(enrollField);
+  if (!enrollment.value || parseInt(enrollment.value, 10) < 1) {
+    enrollment.classList.add('dco-input--error');
+    showFieldErr(enrollField,
+      'Enrollment goal is required.',
+      'La meta de participantes es obligatoria.');
+  }
+
+  // 6 ── Timeline
+  var timeline      = document.getElementById('s2-timeline');
+  var timelineField = timeline.closest('.dco-field');
+  timeline.classList.remove('dco-input--error');
+  clearFieldErr(timelineField);
+  if (!timeline.value || parseInt(timeline.value, 10) < 1) {
+    timeline.classList.add('dco-input--error');
+    showFieldErr(timelineField,
+      'Trial timeline is required.',
+      'La duración del ensayo es obligatoria.');
+  }
+
+  if (!ok) {
+    // Scroll to first visible error message
+    var firstErrMsg = document.querySelector('#screen-step2 .dco-field-error');
+    if (firstErrMsg) firstErrMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  // All valid — advance to evaluation
+  var loadingTab = document.querySelector('.preview-tab[onclick*="loading"]');
+  showScreen('loading', loadingTab);
+}
+
+// Organization "Other" toggle
+function toggleOrgOther(sel) {
+  var other = document.getElementById('s2-org-other');
+  other.style.display = sel.value === 'other' ? 'block' : 'none';
+  if (sel.value === 'other') other.focus();
+}
+
+// Custom dropdown
+function toggleDropdown(wrapperId) {
+  var wrap = document.getElementById(wrapperId);
+  wrap.classList.toggle('open');
+}
+
+function selectTrialType(item, value, labelEn, labelEs, isRare) {
+  var wrap = document.getElementById('trial-type-wrap');
+  var btn  = document.getElementById('trial-type-btn');
+  var disp = document.getElementById('trial-type-display');
+  var otherInput = document.getElementById('trial-type-other-input');
+
+  // Deselect all items, mark this one selected
+  wrap.querySelectorAll('.dco-custom-select__item').forEach(function(el) { el.classList.remove('selected'); });
+  item.classList.add('selected');
+
+  // Update button display
+  btn.classList.remove('placeholder');
+  var wrapper = btn.closest('.dco-wrapper');
+  var lang = wrapper ? (wrapper.dataset.lang || 'en') : 'en';
+  disp.dataset.en = labelEn;
+  disp.dataset.es = labelEs;
+  disp.textContent = lang === 'es' ? labelEs : labelEn;
+
+  // Show RARE note in button if applicable
+  if (isRare) {
+    if (!btn.querySelector('.dco-rare-badge')) {
+      var badge = document.createElement('span');
+      badge.className = 'dco-rare-badge';
+      badge.textContent = 'RARE';
+      badge.style.cssText = 'margin-left:8px;pointer-events:none';
+      btn.appendChild(badge);
+    }
+  } else {
+    var existing = btn.querySelector('.dco-rare-badge');
+    if (existing) existing.remove();
+  }
+
+  // Show/hide "Other" text input
+  otherInput.style.display = value === 'other' ? 'block' : 'none';
+  if (value === 'other') otherInput.focus();
+
+  // Clear any trial-type error and store selection
+  btn.classList.remove('dco-input--error');
+  var btnField = btn.closest('.dco-field');
+  if (btnField) { var fe = btnField.querySelector('.dco-field-error'); if (fe) fe.remove(); }
+
+  selectedDisease = { value: value, labelEn: labelEn, labelEs: labelEs };
+  updateSuggestions();
+
+  wrap.classList.remove('open');
+}
+
+// Close dropdown on outside click
+document.addEventListener('click', function(e) {
+  document.querySelectorAll('.dco-custom-select.open').forEach(function(wrap) {
+    if (!wrap.contains(e.target)) wrap.classList.remove('open');
+  });
+});
+
+// Media tab switcher
+function switchMediaTab(tab, btn) {
+  document.querySelectorAll('.dco-media-tab').forEach(function(b) { b.classList.remove('active'); });
+  document.querySelectorAll('.dco-media-pane').forEach(function(p) { p.classList.remove('active'); });
+  btn.classList.add('active');
+  document.getElementById('media-pane-' + tab).classList.add('active');
+}
+
+// Image preview
+function previewImages(input) {
+  var thumbs = document.getElementById('media-thumbs');
+  Array.from(input.files).forEach(function(file) {
+    if (!file.type.startsWith('image/')) return;
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var wrap = document.createElement('div');
+      wrap.className = 'dco-media-thumb-wrap';
+      var img = document.createElement('img');
+      img.className = 'dco-media-thumb';
+      img.src = e.target.result;
+      img.alt = file.name;
+      var rm = document.createElement('button');
+      rm.className = 'dco-media-thumb-rm';
+      rm.type = 'button';
+      rm.textContent = '✕';
+      rm.onclick = function() { wrap.remove(); };
+      wrap.appendChild(img);
+      wrap.appendChild(rm);
+      thumbs.appendChild(wrap);
+    };
+    reader.readAsDataURL(file);
+  });
+  input.value = '';
+}
+
+// Video file upload preview
+function previewVideos(input) {
+  var list = document.getElementById('video-file-list');
+  Array.from(input.files).forEach(function(file) {
+    var sizeMB = (file.size / (1024 * 1024)).toFixed(1);
+
+    var item = document.createElement('div');
+    item.className = 'dco-video-file-item';
+
+    var icon = document.createElement('span');
+    icon.className = 'dco-video-file-item__icon';
+    icon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>';
+
+    var info = document.createElement('div');
+    info.className = 'dco-video-file-item__info';
+
+    var name = document.createElement('div');
+    name.className = 'dco-video-file-item__name';
+    name.textContent = file.name;
+
+    var size = document.createElement('div');
+    size.className = 'dco-video-file-item__size';
+    size.textContent = sizeMB + ' MB';
+
+    info.appendChild(name);
+    info.appendChild(size);
+
+    var rm = document.createElement('button');
+    rm.type = 'button';
+    rm.className = 'dco-video-file-item__rm';
+    rm.title = 'Remove';
+    rm.textContent = '✕';
+    rm.onclick = function() { item.remove(); };
+
+    item.appendChild(icon);
+    item.appendChild(info);
+    item.appendChild(rm);
+    list.appendChild(item);
+  });
+  input.value = '';
+}
+
+// Video rows
+function addVideoRow() {
+  var list = document.getElementById('video-url-list');
+  var row = document.createElement('div');
+  row.className = 'dco-video-row';
+  row.innerHTML = '<input class="dco-input" type="url" placeholder="https://youtube.com/watch?v=... or https://vimeo.com/...">' +
+                  '<button type="button" class="dco-video-remove" onclick="removeVideoRow(this)" title="Remove">✕</button>';
+  list.appendChild(row);
+  row.querySelector('input').focus();
+}
+
+function removeVideoRow(btn) {
+  var list = document.getElementById('video-url-list');
+  if (list.children.length > 1) {
+    btn.closest('.dco-video-row').remove();
+  } else {
+    btn.closest('.dco-video-row').querySelector('input').value = '';
+  }
+}
+
+// Password strength checker
+function updatePasswordStrength(input) {
+  var pw = input.value;
+  var fill = document.getElementById('dco-pw-fill');
+  var hint = document.getElementById('dco-pw-hint');
+
+  if (!pw) {
+    fill.style.width = '0%';
+    hint.textContent = '';
+    hint.dataset.en = '';
+    hint.dataset.es = '';
+    hint.style.color = '';
+    return;
+  }
+
+  var score = 0;
+  if (pw.length >= 8)              score++;   // meets min length
+  if (pw.length >= 12)             score++;   // good length
+  if (/[A-Z]/.test(pw))           score++;   // uppercase
+  if (/[0-9]/.test(pw))           score++;   // number
+  if (/[^A-Za-z0-9]/.test(pw))   score++;   // special char
+
+  var result;
+  if (score <= 2) {
+    result = { en: 'Poor',    es: 'Débil',    color: '#e74c3c', width: '33%' };
+  } else if (score <= 3) {
+    result = { en: 'Good',    es: 'Buena',    color: '#f39c12', width: '66%' };
+  } else {
+    result = { en: 'Perfect', es: 'Perfecta', color: '#27ae60', width: '100%' };
+  }
+
+  fill.style.width      = result.width;
+  fill.style.background = result.color;
+  hint.style.color      = result.color;
+
+  var wrapper = input.closest('.dco-wrapper');
+  var lang = wrapper ? (wrapper.dataset.lang || 'en') : 'en';
+  hint.dataset.en  = result.en;
+  hint.dataset.es  = result.es;
+  hint.textContent = result[lang];
+}
+
+function selectPayMethod(card, method) {
+  document.querySelectorAll('#preview-pay-grid .dco-pay-method-card').forEach(function(c) {
+    c.classList.remove('selected');
+  });
+  card.classList.add('selected');
+
+  // Show/hide ACH info panel
+  var achInfo = document.getElementById('preview-ach-info');
+  if (method === 'us_bank_account') {
+    achInfo.classList.add('visible');
+  } else {
+    achInfo.classList.remove('visible');
+  }
+
+  // Update button label + hint
+  var wrapper  = card.closest('.dco-wrapper');
+  var lang     = wrapper ? (wrapper.dataset.lang || 'en') : 'en';
+  var bLabel   = btnLabels[method] || btnLabels.card;
+  var hLabel   = hintLabels[method] || hintLabels.card;
+  var labelEl  = document.getElementById('preview-pay-label');
+  var hintEl   = document.getElementById('preview-pay-hint');
+  if (labelEl) { labelEl.dataset.en = bLabel.en; labelEl.dataset.es = bLabel.es; labelEl.textContent = bLabel[lang]; }
+  if (hintEl)  { hintEl.dataset.en  = hLabel.en; hintEl.dataset.es  = hLabel.es; hintEl.textContent  = hLabel[lang]; }
+
+  document.getElementById('preview-pay-btn').disabled = false;
+}
+</script>
+</body>
+</html>
