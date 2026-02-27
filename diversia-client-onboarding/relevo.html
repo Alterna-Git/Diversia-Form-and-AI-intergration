@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Relevo y Términos de Servicio — Diversia Health</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f4f7f9;
+      color: #2c3e50;
+      line-height: 1.75;
+      font-size: 15px;
+    }
+
+    /* ── Header ── */
+    .rel-header {
+      background: linear-gradient(135deg, #1B3A5C 0%, #0d2340 100%);
+      padding: 36px 0 30px;
+      text-align: center;
+      border-bottom: 4px solid #2E86AB;
+    }
+    .rel-header__logo {
+      font-size: 22px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.5px;
+    }
+    .rel-header__sub {
+      font-size: 11px;
+      color: #A8C8D8;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-top: 4px;
+    }
+    .rel-header__badge {
+      display: inline-block;
+      margin-top: 16px;
+      background: rgba(46,134,171,0.25);
+      border: 1px solid rgba(46,134,171,0.5);
+      color: #A8C8D8;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 20px;
+    }
+
+    /* ── Page layout ── */
+    .rel-body {
+      max-width: 760px;
+      margin: 40px auto 60px;
+      padding: 0 20px;
+    }
+
+    /* ── Document card ── */
+    .rel-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+
+    .rel-card__top {
+      background: linear-gradient(135deg, #1B3A5C 0%, #22508a 100%);
+      padding: 30px 36px 26px;
+    }
+    .rel-card__title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.3;
+    }
+    .rel-card__org {
+      font-size: 13px;
+      color: #A8C8D8;
+      margin-top: 6px;
+    }
+
+    .rel-card__content {
+      padding: 32px 36px 36px;
+    }
+
+    /* ── Sections ── */
+    .rel-section {
+      margin-bottom: 28px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid #e8edf2;
+    }
+    .rel-section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .rel-section__heading {
+      font-size: 14px;
+      font-weight: 800;
+      color: #1B3A5C;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .rel-section__num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      background: #2E86AB;
+      color: #fff;
+      border-radius: 50%;
+      font-size: 11px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .rel-section p {
+      color: #3d4f60;
+      margin-bottom: 10px;
+    }
+    .rel-section p:last-child { margin-bottom: 0; }
+
+    .rel-section ul {
+      margin: 8px 0 10px 0;
+      padding-left: 0;
+      list-style: none;
+    }
+    .rel-section ul li {
+      color: #3d4f60;
+      padding: 5px 0 5px 22px;
+      position: relative;
+    }
+    .rel-section ul li::before {
+      content: '–';
+      position: absolute;
+      left: 6px;
+      color: #2E86AB;
+      font-weight: 700;
+    }
+
+    /* ── Callout boxes ── */
+    .rel-callout {
+      background: #eaf4fb;
+      border-left: 4px solid #2E86AB;
+      border-radius: 0 8px 8px 0;
+      padding: 12px 16px;
+      margin: 12px 0;
+      font-size: 14px;
+      color: #1B3A5C;
+      font-weight: 600;
+      line-height: 1.6;
+    }
+    .rel-callout--warn {
+      background: #fff8e1;
+      border-color: #f39c12;
+      color: #7d5500;
+    }
+    .rel-callout--critical {
+      background: #fdf0ef;
+      border-color: #e74c3c;
+      color: #8b1a1a;
+    }
+
+    /* ── Sub-scenario boxes (4A / 4B) ── */
+    .rel-scenario {
+      background: #f8fafc;
+      border: 1px solid #d6e0ea;
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin: 10px 0;
+    }
+    .rel-scenario__label {
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #2E86AB;
+      margin-bottom: 8px;
+    }
+    .rel-scenario p { font-size: 14px; }
+
+    /* ── Acceptance footer ── */
+    .rel-accept {
+      background: linear-gradient(135deg, rgba(46,134,171,0.08) 0%, rgba(27,58,92,0.06) 100%);
+      border: 1.5px solid rgba(46,134,171,0.3);
+      border-radius: 10px;
+      padding: 20px 22px;
+      margin-top: 32px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+    .rel-accept__icon {
+      font-size: 28px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .rel-accept__text {
+      font-size: 13.5px;
+      color: #1B3A5C;
+      font-weight: 600;
+      line-height: 1.65;
+    }
+    .rel-accept__sig {
+      font-size: 12px;
+      color: #6b7e8f;
+      margin-top: 6px;
+      font-style: italic;
+    }
+
+    /* ── Print button ── */
+    .rel-actions {
+      text-align: center;
+      margin-top: 28px;
+    }
+    .rel-btn-print {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #1B3A5C;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 22px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .rel-btn-print:hover { background: #2E86AB; }
+
+    /* ── Footer ── */
+    .rel-footer {
+      text-align: center;
+      font-size: 12px;
+      color: #9aabb8;
+      margin-top: 36px;
+      padding-bottom: 20px;
+    }
+
+    @media print {
+      body { background: #fff; font-size: 13px; }
+      .rel-header { background: #1B3A5C !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .rel-card { box-shadow: none; border: 1px solid #ccc; }
+      .rel-actions, .rel-footer { display: none; }
+    }
+
+    @media (max-width: 600px) {
+      .rel-card__top, .rel-card__content { padding: 20px 20px; }
+      .rel-body { margin-top: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="rel-header">
+    <div class="rel-header__logo">Diversia Health</div>
+    <div class="rel-header__sub">Clinical Trial Recruitment Platform</div>
+    <div class="rel-header__badge">Documento Legal — Solo Lectura</div>
+  </div>
+
+  <div class="rel-body">
+    <div class="rel-card">
+
+      <!-- Document title bar -->
+      <div class="rel-card__top">
+        <div class="rel-card__title">Relevo y Términos de Servicio<br>Activación de Campañas</div>
+        <div class="rel-card__org">Diversia Health · Versión vigente</div>
+      </div>
+
+      <div class="rel-card__content">
+
+        <!-- Section 1 -->
+        <div class="rel-section">
+          <div class="rel-section__heading">
+            <span class="rel-section__num">1</span>
+            Propósito y alcance
+          </div>
+          <p>Este relevo establece los términos bajo los cuales Diversia ejecutará servicios de desarrollo, configuración y activación de campañas digitales relacionadas a reclutamiento/educación/orientación para estudios clínicos, incluyendo, sin limitarse a: formularios de captación, copies, artes, variaciones creativas, configuración de anuncios, segmentación, y publicación/activación conforme a los parámetros aprobados por el Cliente.</p>
+        </div>
+
+        <!-- Section 2 -->
+        <div class="rel-section">
+          <div class="rel-section__heading">
+            <span class="rel-section__num">2</span>
+            Declaración de veracidad y responsabilidad sobre la información
+          </div>
+          <p>Al someter este formulario, usted declara y garantiza que toda la información suministrada para criterios de la campaña (incluyendo nombre del estudio, elegibilidad, ubicación, criterios, mensajes, disclaimers, restricciones, aprobaciones institucionales, enlaces, teléfonos, y cualquier dato operativo) es correcta, vigente y autorizada para uso en comunicación pública.</p>
+          <p>Usted acepta que:</p>
+          <ul>
+            <li>Diversia no será responsable por resultados adversos, rechazos, o pausas de campaña derivados de información incorrecta, incompleta, desactualizada o no autorizada provista por el Cliente.</li>
+            <li>Usted es responsable de validar internamente (con su equipo, investigador, patrocinador, CRO, centro clínico, comité/IRB u oficiales de cumplimiento) que el contenido y mensajes cumplen con los requerimientos aplicables a su estudio/organización.</li>
+          </ul>
+        </div>
+
+        <!-- Section 3 -->
+        <div class="rel-section">
+          <div class="rel-section__heading">
+            <span class="rel-section__num">3</span>
+            Compromiso de Diversia: entrega de insumos y proceso de producción
+          </div>
+          <p>Tras el "submit", Diversia se compromete a:</p>
+          <ul>
+            <li>Proveer al Cliente los insumos pertinentes según el alcance contratado: artes, copies, mensajes, estructura de formulario, recomendaciones de campaña, y/o documentos de referencia necesarios para revisión y aprobación.</li>
+            <li>Mantener comunicación para coordinar los siguientes pasos del proceso.</li>
+          </ul>
+        </div>
+
+        <!-- Section 4 -->
+        <div class="rel-section">
+          <div class="rel-section__heading">
+            <span class="rel-section__num">4</span>
+            Contenido: dos escenarios (Cliente provee vs. Diversia desarrolla)
+          </div>
+          <div class="rel-scenario">
+            <div class="rel-scenario__label">A) Si el Cliente suministra contenido</div>
+            <p>Usted se compromete a entregar a tiempo los materiales requeridos (logos, fotos, textos, links, aprobaciones, disclaimers, etc.). Una vez el contenido sea recibido y validado para producción, Diversia preparará las piezas y le notificará cuando estén listas para aprobación y/o activación.</p>
+          </div>
+          <div class="rel-scenario">
+            <div class="rel-scenario__label">B) Si el Cliente no suministra contenido</div>
+            <p>Usted autoriza a Diversia a desarrollar el contenido (copies, artes, estructura de formulario y variantes creativas) basado en la información provista. Diversia le notificará para revisión. La campaña no se activará hasta recibir su aprobación (según Sección 5).</p>
+          </div>
+        </div>
+
+        <!-- Section 5 -->
+        <div class="rel-section">
+          <div class="rel-section__heading">
+            <span class="rel-section__num">5</span>
+            Aprobación del Cliente y autorización de publicación
+          </div>
+          <p>Antes de activar la campaña, el Cliente deberá aprobar:</p>
+          <ul>
+            <li>Copies finales, artes y variantes creativas (si aplica)</li>
+            <li>Criterios/mensajes principales y disclaimers</li>
+            <li>Destinos (landing page, formulario, WhatsApp, llamadas, etc.)</li>
+            <li>Parámetros operacionales acordados (fechas, presupuesto, regiones, etc.)</li>
+          </ul>
+          <div class="rel-callout">
+            La aprobación del Cliente constituye autorización expresa para publicación. Cualquier retraso en aprobar puede retrasar la fecha de activación sin responsabilidad para Diversia.
+          </div>
+        </div>
+
+        <!-- Section 6 -->
+        <div class="rel-section">
+          <div class="rel-section__heading">
+            <span class="rel-section__num">6</span>
+            Pago, inicio y activación de campaña
+          </div>
+          <p>Una vez el Cliente emite el pago (o se confirma según el acuerdo/paquete seleccionado):</p>
+          <ul>
+            <li>Diversia iniciará el flujo operativo final y se pondrá en comunicación para coordinar activación.</li>
+            <li>Si el contenido ya estaba aprobado, Diversia emitirá una notificación confirmando el momento en que la campaña quede activada.</li>
+          </ul>
+          <div class="rel-callout--warn rel-callout">
+            <strong>Importante:</strong> Someter el formulario no equivale a activación automática; la activación ocurre tras (i) insumos, (ii) aprobación, y (iii) pago confirmado, según aplique.
+          </div>
+        </div>
+
+        <!-- Section 7 -->
+        <div class="rel-section">
+          <div class="rel-section__heading">
+            <span class="rel-section__num">7</span>
+            Regla crítica: campaña activa = no se editan detalles
+          </div>
+          <div class="rel-callout--critical rel-callout">
+            Una vez la campaña esté <strong>ACTIVA</strong>, el Cliente acepta y reconoce que no se podrán editar criterios, mensajes, artes, copies, segmentación base, destino, ni detalles esenciales hasta que la campaña concluya, salvo pausa total según la Sección 8.
+          </div>
+          <p>Si el Cliente solicita cambios luego de activada, el Cliente entiende que puede requerir:</p>
+          <ul>
+            <li>Pausar y cerrar la campaña activa, y</li>
+            <li>Iniciar una campaña nueva, lo cual puede conllevar costos adicionales, nuevo ciclo de producción, y/o nueva aprobación.</li>
+          </ul>
+        </div>
+
+        <!-- Section 8 -->
+        <div class="rel-section">
+          <div class="rel-section__heading">
+            <span class="rel-section__num">8</span>
+            Cambios, pausas, incumplimiento y eventos fuera de control
+          </div>
+          <ul>
+            <li>Diversia podrá pausar una campaña si detecta incumplimientos, riesgos de cumplimiento, problemas de calidad de datos, restricciones de plataforma, o requerimientos de revisión adicional.</li>
+            <li>Diversia no garantiza aprobación por parte de plataformas publicitarias, ya que existen políticas y revisiones automáticas/manuales fuera de nuestro control.</li>
+            <li>Si el Cliente incumple con entregar insumos, aprobaciones o pagos, Diversia podrá detener el proceso hasta que el incumplimiento sea subsanado.</li>
+          </ul>
+        </div>
+
+        <!-- Section 9 -->
+        <div class="rel-section">
+          <div class="rel-section__heading">
+            <span class="rel-section__num">9</span>
+            Propiedad intelectual y licencias de uso
+          </div>
+          <ul>
+            <li>El Cliente garantiza que posee o tiene licencia para usar cualquier marca, logo, imagen, testimonio, video, o material que entregue a Diversia.</li>
+            <li>El Cliente otorga a Diversia una licencia limitada para usar esos materiales únicamente para producir y ejecutar la campaña.</li>
+            <li>Las piezas creativas producidas por Diversia se consideran entregables del servicio conforme al paquete contratado; el alcance de uso (duración, territorios, reutilización) se rige por el acuerdo comercial aplicable.</li>
+          </ul>
+        </div>
+
+        <!-- Section 10 -->
+        <div class="rel-section">
+          <div class="rel-section__heading">
+            <span class="rel-section__num">10</span>
+            Comunicaciones y notificaciones
+          </div>
+          <p>Usted autoriza a Diversia a comunicarse por correo, teléfono, SMS/WhatsApp u otros medios provistos en el formulario para:</p>
+          <ul>
+            <li>Solicitar insumos, enviar artes/copies, coordinar aprobaciones</li>
+            <li>Confirmar pago, y</li>
+            <li>Notificar activación, pausas o cierre de campaña.</li>
+          </ul>
+        </div>
+
+        <!-- Section 11 -->
+        <div class="rel-section">
+          <div class="rel-section__heading">
+            <span class="rel-section__num">11</span>
+            Privacidad y datos
+          </div>
+          <p>El Cliente reconoce que:</p>
+          <ul>
+            <li>Los formularios y campañas pueden recopilar información de personas interesadas (leads).</li>
+            <li>Diversia manejará la información conforme a prácticas razonables de privacidad y seguridad operacional.</li>
+            <li>El Cliente es responsable de asegurar que su uso de datos y mensajes cumpla con las políticas aplicables a su estudio/organización (incluyendo, si aplica, requisitos de consentimiento, políticas de privacidad, y cumplimiento institucional).</li>
+          </ul>
+        </div>
+
+        <!-- Section 12 -->
+        <div class="rel-section">
+          <div class="rel-section__heading">
+            <span class="rel-section__num">12</span>
+            Limitación de responsabilidad (servicio de mercadeo y comunicación)
+          </div>
+          <p>Usted entiende y acepta que Diversia provee un servicio de comunicación/mercadeo y ejecución de campañas, y que:</p>
+          <ul>
+            <li>No se garantizan resultados específicos (ej. número de leads, elegibilidad final, enrolamiento o tasas de conversión).</li>
+            <li>Los resultados pueden variar por múltiples factores (presupuesto, mercado, temporada, criterios, restricciones de plataforma, disponibilidad del equipo clínico, etc.).</li>
+          </ul>
+        </div>
+
+        <!-- Section 13 -->
+        <div class="rel-section">
+          <div class="rel-section__heading">
+            <span class="rel-section__num">13</span>
+            Aceptación expresa
+          </div>
+          <p>Al marcar este relevo y someter el formulario, usted:</p>
+          <ul>
+            <li>Declara que leyó, entendió y aceptó estos términos,</li>
+            <li>Confirma la veracidad de la información suministrada,</li>
+            <li>Autoriza a Diversia a iniciar el proceso de producción, revisión, aprobación, pago y activación conforme a lo aquí descrito,</li>
+            <li>Reconoce la regla de "campaña activa = no cambios" hasta conclusión, salvo cierre e inicio de una nueva campaña.</li>
+          </ul>
+        </div>
+
+        <!-- Acceptance statement -->
+        <div class="rel-accept">
+          <div class="rel-accept__icon">✍️</div>
+          <div>
+            <div class="rel-accept__text">
+              He leído y acepto el Relevo y Términos de Servicio para Activación de Campañas de Diversia Health. Declaro que la información suministrada es correcta y autorizo el inicio del proceso conforme a lo aquí establecido.
+            </div>
+            <div class="rel-accept__sig">Firma electrónica/consentimiento: Marcar la casilla en el formulario de pago constituye firma electrónica y aceptación vinculante.</div>
+          </div>
+        </div>
+
+        <!-- Print / Close -->
+        <div class="rel-actions">
+          <button class="rel-btn-print" onclick="window.print()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            Imprimir / Guardar PDF
+          </button>
+        </div>
+
+      </div><!-- /.rel-card__content -->
+    </div><!-- /.rel-card -->
+
+    <div class="rel-footer">
+      © Diversia Health · Documento de aceptación de términos de servicio · Uso interno y del cliente
+    </div>
+  </div>
+
+</body>
+</html>
