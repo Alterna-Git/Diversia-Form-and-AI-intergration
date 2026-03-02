@@ -4,8 +4,8 @@
  * Plugin URI: https://diversiahealth.com
  * Description: Multi-step client registration with AI qualification (OpenAI GPT-4o) and Stripe payment gating. Only qualified clients gain access to payment and are provisioned as active clients.
  * Version: 1.0.0
- * Author: Alterna Agency
- * Author URI: https://diversiahealth.com
+ * Author: Jimmy
+ * Author URI: mailto:Jimmy@alternaagancy.com
  * License: GPL v2 or later
  * Text Domain: diversia-client-onboarding
  */
