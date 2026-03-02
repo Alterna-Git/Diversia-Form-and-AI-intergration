@@ -23,6 +23,7 @@ define('DCO_TEXT_DOMAIN', 'diversia-client-onboarding');
 // Load all class files
 require_once DCO_PLUGIN_DIR . 'includes/class-database.php';
 require_once DCO_PLUGIN_DIR . 'includes/class-admin-settings.php';
+require_once DCO_PLUGIN_DIR . 'includes/class-applications-admin.php';
 require_once DCO_PLUGIN_DIR . 'includes/class-ai-parameters.php';
 require_once DCO_PLUGIN_DIR . 'includes/class-rate-limiter.php';
 require_once DCO_PLUGIN_DIR . 'includes/class-qualification-token.php';
@@ -48,6 +49,7 @@ class Diversia_Client_Onboarding {
         add_action('init',               array($this, 'init'));
         add_action('admin_init',         array('DCO_Database',       'check_version'));
         add_action('admin_init',         array('DCO_Admin_Settings',  'init'));
+        add_action('admin_init',         array('DCO_Applications_Admin', 'init'));
         add_action('admin_init',         array('DCO_AI_Parameters',   'init'));
         add_action('rest_api_init',      array('DCO_Stripe_Webhook', 'register_route'));
         add_action('wp_enqueue_scripts', array($this, 'enqueue_frontend_assets'));

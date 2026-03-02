@@ -100,6 +100,10 @@ class DCO_Admin_Settings {
                    style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#2e86ab;color:#fff;border-radius:5px;text-decoration:none;font-weight:600;font-size:13px;">
                     ⚙ Configure AI Qualification Parameters →
                 </a>
+                <a href="<?php echo esc_url(admin_url('options-general.php?page=dco-applications')); ?>"
+                   style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#1b3a5c;color:#fff;border-radius:5px;text-decoration:none;font-weight:600;font-size:13px;margin-left:8px;">
+                    📊 View Client Applications →
+                </a>
                 <span style="margin-left:10px;color:#666;font-size:13px;">Set the criteria the AI uses to evaluate all client applications.</span>
             </p>
             <hr style="margin:16px 0 24px;">
