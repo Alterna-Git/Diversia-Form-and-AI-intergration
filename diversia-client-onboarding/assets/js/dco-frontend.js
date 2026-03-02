@@ -500,83 +500,69 @@
 
 /* ==========================================================================
    Step 2 — Disease dropdown, org toggle, timeline unit, media upload
-   (Plain JS — no jQuery dependency needed for these UI helpers)
+   All assigned to window to guarantee global scope regardless of how WP loads the script
    ========================================================================== */
 
-// ── Disease custom dropdown ──────────────────────────────────────────────────
-function dcoToggleDropdown(wrapId) {
+window.dcoToggleDropdown = function(wrapId) {
     var wrap = document.getElementById(wrapId);
     if (!wrap) return;
     var isOpen = wrap.classList.contains('open');
-    // Close all open dropdowns first
     document.querySelectorAll('.dco-custom-select.open').forEach(function(el) {
         el.classList.remove('open');
     });
     if (!isOpen) wrap.classList.add('open');
-}
+};
 
-// Close dropdown when clicking outside
-document.addEventListener('click', function(e) {
-    if (!e.target.closest('.dco-custom-select')) {
-        document.querySelectorAll('.dco-custom-select.open').forEach(function(el) {
-            el.classList.remove('open');
-        });
-    }
-});
-
-function dcoSelectTrialType(el, labelEn, labelEs, isOther) {
+window.dcoSelectTrialType = function(el, labelEn, labelEs, isOther) {
     var display = document.getElementById('dco-trial-type-display');
     var hidden  = document.getElementById('dco-trial-type-value');
     var btn     = document.getElementById('dco-trial-type-btn');
     var other   = document.getElementById('dco-trial-type-other');
     var wrap    = document.getElementById('dco-trial-type-wrap');
-
-    // Detect active language
-    var lang = (document.documentElement.lang || 'en').substring(0, 2);
-    var label = (lang === 'es' && labelEs) ? labelEs : labelEn;
-
+    var langBtn = document.getElementById('dco-lang-btn');
+    var lang    = (langBtn && langBtn.classList.contains('dco-lang-toggle--active')) ? 'es' : 'en';
+    var label   = (lang === 'es' && labelEs) ? labelEs : labelEn;
     if (display) display.textContent = label;
     if (hidden)  hidden.value = labelEn;
     if (btn)     btn.classList.add('dco-custom-select__btn--selected');
     if (wrap)    wrap.classList.remove('open');
     if (other)   other.style.display = isOther ? 'block' : 'none';
-}
+    if (!isOther && other) other.value = '';
+};
 
-// ── Organization "Other" text reveal ─────────────────────────────────────────
-function dcoToggleOrgOther(sel) {
+window.dcoToggleOrgOther = function(sel) {
     var other = document.getElementById('dco-org-other');
     if (!other) return;
     other.style.display = (sel.value === 'Other') ? 'block' : 'none';
     if (sel.value !== 'Other') other.value = '';
-}
+};
 
-// ── Timeline unit toggle (Months / Days) ─────────────────────────────────────
-function dcoSetTimelineUnit(unit) {
+window.dcoSetTimelineUnit = function(unit) {
     var hidden = document.getElementById('dco-timeline-unit');
     var btnM   = document.getElementById('dco-unit-months');
     var btnD   = document.getElementById('dco-unit-days');
     if (hidden) hidden.value = unit;
     if (btnM)   btnM.classList.toggle('dco-unit-btn--active', unit === 'months');
     if (btnD)   btnD.classList.toggle('dco-unit-btn--active', unit === 'days');
-}
+};
 
-// ── Media tab switcher ────────────────────────────────────────────────────────
-function dcoSwitchMediaTab(tab, btn) {
-    // Tabs
+window.dcoSwitchMediaTab = function(tab, btn) {
     document.querySelectorAll('.dco-media-tab').forEach(function(t) {
         t.classList.remove('dco-media-tab--active');
     });
-    btn.classList.add('dco-media-tab--active');
-    // Panes
+    if (btn) btn.classList.add('dco-media-tab--active');
     document.querySelectorAll('.dco-media-pane').forEach(function(p) {
         p.classList.remove('dco-media-pane--active');
+        p.style.display = 'none';
     });
     var pane = document.getElementById('dco-pane-' + tab);
-    if (pane) pane.classList.add('dco-media-pane--active');
-}
+    if (pane) {
+        pane.classList.add('dco-media-pane--active');
+        pane.style.display = 'block';
+    }
+};
 
-// ── Image preview ─────────────────────────────────────────────────────────────
-function dcoPreviewImages(input) {
+window.dcoPreviewImages = function(input) {
     var container = document.getElementById('dco-img-thumbs');
     if (!container) return;
     container.innerHTML = '';
@@ -600,33 +586,30 @@ function dcoPreviewImages(input) {
         };
         reader.readAsDataURL(file);
     });
-}
+};
 
-// ── Video URL rows ────────────────────────────────────────────────────────────
-function dcoAddVideoRow() {
+window.dcoAddVideoRow = function() {
     var list = document.getElementById('dco-video-url-list');
     if (!list) return;
     var row = document.createElement('div');
     row.className = 'dco-video-row';
     row.innerHTML = '<input class="dco-input" type="url" name="promo_video_urls[]"'
         + ' placeholder="https://youtube.com/watch?v=... or https://vimeo.com/...">'
-        + '<button type="button" class="dco-video-remove" onclick="dcoRemoveVideoRow(this)" title="Remove">✕</button>';
+        + '<button type="button" class="dco-video-remove" onclick="window.dcoRemoveVideoRow(this)" title="Remove">✕</button>';
     list.appendChild(row);
-}
+};
 
-function dcoRemoveVideoRow(btn) {
+window.dcoRemoveVideoRow = function(btn) {
     var row = btn.closest('.dco-video-row');
     var list = document.getElementById('dco-video-url-list');
-    // Keep at least one row
     if (list && list.querySelectorAll('.dco-video-row').length > 1) {
         row.remove();
     } else {
         row.querySelector('input').value = '';
     }
-}
+};
 
-// ── Video file preview ────────────────────────────────────────────────────────
-function dcoPreviewVideos(input) {
+window.dcoPreviewVideos = function(input) {
     var container = document.getElementById('dco-video-file-list');
     if (!container) return;
     container.innerHTML = '';
@@ -646,4 +629,20 @@ function dcoPreviewVideos(input) {
             + '<button type="button" class="dco-video-file-item__rm" onclick="this.closest(\'.dco-video-file-item\').remove()">×</button>';
         container.appendChild(item);
     });
-}
+};
+
+// Close dropdown on outside click — runs after DOM ready
+document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.dco-custom-select')) {
+            document.querySelectorAll('.dco-custom-select.open').forEach(function(el) {
+                el.classList.remove('open');
+            });
+        }
+    });
+
+    // Force-hide inactive media panes on load (belt-and-suspenders vs theme overrides)
+    document.querySelectorAll('.dco-media-pane:not(.dco-media-pane--active)').forEach(function(p) {
+        p.style.display = 'none';
+    });
+});
