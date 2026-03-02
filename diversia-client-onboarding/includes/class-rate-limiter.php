@@ -12,6 +12,11 @@ class DCO_Rate_Limiter {
      * @return bool  true if under the limit (request should proceed), false if exceeded.
      */
     public static function check_and_increment(string $identifier, string $action): bool {
+        // Admins are never rate-limited (useful for testing)
+        if (current_user_can('manage_options')) {
+            return true;
+        }
+
         $max = (int) DCO_Admin_Settings::get_option(DCO_Admin_Settings::OPT_RATE_LIMIT_MAX, 5);
         $key = self::build_key($identifier, $action);
 
