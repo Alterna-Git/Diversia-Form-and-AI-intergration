@@ -247,13 +247,34 @@
 
     function validateStep2($form) {
         var errors = [];
-        var budgetMin = parseInt($form.find('#dco-budget-min').val(), 10) || 0;
-        var budgetMax = parseInt($form.find('#dco-budget-max').val(), 10) || 0;
 
-        if (!$form.find('#dco-trial-type').val())   errors.push('Trial type / Tipo de ensayo es requerido.');
-        if (!$form.find('#dco-org-type').val().trim()) errors.push('Organization type / Tipo de organización es requerido.');
-        if (!budgetMin && !budgetMax)               errors.push('Estimated budget / Presupuesto estimado es requerido.');
-        else if (budgetMax > 0 && budgetMax < budgetMin) errors.push('Maximum budget must be greater than the minimum. / El presupuesto máximo debe ser mayor al mínimo.');
+        // Resolve org type — if "Other" selected, use the text input value
+        var orgType = $form.find('#dco-org-type').val();
+        if (orgType === 'Other') {
+            var orgOther = $form.find('#dco-org-other').val().trim();
+            if (orgOther) {
+                $form.find('#dco-org-type').val(orgOther);
+                orgType = orgOther;
+            }
+        }
+
+        // Resolve trial type — if "Other", use the text input
+        var trialType = $form.find('#dco-trial-type-value').val();
+        if (trialType === 'Other') {
+            var trialOther = $form.find('#dco-trial-type-other').val().trim();
+            if (trialOther) {
+                $form.find('#dco-trial-type-value').val(trialOther);
+                trialType = trialOther;
+            }
+        }
+
+        var budget = parseInt($form.find('#dco-budget').val(), 10) || 0;
+
+        if (!trialType)      errors.push('Trial type / Tipo de ensayo es requerido.');
+        if (!orgType.trim()) errors.push('Organization / Organización es requerido.');
+        if (!budget)         errors.push('Budget / Presupuesto es requerido.');
+        else if (budget < 500) errors.push('Minimum budget is $500. / El presupuesto mínimo es $500.');
+
         return errors;
     }
 
@@ -476,3 +497,153 @@
     }
 
 })(jQuery);
+
+/* ==========================================================================
+   Step 2 — Disease dropdown, org toggle, timeline unit, media upload
+   (Plain JS — no jQuery dependency needed for these UI helpers)
+   ========================================================================== */
+
+// ── Disease custom dropdown ──────────────────────────────────────────────────
+function dcoToggleDropdown(wrapId) {
+    var wrap = document.getElementById(wrapId);
+    if (!wrap) return;
+    var isOpen = wrap.classList.contains('open');
+    // Close all open dropdowns first
+    document.querySelectorAll('.dco-custom-select.open').forEach(function(el) {
+        el.classList.remove('open');
+    });
+    if (!isOpen) wrap.classList.add('open');
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.dco-custom-select')) {
+        document.querySelectorAll('.dco-custom-select.open').forEach(function(el) {
+            el.classList.remove('open');
+        });
+    }
+});
+
+function dcoSelectTrialType(el, labelEn, labelEs, isOther) {
+    var display = document.getElementById('dco-trial-type-display');
+    var hidden  = document.getElementById('dco-trial-type-value');
+    var btn     = document.getElementById('dco-trial-type-btn');
+    var other   = document.getElementById('dco-trial-type-other');
+    var wrap    = document.getElementById('dco-trial-type-wrap');
+
+    // Detect active language
+    var lang = (document.documentElement.lang || 'en').substring(0, 2);
+    var label = (lang === 'es' && labelEs) ? labelEs : labelEn;
+
+    if (display) display.textContent = label;
+    if (hidden)  hidden.value = labelEn;
+    if (btn)     btn.classList.add('dco-custom-select__btn--selected');
+    if (wrap)    wrap.classList.remove('open');
+    if (other)   other.style.display = isOther ? 'block' : 'none';
+}
+
+// ── Organization "Other" text reveal ─────────────────────────────────────────
+function dcoToggleOrgOther(sel) {
+    var other = document.getElementById('dco-org-other');
+    if (!other) return;
+    other.style.display = (sel.value === 'Other') ? 'block' : 'none';
+    if (sel.value !== 'Other') other.value = '';
+}
+
+// ── Timeline unit toggle (Months / Days) ─────────────────────────────────────
+function dcoSetTimelineUnit(unit) {
+    var hidden = document.getElementById('dco-timeline-unit');
+    var btnM   = document.getElementById('dco-unit-months');
+    var btnD   = document.getElementById('dco-unit-days');
+    if (hidden) hidden.value = unit;
+    if (btnM)   btnM.classList.toggle('dco-unit-btn--active', unit === 'months');
+    if (btnD)   btnD.classList.toggle('dco-unit-btn--active', unit === 'days');
+}
+
+// ── Media tab switcher ────────────────────────────────────────────────────────
+function dcoSwitchMediaTab(tab, btn) {
+    // Tabs
+    document.querySelectorAll('.dco-media-tab').forEach(function(t) {
+        t.classList.remove('dco-media-tab--active');
+    });
+    btn.classList.add('dco-media-tab--active');
+    // Panes
+    document.querySelectorAll('.dco-media-pane').forEach(function(p) {
+        p.classList.remove('dco-media-pane--active');
+    });
+    var pane = document.getElementById('dco-pane-' + tab);
+    if (pane) pane.classList.add('dco-media-pane--active');
+}
+
+// ── Image preview ─────────────────────────────────────────────────────────────
+function dcoPreviewImages(input) {
+    var container = document.getElementById('dco-img-thumbs');
+    if (!container) return;
+    container.innerHTML = '';
+    Array.from(input.files).slice(0, 10).forEach(function(file) {
+        if (!file.type.startsWith('image/')) return;
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            var wrap = document.createElement('div');
+            wrap.className = 'dco-media-thumb-wrap';
+            var img = document.createElement('img');
+            img.className = 'dco-media-thumb';
+            img.src = e.target.result;
+            var rm = document.createElement('button');
+            rm.type = 'button';
+            rm.className = 'dco-media-thumb-rm';
+            rm.textContent = '×';
+            rm.onclick = function() { wrap.remove(); };
+            wrap.appendChild(img);
+            wrap.appendChild(rm);
+            container.appendChild(wrap);
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+// ── Video URL rows ────────────────────────────────────────────────────────────
+function dcoAddVideoRow() {
+    var list = document.getElementById('dco-video-url-list');
+    if (!list) return;
+    var row = document.createElement('div');
+    row.className = 'dco-video-row';
+    row.innerHTML = '<input class="dco-input" type="url" name="promo_video_urls[]"'
+        + ' placeholder="https://youtube.com/watch?v=... or https://vimeo.com/...">'
+        + '<button type="button" class="dco-video-remove" onclick="dcoRemoveVideoRow(this)" title="Remove">✕</button>';
+    list.appendChild(row);
+}
+
+function dcoRemoveVideoRow(btn) {
+    var row = btn.closest('.dco-video-row');
+    var list = document.getElementById('dco-video-url-list');
+    // Keep at least one row
+    if (list && list.querySelectorAll('.dco-video-row').length > 1) {
+        row.remove();
+    } else {
+        row.querySelector('input').value = '';
+    }
+}
+
+// ── Video file preview ────────────────────────────────────────────────────────
+function dcoPreviewVideos(input) {
+    var container = document.getElementById('dco-video-file-list');
+    if (!container) return;
+    container.innerHTML = '';
+    Array.from(input.files).forEach(function(file) {
+        var size = file.size > 1048576
+            ? (file.size / 1048576).toFixed(1) + ' MB'
+            : (file.size / 1024).toFixed(0) + ' KB';
+        var item = document.createElement('div');
+        item.className = 'dco-video-file-item';
+        item.innerHTML = '<span class="dco-video-file-item__icon">'
+            + '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>'
+            + '</span>'
+            + '<div class="dco-video-file-item__info">'
+            +   '<div class="dco-video-file-item__name">' + file.name + '</div>'
+            +   '<div class="dco-video-file-item__size">' + size + '</div>'
+            + '</div>'
+            + '<button type="button" class="dco-video-file-item__rm" onclick="this.closest(\'.dco-video-file-item\').remove()">×</button>';
+        container.appendChild(item);
+    });
+}
