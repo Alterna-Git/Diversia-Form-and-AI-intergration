@@ -1120,6 +1120,21 @@ body {
 .dco-cancel-btn    { padding: 5px 10px; border-radius: 8px; font-size: 11px; font-weight: 600; font-family: inherit; cursor: pointer; border: 1px solid rgba(231,76,60,0.45); background: rgba(231,76,60,0.12); color: #ff7675; transition: all 0.18s; }
 .dco-cancel-btn:hover { background: rgba(231,76,60,0.28); color: #fff; }
 
+/* Set Status controls */
+.dco-set-status-select { padding: 4px 6px; border-radius: 7px; font-size: 11px; background: rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.16); color: rgba(0,0,0,0.65); font-family: inherit; }
+.dco-set-status-btn { padding: 5px 10px; border-radius: 8px; font-size: 11px; font-weight: 600; font-family: inherit; cursor: pointer; border: 1px solid rgba(80,80,100,0.35); background: rgba(80,80,100,0.10); color: rgba(0,0,0,0.60); transition: all 0.18s; }
+.dco-set-status-btn:hover { background: rgba(80,80,100,0.22); color: #111; }
+
+/* Delete button */
+.dco-delete-btn { padding: 5px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; font-family: inherit; cursor: pointer; border: 1px solid rgba(192,57,43,0.55); background: rgba(192,57,43,0.14); color: #c0392b; transition: all 0.18s; }
+.dco-delete-btn:hover { background: rgba(192,57,43,0.32); color: #fff; border-color: rgba(192,57,43,0.80); }
+.dco-delete-btn--locked { display: inline-block; padding: 5px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; font-family: inherit; cursor: not-allowed; border: 1px solid rgba(0,0,0,0.10); background: transparent; color: rgba(0,0,0,0.22); }
+
+/* Status badges — extra states */
+.dco-status-badge--cancelled { background: rgba(231,76,60,0.14); color: #e74c3c; border: 1px solid rgba(231,76,60,0.30); }
+.dco-status-badge--closed    { background: rgba(90,90,105,0.12); color: rgba(0,0,0,0.52); border: 1px solid rgba(90,90,105,0.22); }
+.dco-status-badge--expired   { background: rgba(60,60,75,0.10); color: rgba(0,0,0,0.40); border: 1px solid rgba(60,60,75,0.18); }
+
 @media (max-width: 640px) {
   .dco-adm-dash-stats { grid-template-columns: repeat(3,1fr); }
   .dco-adm-camp-table { display: block; overflow-x: auto; }
@@ -4899,7 +4914,7 @@ function populateAdminDashboard() {
   });
 
   // ── Stats ──
-  var counts = { total: rows.length, active: 0, pending: 0, completed: 0, cancelled: 0 };
+  var counts = { total: rows.length, active: 0, pending: 0, completed: 0, cancelled: 0, closed: 0, expired: 0 };
   rows.forEach(function(r) {
     var s = r.camp.status || 'pending';
     if (counts[s] !== undefined) counts[s]++;
@@ -4910,7 +4925,9 @@ function populateAdminDashboard() {
     { key: 'active',    label: 'Active',    color: '#6fcf97' },
     { key: 'pending',   label: 'Pending',   color: '#f9ca74' },
     { key: 'completed', label: 'Completed', color: '#74b9ff' },
-    { key: 'cancelled', label: 'Cancelled', color: '#ff7675' }
+    { key: 'cancelled', label: 'Cancelled', color: '#ff7675' },
+    { key: 'closed',    label: 'Closed',    color: '#aaa' },
+    { key: 'expired',   label: 'Expired',   color: '#888' }
   ];
   var statsEl = document.getElementById('adm-dash-stats');
   if (statsEl) {
@@ -4940,9 +4957,10 @@ function populateAdminDashboard() {
     + '</tr></thead><tbody>';
 
   rows.forEach(function(r) {
-    var camp       = r.camp;
-    var status     = camp.status || 'pending';
+    var camp        = r.camp;
+    var status      = camp.status || 'pending';
     var isCancelled = status === 'cancelled';
+    var isDeletable = (status === 'cancelled' || status === 'closed' || status === 'expired');
     var statusClass = 'dco-status-badge--' + status;
     var statusLabel = status.charAt(0).toUpperCase() + status.slice(1);
 
@@ -4978,7 +4996,7 @@ function populateAdminDashboard() {
       + '<input class="dco-meta-inp" type="number" min="0" placeholder="0"'
       + ' value="' + (camp.metaLeads || '') + '"'
       + ' onchange="updateMetaLeads(\'' + _esc(r.email) + '\',' + r.idx + ',this.value)"'
-      + (isCancelled ? ' disabled' : '')
+      + (isDeletable || isCancelled ? ' disabled' : '')
       + '>'
       + '</td>';
 
@@ -4994,18 +5012,25 @@ function populateAdminDashboard() {
     }
     html += '</td>';
 
-    // Actions
+    // Actions — Set Status dropdown + Delete button
     html += '<td>';
-    if (!isCancelled) {
-      html += '<div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap">'
-        + '<select class="dco-cancel-select" id="cr-' + rowKey + '">'
-        + '<option value="Non-Payment">Non-Payment</option>'
-        + '<option value="Closed Account">Closed Account</option>'
+    html += '<div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-bottom:6px">';
+    if (!isDeletable) {
+      html += '<select class="dco-set-status-select" id="ss-' + rowKey + '">'
+        + '<option value="">Set Status…</option>'
+        + '<option value="cancelled">Non-Payment</option>'
+        + '<option value="closed">Closed</option>'
+        + '<option value="expired">Expired</option>'
         + '</select>'
-        + '<button class="dco-cancel-btn" onclick="cancelCampaign(\'' + _esc(r.email) + '\',' + r.idx + ')">Cancel</button>'
-        + '</div>';
+        + '<button class="dco-set-status-btn" onclick="setCampaignStatus(\'' + _esc(r.email) + '\',' + r.idx + ')">Set</button>';
     } else {
-      html += '<span style="font-size:11px;color:rgba(0,0,0,0.35)">Closed</span>';
+      html += '<span style="font-size:11px;color:rgba(0,0,0,0.40);font-style:italic">' + statusLabel + '</span>';
+    }
+    html += '</div>';
+    if (isDeletable) {
+      html += '<button class="dco-delete-btn" onclick="deleteCampaign(\'' + _esc(r.email) + '\',' + r.idx + ')">🗑 Delete</button>';
+    } else {
+      html += '<span class="dco-delete-btn--locked" title="Set a terminal status first to enable delete">🗑 Delete</span>';
     }
     html += '</td>';
     html += '</tr>';
@@ -5015,16 +5040,35 @@ function populateAdminDashboard() {
   campEl.innerHTML = html;
 }
 
-function cancelCampaign(clientEmail, campIdx) {
-  var rowKey = _esc(clientEmail) + '__' + campIdx;
-  var sel    = document.getElementById('cr-' + rowKey);
-  var reason = sel ? sel.value : 'Non-Payment';
-  if (!confirm('Cancel this campaign? Reason: ' + reason + '\n\nThis will mark it as Cancelled in the client dashboard.')) return;
+function setCampaignStatus(clientEmail, campIdx) {
+  var rowKey    = _esc(clientEmail) + '__' + campIdx;
+  var sel       = document.getElementById('ss-' + rowKey);
+  var newStatus = sel ? sel.value : '';
+  if (!newStatus) { alert('Please select a status first.'); return; }
+  var labelMap  = { cancelled: 'Non-Payment (Cancelled)', closed: 'Closed', expired: 'Expired' };
+  var label     = labelMap[newStatus] || newStatus;
+  if (!confirm('Set this campaign to "' + label + '"?\n\nThe Delete button will become active.')) return;
   var clients = _getClients();
   if (!clients[clientEmail] || !clients[clientEmail].campaigns[campIdx]) return;
-  clients[clientEmail].campaigns[campIdx].status       = 'cancelled';
-  clients[clientEmail].campaigns[campIdx].cancelReason = reason;
-  clients[clientEmail].campaigns[campIdx].cancelledAt  = new Date().toISOString();
+  var camp = clients[clientEmail].campaigns[campIdx];
+  camp.status          = newStatus;
+  camp.statusChangedAt = new Date().toISOString();
+  if (newStatus === 'cancelled') camp.cancelReason = 'Non-Payment';
+  _saveClients(clients);
+  populateAdminDashboard();
+}
+
+function deleteCampaign(clientEmail, campIdx) {
+  var clients = _getClients();
+  if (!clients[clientEmail] || !clients[clientEmail].campaigns[campIdx]) return;
+  var status = clients[clientEmail].campaigns[campIdx].status || 'pending';
+  if (status !== 'closed' && status !== 'expired' && status !== 'cancelled') {
+    alert('Cannot delete: set the campaign to Non-Payment, Closed, or Expired first.');
+    return;
+  }
+  var clientName = (clients[clientEmail].firstName || '') + ' ' + (clients[clientEmail].lastName || '');
+  if (!confirm('Permanently delete this campaign for ' + clientName.trim() + ' (' + clientEmail + ')?\n\nThis cannot be undone.')) return;
+  clients[clientEmail].campaigns.splice(campIdx, 1);
   _saveClients(clients);
   populateAdminDashboard();
 }

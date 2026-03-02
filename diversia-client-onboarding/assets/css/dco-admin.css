@@ -661,14 +661,68 @@
     font-weight: 600;
 }
 
+/* Meta form layout — two input rows + action buttons */
 .dco-apps-meta-form {
     display: flex;
-    align-items: center;
-    gap: 8px;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.dco-apps-meta-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.dco-apps-meta-label {
+    display: block;
+    font-size: 11px;
+    color: #888;
+    margin-bottom: 2px;
+    font-weight: 500;
+}
+
+.dco-apps-form-id-input {
+    width: 130px;
+    font-size: 12px;
+}
+
+.dco-apps-meta-actions {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
 }
 
 .dco-apps-meta-form .button {
     margin: 0;
+}
+
+/* Sync status badge below the form */
+.dco-apps-sync-badge {
+    font-size: 11px;
+    color: #1e8449;
+    background: #eafbf0;
+    border: 1px solid #b2dfcc;
+    border-radius: 4px;
+    padding: 2px 6px;
+    display: inline-block;
+    margin-top: 2px;
+}
+
+.dco-apps-sync-badge--pending {
+    color: #856404;
+    background: #fff8e1;
+    border-color: #ffd54f;
+}
+
+/* Sync button — primary style with icon */
+.dco-apps-sync-btn {
+    white-space: nowrap;
+}
+
+.dco-apps-sync-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 .dco-apps-delta {
@@ -681,4 +735,38 @@
 
 .dco-apps-delta--negative {
     color: #c0392b;
+}
+
+/* Status dropdown in row form */
+.dco-apps-status-select {
+    font-size: 12px;
+    max-width: 130px;
+}
+
+/* Actions cell */
+.dco-apps-actions-cell {
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+/* Delete button — red destructive */
+.dco-apps-delete-btn.button {
+    background: #c0392b !important;
+    border-color: #a93226 !important;
+    color: #fff !important;
+    white-space: nowrap;
+}
+
+.dco-apps-delete-btn.button:hover,
+.dco-apps-delete-btn.button:focus {
+    background: #a93226 !important;
+    border-color: #922b21 !important;
+    color: #fff !important;
+}
+
+/* Lock indicator for non-deletable rows */
+.dco-apps-delete-locked {
+    color: #adb5bd;
+    font-size: 13px;
+    cursor: help;
 }

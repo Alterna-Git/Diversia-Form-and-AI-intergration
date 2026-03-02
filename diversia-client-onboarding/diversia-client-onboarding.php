@@ -28,6 +28,7 @@ require_once DCO_PLUGIN_DIR . 'includes/class-ai-parameters.php';
 require_once DCO_PLUGIN_DIR . 'includes/class-rate-limiter.php';
 require_once DCO_PLUGIN_DIR . 'includes/class-qualification-token.php';
 require_once DCO_PLUGIN_DIR . 'includes/class-openai-client.php';
+require_once DCO_PLUGIN_DIR . 'includes/class-meta-client.php';
 require_once DCO_PLUGIN_DIR . 'includes/class-stripe-client.php';
 require_once DCO_PLUGIN_DIR . 'includes/class-stripe-webhook.php';
 require_once DCO_PLUGIN_DIR . 'includes/class-client-provisioner.php';
@@ -47,20 +48,34 @@ class Diversia_Client_Onboarding {
 
     private function __construct() {
         add_action('init',               array($this, 'init'));
-        add_action('admin_init',         array('DCO_Database',       'check_version'));
-        add_action('admin_init',         array('DCO_Admin_Settings',  'init'));
-        add_action('admin_init',         array('DCO_Applications_Admin', 'init'));
-        add_action('admin_init',         array('DCO_AI_Parameters',   'init'));
-        add_action('rest_api_init',      array('DCO_Stripe_Webhook', 'register_route'));
+        add_action('admin_init',         array('DCO_Database',          'check_version'));
+        add_action('admin_init',         array('DCO_Admin_Settings',    'init'));
+        add_action('admin_init',         array('DCO_Applications_Admin','init'));
+        add_action('admin_init',         array('DCO_AI_Parameters',     'init'));
+        add_action('rest_api_init',      array('DCO_Stripe_Webhook',    'register_route'));
         add_action('wp_enqueue_scripts', array($this, 'enqueue_frontend_assets'));
 
         // Register pending_client role on init so it exists before any user creation
         add_action('init', array($this, 'register_pending_client_role'));
+
+        // Redirect provisioned clients to the trial dashboard after login
+        add_filter('login_redirect', array($this, 'redirect_client_after_login'), 10, 3);
     }
 
     public function init() {
         DCO_Shortcodes::register();
         DCO_Ajax_Handlers::register();
+    }
+
+    /**
+     * Redirects provisioned clients to /trial-dashboard/ after login.
+     * Admins and other roles follow the default WP redirect.
+     */
+    public function redirect_client_after_login(string $redirect_to, string $requested_redirect_to, $user): string {
+        if ($user instanceof WP_User && in_array('client', (array) $user->roles, true)) {
+            return home_url('/trial-dashboard/');
+        }
+        return $redirect_to;
     }
 
     public function register_pending_client_role() {

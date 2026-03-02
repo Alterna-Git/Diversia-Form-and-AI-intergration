@@ -3,7 +3,7 @@ if (!defined('ABSPATH')) exit;
 
 class DCO_Database {
 
-    const DB_VERSION        = '1.1.0';
+    const DB_VERSION        = '1.2.0';
     const DB_VERSION_OPTION = 'dco_db_version';
 
     /**
@@ -64,6 +64,8 @@ class DCO_Database {
             estimated_budget        VARCHAR(100) NOT NULL DEFAULT '',
             enrollment_goal         INT(11) DEFAULT NULL,
             meta_leads              INT(11) DEFAULT NULL,
+            meta_lead_form_id       VARCHAR(100) DEFAULT NULL,
+            meta_leads_synced_at    DATETIME DEFAULT NULL,
             timeline_months         INT(11) DEFAULT NULL,
             organization_type       VARCHAR(100) NOT NULL DEFAULT '',
             organization_website    VARCHAR(500) DEFAULT NULL,

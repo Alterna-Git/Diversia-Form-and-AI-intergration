@@ -60,7 +60,10 @@ class DCO_Client_Provisioner {
         // 6. Notify admin
         self::notify_admin($app);
 
-        // 7. Fire action hook for extensibility
+        // 7. Store all application data as user meta so the client dashboard can read it
+        self::set_client_user_meta($app, $ctd_client_id, $user_id);
+
+        // 8. Fire action hook for extensibility
         do_action('dco_client_provisioned', $application_id, $ctd_client_id, $user_id);
 
         error_log("[DCO Provisioner] SUCCESS: application {$application_id} → ctd_client_id {$ctd_client_id}");
@@ -131,6 +134,35 @@ class DCO_Client_Provisioner {
         update_user_meta($user_id, 'ctd_client_id', $ctd_client_id);
 
         return $ctd_client_id;
+    }
+
+    /**
+     * Stores all key application data as WP user meta so the client dashboard
+     * and any other plugin/theme can read it via get_user_meta().
+     *
+     * Meta keys (all prefixed dco_):
+     *   dco_application_id, dco_trial_type, dco_enrollment_goal,
+     *   dco_estimated_budget, dco_organization_type, dco_ai_score,
+     *   dco_ai_qualified, dco_payment_completed_at, dco_onboarding_complete
+     *
+     * ctd_client_id is already set by create_ctd_client_record() — not duplicated here.
+     */
+    private static function set_client_user_meta(object $app, int $ctd_client_id, int $user_id): void {
+        $meta = array(
+            'dco_application_id'       => (int) $app->id,
+            'dco_trial_type'           => sanitize_text_field($app->trial_type ?? ''),
+            'dco_enrollment_goal'      => (int) ($app->enrollment_goal ?? 0),
+            'dco_estimated_budget'     => sanitize_text_field($app->estimated_budget ?? ''),
+            'dco_organization_type'    => sanitize_text_field($app->organization_type ?? ''),
+            'dco_ai_score'             => (float) ($app->ai_score ?? 0),
+            'dco_ai_qualified'         => (int) ($app->ai_qualified ?? 0),
+            'dco_payment_completed_at' => sanitize_text_field($app->payment_completed_at ?? ''),
+            'dco_onboarding_complete'  => '1',
+        );
+
+        foreach ($meta as $key => $value) {
+            update_user_meta($user_id, $key, $value);
+        }
     }
 
     /**

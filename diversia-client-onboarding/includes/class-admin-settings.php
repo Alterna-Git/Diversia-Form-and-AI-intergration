@@ -19,11 +19,14 @@ class DCO_Admin_Settings {
     const OPT_TOKEN_TTL_HOURS          = 'dco_token_ttl_hours';
     const OPT_RATE_LIMIT_MAX           = 'dco_rate_limit_max';
     const OPT_ADMIN_NOTIFICATION_EMAIL = 'dco_admin_notification_email';
+    const OPT_META_ACCESS_TOKEN        = 'dco_meta_access_token';
+    const OPT_META_APP_ID              = 'dco_meta_app_id';
 
     public static function init(): void {
         add_action('admin_menu',  array(__CLASS__, 'add_settings_page'));
         add_action('admin_init',  array(__CLASS__, 'register_settings'));
         add_action('admin_post_dco_test_openai_connection', array(__CLASS__, 'handle_test_openai_connection'));
+        add_action('admin_post_dco_test_meta_connection',   array(__CLASS__, 'handle_test_meta_connection'));
     }
 
     public static function add_settings_page(): void {
@@ -71,6 +74,13 @@ class DCO_Admin_Settings {
         add_settings_field(self::OPT_QUALIFICATION_CRITERIA, 'Additional AI Instructions',  array(__CLASS__, 'render_field_qualification_criteria'), 'dco-settings', 'dco_qualification');
         add_settings_field(self::OPT_ALLOWED_ORG_TYPES,      'Allowed Organization Types',  array(__CLASS__, 'render_field_allowed_org_types'),       'dco-settings', 'dco_qualification');
 
+        // Section: Meta Integration
+        add_settings_section('dco_meta', 'Meta Integration', array(__CLASS__, 'render_section_meta'), 'dco-settings');
+        register_setting('dco_settings_group', self::OPT_META_ACCESS_TOKEN, array('sanitize_callback' => array(__CLASS__, 'sanitize_api_key')));
+        register_setting('dco_settings_group', self::OPT_META_APP_ID,       array('sanitize_callback' => 'sanitize_text_field'));
+        add_settings_field(self::OPT_META_ACCESS_TOKEN, 'Access Token',  array(__CLASS__, 'render_field_meta_access_token'), 'dco-settings', 'dco_meta');
+        add_settings_field(self::OPT_META_APP_ID,       'App ID',        array(__CLASS__, 'render_field_meta_app_id'),       'dco-settings', 'dco_meta');
+
         // Section: Security & Notifications
         add_settings_section('dco_security', 'Security & Notifications', array(__CLASS__, 'render_section_security'), 'dco-settings');
         register_setting('dco_settings_group', self::OPT_TOKEN_TTL_HOURS,          array('sanitize_callback' => 'intval'));
@@ -85,14 +95,21 @@ class DCO_Admin_Settings {
         if (!current_user_can('manage_options')) {
             return;
         }
-        $test_status = sanitize_key($_GET['dco_openai_test'] ?? '');
-        $test_msg    = sanitize_text_field(wp_unslash($_GET['dco_openai_msg'] ?? ''));
+        $test_status      = sanitize_key($_GET['dco_openai_test'] ?? '');
+        $test_msg         = sanitize_text_field(wp_unslash($_GET['dco_openai_msg'] ?? ''));
+        $meta_test_status = sanitize_key($_GET['dco_meta_test'] ?? '');
+        $meta_test_msg    = sanitize_text_field(wp_unslash($_GET['dco_meta_msg'] ?? ''));
         ?>
         <div class="wrap">
             <h1>Client Onboarding Settings</h1>
             <?php if ($test_status && $test_msg): ?>
                 <div class="notice notice-<?php echo $test_status === 'success' ? 'success' : 'error'; ?> is-dismissible">
                     <p><?php echo esc_html($test_msg); ?></p>
+                </div>
+            <?php endif; ?>
+            <?php if ($meta_test_status && $meta_test_msg): ?>
+                <div class="notice notice-<?php echo $meta_test_status === 'success' ? 'success' : 'error'; ?> is-dismissible">
+                    <p><?php echo esc_html($meta_test_msg); ?></p>
                 </div>
             <?php endif; ?>
             <p>
@@ -114,11 +131,17 @@ class DCO_Admin_Settings {
                 submit_button('Save Settings');
                 ?>
             </form>
-            <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" style="margin-top:12px;">
+            <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" style="margin-top:12px;display:inline-block;margin-right:16px;">
                 <?php wp_nonce_field('dco_test_openai_connection'); ?>
                 <input type="hidden" name="action" value="dco_test_openai_connection">
                 <?php submit_button('Test OpenAI Connection', 'secondary', 'submit', false); ?>
                 <span class="description" style="margin-left:8px;">Tests the currently saved OpenAI API key and model.</span>
+            </form>
+            <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" style="margin-top:12px;display:inline-block;">
+                <?php wp_nonce_field('dco_test_meta_connection'); ?>
+                <input type="hidden" name="action" value="dco_test_meta_connection">
+                <?php submit_button('Test Meta Connection', 'secondary', 'submit', false); ?>
+                <span class="description" style="margin-left:8px;">Tests the currently saved Meta access token.</span>
             </form>
             <hr>
             <h2>Webhook Endpoint</h2>
@@ -147,6 +170,24 @@ class DCO_Admin_Settings {
         exit;
     }
 
+    public static function handle_test_meta_connection(): void {
+        if (!current_user_can('manage_options')) {
+            wp_die('Unauthorized');
+        }
+
+        check_admin_referer('dco_test_meta_connection');
+
+        $client = new DCO_Meta_Client();
+        $result = $client->test_connection();
+
+        wp_safe_redirect(add_query_arg(array(
+            'page'           => 'dco-settings',
+            'dco_meta_test'  => $result['success'] ? 'success' : 'error',
+            'dco_meta_msg'   => $result['message'],
+        ), admin_url('options-general.php')));
+        exit;
+    }
+
     // --- Section descriptions ---
 
     public static function render_section_api_keys(): void {
@@ -163,6 +204,11 @@ class DCO_Admin_Settings {
 
     public static function render_section_security(): void {
         echo '<p>Security settings and admin notification preferences.</p>';
+    }
+
+    public static function render_section_meta(): void {
+        echo '<p>Configure your Meta (Facebook) access token to automatically sync lead counts from Meta Lead Gen Forms into the <a href="' . esc_url(admin_url('options-general.php?page=dco-applications')) . '">Client Applications</a> dashboard.</p>';
+        echo '<p class="description">You need a <strong>long-lived System User token</strong> or <strong>Page Access Token</strong> with <code>ads_read</code> and <code>leads_retrieval</code> permissions. Obtain this from your <a href="https://business.facebook.com/settings/system-users" target="_blank" rel="noopener">Meta Business Settings → System Users</a>.</p>';
     }
 
     // --- Field renderers ---
@@ -206,7 +252,7 @@ class DCO_Admin_Settings {
     }
 
     public static function render_field_stripe_success_url(): void {
-        $val = self::get_option(self::OPT_STRIPE_SUCCESS_URL, home_url('/client-welcome/'));
+        $val = self::get_option(self::OPT_STRIPE_SUCCESS_URL, home_url('/trial-dashboard/'));
         echo '<input type="url" name="' . esc_attr(self::OPT_STRIPE_SUCCESS_URL) . '" value="' . esc_attr($val) . '" class="regular-text">';
         echo '<p class="description">Where to redirect after successful payment (must be a page on your site).</p>';
     }
@@ -301,6 +347,18 @@ class DCO_Admin_Settings {
         $val = self::get_option(self::OPT_ADMIN_NOTIFICATION_EMAIL, 'info@diversiahealth.com');
         echo '<input type="email" name="' . esc_attr(self::OPT_ADMIN_NOTIFICATION_EMAIL) . '" value="' . esc_attr($val) . '" class="regular-text">';
         echo '<p class="description">New application notifications and alerts will be sent to this address.</p>';
+    }
+
+    public static function render_field_meta_access_token(): void {
+        $val = self::get_option(self::OPT_META_ACCESS_TOKEN, '');
+        echo '<input type="password" name="' . esc_attr(self::OPT_META_ACCESS_TOKEN) . '" value="' . esc_attr($val) . '" class="regular-text" autocomplete="off" placeholder="EAAxxxxxxx...">';
+        echo '<p class="description">Long-lived Meta access token with <code>ads_read</code> and <code>leads_retrieval</code> permissions. Generate from Meta Business Settings → System Users.</p>';
+    }
+
+    public static function render_field_meta_app_id(): void {
+        $val = self::get_option(self::OPT_META_APP_ID, '');
+        echo '<input type="text" name="' . esc_attr(self::OPT_META_APP_ID) . '" value="' . esc_attr($val) . '" class="regular-text" placeholder="1234567890123456">';
+        echo '<p class="description">Your Meta App ID (optional — for reference and future webhook setup).</p>';
     }
 
     // --- Sanitization ---
