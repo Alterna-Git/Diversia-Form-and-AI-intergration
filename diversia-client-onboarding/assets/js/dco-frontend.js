@@ -387,7 +387,7 @@
     }
 
     // ---------------------------------------------------------------------------
-    // Password Strength Indicator
+    // Password Strength Indicator + Criteria Checklist
     // ---------------------------------------------------------------------------
     function initPasswordStrength() {
         $('#dco-password').on('input', function () {
@@ -396,10 +396,21 @@
             var $fill    = $('#dco-strength-fill');
             var $text    = $('#dco-strength-text');
 
-            if (pass.length >= 8)              strength++;
-            if (/[A-Z]/.test(pass))            strength++;
-            if (/[0-9]/.test(pass))            strength++;
-            if (/[^A-Za-z0-9]/.test(pass))    strength++;
+            var hasLength  = pass.length >= 8;
+            var hasUpper   = /[A-Z]/.test(pass);
+            var hasNumber  = /[0-9]/.test(pass);
+            var hasSpecial = /[^A-Za-z0-9]/.test(pass);
+
+            if (hasLength)  strength++;
+            if (hasUpper)   strength++;
+            if (hasNumber)  strength++;
+            if (hasSpecial) strength++;
+
+            // Update live criteria indicators
+            setCriterion('dco-crit-length',  hasLength);
+            setCriterion('dco-crit-upper',   hasUpper);
+            setCriterion('dco-crit-number',  hasNumber);
+            setCriterion('dco-crit-special', hasSpecial);
 
             var colors = ['', '#e74c3c', '#f39c12', '#2ecc71', '#27ae60'];
             var labels = ['', 'Débil / Weak', 'Regular / Fair', 'Buena / Good', 'Fuerte / Strong'];
@@ -407,6 +418,16 @@
             $fill.css({ width: (strength * 25) + '%', background: colors[strength] || '' });
             $text.text(pass.length ? labels[strength] : '');
         });
+    }
+
+    function setCriterion(id, met) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        if (met) {
+            el.classList.add('dco-criterion--met');
+        } else {
+            el.classList.remove('dco-criterion--met');
+        }
     }
 
     // ---------------------------------------------------------------------------
@@ -629,6 +650,19 @@ window.dcoPreviewVideos = function(input) {
             + '<button type="button" class="dco-video-file-item__rm" onclick="this.closest(\'.dco-video-file-item\').remove()">×</button>';
         container.appendChild(item);
     });
+};
+
+// Password peek toggle
+window.dcoPeekToggle = function(inputId, btnId) {
+    var input = document.getElementById(inputId);
+    var btn   = document.getElementById(btnId);
+    if (!input || !btn) return;
+    var show = input.type === 'password';
+    input.type = show ? 'text' : 'password';
+    var iconShow = btn.querySelector('.dco-peek-icon--show');
+    var iconHide = btn.querySelector('.dco-peek-icon--hide');
+    if (iconShow) iconShow.style.display = show ? 'none' : '';
+    if (iconHide) iconHide.style.display = show ? ''     : 'none';
 };
 
 // Close dropdown on outside click — runs after DOM ready

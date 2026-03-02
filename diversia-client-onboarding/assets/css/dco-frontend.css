@@ -370,6 +370,71 @@
     transition: width 0.3s, background 0.3s;
 }
 
+/* Password input wrapper + peek toggle */
+.dco-input-wrap {
+    position: relative;
+}
+.dco-input-wrap .dco-input {
+    padding-right: 44px;
+}
+.dco-peek-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    cursor: pointer;
+    padding: 4px;
+    color: var(--dco-text-muted, #a0a0b0);
+    line-height: 0;
+    transition: color 0.2s;
+}
+.dco-peek-btn:hover {
+    color: var(--dco-text, #e0e0ff);
+}
+
+/* Password criteria checklist */
+.dco-criteria {
+    list-style: none !important;
+    margin: 10px 0 0 !important;
+    padding: 0 !important;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 12px;
+}
+.dco-criteria li {
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+.dco-criteria li::before,
+.dco-criteria li::after {
+    display: none !important;
+    content: none !important;
+}
+.dco-criterion {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--dco-text-muted, #a0a0b0);
+    transition: color 0.25s;
+}
+.dco-criterion__icon {
+    flex-shrink: 0;
+    opacity: 0.3;
+    transition: opacity 0.25s, stroke 0.25s;
+}
+.dco-criterion--met {
+    color: #2ecc71;
+}
+.dco-criterion--met .dco-criterion__icon {
+    opacity: 1;
+    stroke: #2ecc71;
+}
+
 /* ==========================================================================
    Buttons
    ========================================================================== */
