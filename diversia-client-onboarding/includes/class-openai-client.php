@@ -44,6 +44,43 @@ class DCO_OpenAI_Client {
         }
     }
 
+    /**
+     * Sends a minimal request to confirm the configured key and model can respond.
+     *
+     * @return array{success:bool,message:string}
+     */
+    public function test_connection(): array {
+        if (empty($this->api_key)) {
+            return array(
+                'success' => false,
+                'message' => 'OpenAI API key is not configured.',
+            );
+        }
+
+        try {
+            $this->call_api(array(
+                array(
+                    'role' => 'system',
+                    'content' => 'You are a connection test. Respond with a short JSON object.',
+                ),
+                array(
+                    'role' => 'user',
+                    'content' => 'Return exactly {"status":"ok"}',
+                ),
+            ), 20);
+
+            return array(
+                'success' => true,
+                'message' => 'OpenAI connection successful. The saved API key and model responded correctly.',
+            );
+        } catch (Exception $e) {
+            return array(
+                'success' => false,
+                'message' => 'OpenAI test failed: ' . $e->getMessage(),
+            );
+        }
+    }
+
     // ---------------------------------------------------------------------------
     // Private helpers
     // ---------------------------------------------------------------------------
@@ -200,7 +237,7 @@ PROMPT;
             . "Please evaluate this application and respond with a JSON object only.";
     }
 
-    private function call_api(array $messages): string {
+    private function call_api(array $messages, int $max_tokens = 1400): string {
         $response = wp_remote_post($this->api_url, array(
             'timeout' => 45,
             'headers' => array(
@@ -210,7 +247,7 @@ PROMPT;
             'body' => wp_json_encode(array(
                 'model'       => $this->model,
                 'messages'    => $messages,
-                'max_tokens'  => 1400,
+                'max_tokens'  => $max_tokens,
                 'temperature' => 0.2,
             )),
         ));

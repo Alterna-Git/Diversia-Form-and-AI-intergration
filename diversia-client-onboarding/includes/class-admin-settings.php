@@ -23,6 +23,7 @@ class DCO_Admin_Settings {
     public static function init(): void {
         add_action('admin_menu',  array(__CLASS__, 'add_settings_page'));
         add_action('admin_init',  array(__CLASS__, 'register_settings'));
+        add_action('admin_post_dco_test_openai_connection', array(__CLASS__, 'handle_test_openai_connection'));
     }
 
     public static function add_settings_page(): void {
@@ -84,9 +85,16 @@ class DCO_Admin_Settings {
         if (!current_user_can('manage_options')) {
             return;
         }
+        $test_status = sanitize_key($_GET['dco_openai_test'] ?? '');
+        $test_msg    = sanitize_text_field(wp_unslash($_GET['dco_openai_msg'] ?? ''));
         ?>
         <div class="wrap">
             <h1>Client Onboarding Settings</h1>
+            <?php if ($test_status && $test_msg): ?>
+                <div class="notice notice-<?php echo $test_status === 'success' ? 'success' : 'error'; ?> is-dismissible">
+                    <p><?php echo esc_html($test_msg); ?></p>
+                </div>
+            <?php endif; ?>
             <p>
                 <a href="<?php echo esc_url(admin_url('options-general.php?page=dco-ai-parameters')); ?>"
                    style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#2e86ab;color:#fff;border-radius:5px;text-decoration:none;font-weight:600;font-size:13px;">
@@ -102,6 +110,12 @@ class DCO_Admin_Settings {
                 submit_button('Save Settings');
                 ?>
             </form>
+            <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" style="margin-top:12px;">
+                <?php wp_nonce_field('dco_test_openai_connection'); ?>
+                <input type="hidden" name="action" value="dco_test_openai_connection">
+                <?php submit_button('Test OpenAI Connection', 'secondary', 'submit', false); ?>
+                <span class="description" style="margin-left:8px;">Tests the currently saved OpenAI API key and model.</span>
+            </form>
             <hr>
             <h2>Webhook Endpoint</h2>
             <p>Configure this URL in your Stripe Dashboard under <strong>Developers → Webhooks</strong>:</p>
@@ -109,6 +123,24 @@ class DCO_Admin_Settings {
             <p>Event to listen for: <strong>checkout.session.completed</strong></p>
         </div>
         <?php
+    }
+
+    public static function handle_test_openai_connection(): void {
+        if (!current_user_can('manage_options')) {
+            wp_die('Unauthorized');
+        }
+
+        check_admin_referer('dco_test_openai_connection');
+
+        $client = new DCO_OpenAI_Client();
+        $result = $client->test_connection();
+
+        wp_safe_redirect(add_query_arg(array(
+            'page'            => 'dco-settings',
+            'dco_openai_test' => $result['success'] ? 'success' : 'error',
+            'dco_openai_msg'  => $result['message'],
+        ), admin_url('options-general.php')));
+        exit;
     }
 
     // --- Section descriptions ---

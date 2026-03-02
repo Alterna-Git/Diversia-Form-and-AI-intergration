@@ -4,21 +4,25 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Diversia Health — Client Registration Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #eef2f6; min-height: 100vh; }
+body { font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #eef2f6; min-height: 100vh; }
+h1, h2, h3, h4, h5, .dco-panel__title, .dco-result__title, .dco-loading__title { font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-weight: 800; }
 
 .preview-tabs { display: flex; gap: 0; background: #1B3A5C; padding: 0 24px; overflow-x: auto; }
-.preview-tab { padding: 14px 18px; color: #A8C8D8; cursor: pointer; font-size: 13px; font-weight: 600; border-bottom: 3px solid transparent; transition: all 0.2s; white-space: nowrap; }
+.preview-tab { padding: 14px 18px; color: #8DE2ED; cursor: pointer; font-size: 13px; font-weight: 600; border-bottom: 3px solid transparent; transition: all 0.2s; white-space: nowrap; }
 .preview-tab:hover { color: #fff; }
-.preview-tab.active { color: #fff; border-bottom-color: #2E86AB; }
+.preview-tab.active { color: #fff; border-bottom-color: #F47920; }
 
 .preview-screen { display: none; padding: 32px 20px; }
 .preview-screen.active { display: block; }
 
 /* ===== DCO Styles ===== */
 :root {
-  --dco-navy: #1B3A5C; --dco-teal: #2E86AB; --dco-teal-light: #A8C8D8;
+  --dco-navy: #1B3A5C; --dco-teal: #F47920; --dco-teal-light: #8DE2ED; --dco-brand-blue: #8DE2ED;
   --dco-bg: #f4f7f9; --dco-white: #ffffff; --dco-border: #d6e0ea;
   --dco-text: #2c3e50; --dco-muted: #6b7e8f;
   --dco-success: #27ae60; --dco-error: #e74c3c; --dco-warning: #f39c12;
@@ -30,7 +34,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 /* Language bar */
 .dco-lang-bar { display: flex; justify-content: flex-end; margin-bottom: 12px; }
 .dco-lang-toggle { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; background: var(--dco-white); border: 1.5px solid var(--dco-border); border-radius: 20px; color: var(--dco-muted); font-size: 13px; font-weight: 600; cursor: pointer; transition: border-color 0.2s, color 0.2s, background 0.2s; font-family: inherit; }
-.dco-lang-toggle:hover { border-color: var(--dco-teal); color: var(--dco-teal); background: rgba(46,134,171,0.05); }
+.dco-lang-toggle:hover { border-color: var(--dco-teal); color: var(--dco-teal); background: rgba(244,121,32,0.05); }
 .dco-lang-toggle.active { background: var(--dco-navy); border-color: var(--dco-navy); color: #fff; }
 
 /* Steps */
@@ -54,7 +58,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .dco-label { display: block; font-size: 13px; font-weight: 600; color: var(--dco-navy); margin-bottom: 6px; }
 .dco-required { color: var(--dco-error); margin-left: 2px; }
 .dco-input { width: 100%; padding: 10px 14px; border: 1.5px solid var(--dco-border); border-radius: 6px; font-size: 14px; color: var(--dco-text); background: #fff; outline: none; font-family: inherit; transition: border-color 0.2s, box-shadow 0.2s; }
-.dco-input:focus { border-color: var(--dco-teal); box-shadow: 0 0 0 3px rgba(46,134,171,0.15); }
+.dco-input:focus { border-color: var(--dco-teal); box-shadow: 0 0 0 3px rgba(244,121,32,0.15); }
 .dco-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7e8f' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; }
 .dco-textarea { min-height: 100px; resize: vertical; }
 .dco-hint { display: block; font-size: 12px; color: var(--dco-muted); margin-top: 4px; }
@@ -73,7 +77,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 /* Buttons */
 .dco-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 28px; border-radius: 6px; border: none; cursor: pointer; font-size: 15px; font-weight: 600; text-decoration: none; transition: background 0.2s; line-height: 1; font-family: inherit; }
 .dco-btn--primary { background: var(--dco-teal); color: #fff; }
-.dco-btn--primary:hover { background: #2573a0; }
+.dco-btn--primary:hover { background: #d46010; }
 .dco-btn--secondary { background: transparent; color: var(--dco-navy); border: 2px solid var(--dco-border); }
 .dco-btn--secondary:hover { border-color: var(--dco-teal); color: var(--dco-teal); }
 .dco-btn--large { padding: 16px 36px; font-size: 16px; }
@@ -149,7 +153,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .dco-add-provider-row { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
 .dco-admin-btn { background: var(--dco-navy); color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; }
 .dco-admin-btn:hover { background: var(--dco-teal); }
-.dco-eval-panel { background: rgba(46,134,171,0.07); border: 1px solid rgba(46,134,171,0.22); border-radius: 10px; padding: 14px 18px; margin: 18px 0 4px; }
+.dco-eval-panel { background: rgba(244,121,32,0.07); border: 1px solid rgba(244,121,32,0.22); border-radius: 10px; padding: 14px 18px; margin: 18px 0 4px; }
 .dco-eval-panel__title { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: var(--dco-teal); margin-bottom: 10px; }
 .dco-eval-panel__row { display: flex; align-items: center; gap: 10px; font-size: 13px; margin-bottom: 7px; }
 .dco-eval-panel__row:last-child { margin-bottom: 0; }
@@ -159,14 +163,14 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .dco-eval-panel__score { color: var(--dco-muted); font-size: 12px; margin-left: auto; }
 
 /* ACH info panel */
-.dco-ach-info { margin: 16px 0 4px; background: #eaf4fb; border: 1px solid #a9d4ea; border-radius: var(--dco-radius); overflow: hidden; display: none; }
+.dco-ach-info { margin: 16px 0 4px; background: #f0ebff; border: 1px solid #c4aff5; border-radius: var(--dco-radius); overflow: hidden; display: none; }
 .dco-ach-info.visible { display: block; }
-.dco-ach-info__header { display: flex; align-items: center; gap: 8px; padding: 12px 18px; background: rgba(46,134,171,0.12); border-bottom: 1px solid #a9d4ea; font-size: 13px; font-weight: 700; color: var(--dco-navy); }
+.dco-ach-info__header { display: flex; align-items: center; gap: 8px; padding: 12px 18px; background: rgba(244,121,32,0.12); border-bottom: 1px solid #c4aff5; font-size: 13px; font-weight: 700; color: var(--dco-navy); }
 .dco-ach-info__steps { margin: 0; padding: 14px 18px 14px 36px; display: flex; flex-direction: column; gap: 10px; }
 .dco-ach-info__steps li { font-size: 13px; color: var(--dco-text); line-height: 1.55; padding-left: 4px; }
 
 /* Agreement / Relevo box */
-.dco-agreement { display: flex; align-items: flex-start; gap: 13px; background: rgba(46,134,171,0.07); border: 1.5px solid rgba(46,134,171,0.22); border-radius: 12px; padding: 16px 18px; margin: 20px 0 6px; transition: border-color 0.2s, background 0.2s; }
+.dco-agreement { display: flex; align-items: flex-start; gap: 13px; background: rgba(244,121,32,0.07); border: 1.5px solid rgba(244,121,32,0.22); border-radius: 12px; padding: 16px 18px; margin: 20px 0 6px; transition: border-color 0.2s, background 0.2s; }
 .dco-agreement--error { border-color: var(--dco-error); background: rgba(231,76,60,0.06); }
 .dco-agreement__chk { flex: 0 0 20px; width: 20px; height: 20px; margin-top: 2px; cursor: pointer; accent-color: var(--dco-teal); }
 .dco-agreement__text { font-size: 13px; color: var(--dco-text); line-height: 1.65; cursor: pointer; }
@@ -187,10 +191,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .dco-suggestions__item-issue::before { content: '✕'; flex-shrink: 0; font-size: 11px; font-weight: 700; background: var(--dco-error); color: #fff; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-top: 1px; }
 .dco-suggestions__item-fix { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; font-weight: 500; color: #1e6d3b; margin: 0; line-height: 1.5; }
 .dco-suggestions__item-fix::before { content: '→'; flex-shrink: 0; font-size: 12px; font-weight: 700; background: var(--dco-success); color: #fff; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-top: 1px; }
-.dco-revise-cta { margin: 20px 0 8px; padding: 22px 24px; background: rgba(46,134,171,0.05); border: 1px dashed var(--dco-teal-light); border-radius: var(--dco-radius); text-align: center; }
+.dco-revise-cta { margin: 20px 0 8px; padding: 22px 24px; background: rgba(244,121,32,0.05); border: 1px dashed var(--dco-teal-light); border-radius: var(--dco-radius); text-align: center; }
 
 /* What's Included */
-.dco-includes { margin: 24px 0; padding: 24px; background: linear-gradient(135deg, rgba(46,134,171,0.06) 0%, rgba(27,58,92,0.04) 100%); border: 1px solid rgba(46,134,171,0.2); border-radius: var(--dco-radius); }
+.dco-includes { margin: 24px 0; padding: 24px; background: linear-gradient(135deg, rgba(244,121,32,0.06) 0%, rgba(27,58,92,0.04) 100%); border: 1px solid rgba(244,121,32,0.2); border-radius: var(--dco-radius); }
 .dco-includes__title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--dco-navy); margin: 0 0 16px; }
 .dco-includes__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
 .dco-includes__item { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: var(--dco-text); line-height: 1.5; }
@@ -202,8 +206,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .dco-pay-method-section__hint { margin: 10px 0 0; font-size: 13px; color: var(--dco-error); font-weight: 500; }
 .dco-pay-method-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .dco-pay-method-card { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 18px 20px; background: #fff; border: 2px solid var(--dco-border); border-radius: var(--dco-radius); cursor: pointer; text-align: left; transition: border-color 0.2s, background 0.2s, box-shadow 0.2s; font-family: inherit; }
-.dco-pay-method-card:hover { border-color: var(--dco-teal-light); background: rgba(46,134,171,0.03); }
-.dco-pay-method-card.selected { border-color: var(--dco-teal); background: rgba(46,134,171,0.06); box-shadow: 0 0 0 3px rgba(46,134,171,0.15); }
+.dco-pay-method-card:hover { border-color: var(--dco-teal-light); background: rgba(244,121,32,0.03); }
+.dco-pay-method-card.selected { border-color: var(--dco-teal); background: rgba(244,121,32,0.06); box-shadow: 0 0 0 3px rgba(244,121,32,0.15); }
 .dco-pay-method-card__icon { color: var(--dco-teal); margin-bottom: 6px; }
 .dco-pay-method-card.selected .dco-pay-method-card__icon { color: var(--dco-navy); }
 .dco-pay-method-card__title { font-size: 14px; font-weight: 700; color: var(--dco-navy); line-height: 1.3; }
@@ -215,13 +219,13 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 /* Custom dropdown */
 .dco-custom-select { position: relative; }
 .dco-custom-select__btn { width: 100%; padding: 10px 14px; border: 1.5px solid var(--dco-border); border-radius: 6px; font-size: 14px; color: var(--dco-text); background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7e8f' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 14px center; text-align: left; cursor: pointer; font-family: inherit; transition: border-color 0.2s, box-shadow 0.2s; appearance: none; outline: none; }
-.dco-custom-select__btn:focus, .dco-custom-select.open .dco-custom-select__btn { border-color: var(--dco-teal); box-shadow: 0 0 0 3px rgba(46,134,171,0.15); }
+.dco-custom-select__btn:focus, .dco-custom-select.open .dco-custom-select__btn { border-color: var(--dco-teal); box-shadow: 0 0 0 3px rgba(244,121,32,0.15); }
 .dco-custom-select__btn.placeholder { color: var(--dco-muted); }
 .dco-custom-select__list { display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: #fff; border: 1.5px solid var(--dco-teal); border-radius: 6px; box-shadow: 0 6px 24px rgba(27,58,92,0.14); z-index: 300; max-height: 320px; overflow-y: auto; list-style: none; padding: 4px 0; margin: 0; }
 .dco-custom-select.open .dco-custom-select__list { display: block; }
 .dco-custom-select__item { padding: 9px 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px; cursor: pointer; font-size: 14px; color: var(--dco-text); }
-.dco-custom-select__item:hover { background: rgba(46,134,171,0.07); }
-.dco-custom-select__item.selected { background: rgba(46,134,171,0.1); color: var(--dco-teal); font-weight: 600; }
+.dco-custom-select__item:hover { background: rgba(244,121,32,0.07); }
+.dco-custom-select__item.selected { background: rgba(244,121,32,0.1); color: var(--dco-teal); font-weight: 600; }
 .dco-custom-select__item--sep { padding: 6px 14px 4px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--dco-muted); cursor: default; border-top: 1px solid var(--dco-border); margin-top: 4px; pointer-events: none; }
 .dco-rare-badge { font-size: 10px; font-weight: 700; background: #fff8e1; color: #7d5a00; border: 1px solid #f0c040; border-radius: 10px; padding: 2px 7px; letter-spacing: 0.3px; flex-shrink: 0; white-space: nowrap; }
 
@@ -232,7 +236,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .dco-media-pane { display: none; }
 .dco-media-pane.active { display: block; }
 .dco-media-drop { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 28px 20px; border: 2px dashed var(--dco-border); border-radius: 8px; cursor: pointer; background: #f8fafc; transition: border-color 0.2s, background 0.2s; text-align: center; }
-.dco-media-drop:hover { border-color: var(--dco-teal); background: rgba(46,134,171,0.04); }
+.dco-media-drop:hover { border-color: var(--dco-teal); background: rgba(244,121,32,0.04); }
 .dco-media-drop__icon { color: var(--dco-teal-light); }
 .dco-media-drop__label { font-size: 13px; color: var(--dco-muted); }
 .dco-media-drop__label u { color: var(--dco-teal); }
@@ -247,7 +251,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .dco-video-remove { width: 36px; height: 40px; border: 1.5px solid var(--dco-border); border-radius: 6px; background: none; cursor: pointer; color: var(--dco-muted); font-size: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: border-color 0.2s, color 0.2s; font-family: inherit; }
 .dco-video-remove:hover { border-color: var(--dco-error); color: var(--dco-error); }
 .dco-add-video-btn { margin-top: 8px; width: 100%; padding: 9px; border: 1.5px dashed var(--dco-border); border-radius: 6px; background: none; font-size: 13px; font-weight: 600; color: var(--dco-teal); cursor: pointer; font-family: inherit; transition: border-color 0.2s, background 0.2s; }
-.dco-add-video-btn:hover { border-color: var(--dco-teal); background: rgba(46,134,171,0.04); }
+.dco-add-video-btn:hover { border-color: var(--dco-teal); background: rgba(244,121,32,0.04); }
 .dco-or-divider { display: flex; align-items: center; gap: 12px; margin: 16px 0; }
 .dco-or-divider::before, .dco-or-divider::after { content: ''; flex: 1; height: 1px; background: var(--dco-border); }
 .dco-or-divider span { font-size: 11px; font-weight: 700; color: var(--dco-muted); text-transform: uppercase; letter-spacing: 0.5px; }
@@ -267,12 +271,28 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 /* ── Body: deep navy mesh gradient ── */
 body {
   background:
-    radial-gradient(ellipse 70% 55% at 12% 8%,  rgba(46,134,171,0.50) 0%, transparent 62%),
+    radial-gradient(ellipse 70% 55% at 12% 8%,  rgba(244,121,32,0.45) 0%, transparent 62%),
     radial-gradient(ellipse 55% 65% at 88% 88%,  rgba(10,28,58,0.75)  0%, transparent 62%),
-    radial-gradient(ellipse 45% 40% at 58% 25%,  rgba(0,90,145,0.22)  0%, transparent 68%),
-    linear-gradient(168deg, #050d1b 0%, #091b33 28%, #0c2d50 58%, #050f20 100%);
+    radial-gradient(ellipse 45% 40% at 58% 25%,  rgba(244,121,32,0.18)  0%, transparent 68%),
+    radial-gradient(ellipse 30% 30% at 80% 10%,  rgba(141,226,237,0.12) 0%, transparent 55%),
+    linear-gradient(168deg, #050d1b 0%, #091525 28%, #0d2040 58%, #050f20 100%);
   background-attachment: fixed;
 }
+
+/* ── Brand logo in tab bar ── */
+.dco-logo-wrap {
+  display: flex; align-items: center; gap: 9px;
+  padding: 0 18px 0 6px; flex-shrink: 0;
+  border-right: 1px solid rgba(255,255,255,0.10);
+  margin-right: 6px;
+}
+.dco-logo-text {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 11px; font-weight: 800; color: #fff;
+  letter-spacing: 0.8px; line-height: 1.25; white-space: nowrap;
+  text-transform: uppercase;
+}
+.dco-logo-text span { display: block; color: rgba(141,226,237,0.90); font-size: 9px; letter-spacing: 2px; font-weight: 600; }
 
 /* ── Preview tab bar ── */
 .preview-tabs {
@@ -283,7 +303,7 @@ body {
 }
 .preview-tab { color: rgba(168,200,216,0.52); }
 .preview-tab:hover { color: rgba(255,255,255,0.88); background: rgba(255,255,255,0.04); }
-.preview-tab.active { color: #fff; border-bottom-color: #2E86AB; }
+.preview-tab.active { color: #fff; border-bottom-color: #F47920; }
 
 /* ── Screen padding ── */
 .preview-screen { padding: 36px 20px; }
@@ -306,10 +326,10 @@ body {
   color: #fff;
 }
 .dco-lang-toggle.active {
-  background: rgba(46,134,171,0.48);
-  border-color: rgba(46,134,171,0.55);
+  background: rgba(244,121,32,0.48);
+  border-color: rgba(244,121,32,0.55);
   color: #fff;
-  box-shadow: 0 4px 16px rgba(46,134,171,0.38), inset 0 1px 0 rgba(255,255,255,0.25);
+  box-shadow: 0 4px 16px rgba(244,121,32,0.38), inset 0 1px 0 rgba(255,255,255,0.25);
 }
 
 /* ── Step indicators ── */
@@ -324,10 +344,10 @@ body {
 }
 .dco-step.active .dco-step__num,
 .dco-step.done  .dco-step__num {
-  background: rgba(46,134,171,0.62);
+  background: rgba(244,121,32,0.62);
   border: 1px solid rgba(255,255,255,0.34);
   color: #fff;
-  box-shadow: 0 4px 20px rgba(46,134,171,0.55), inset 0 1px 0 rgba(255,255,255,0.35);
+  box-shadow: 0 4px 20px rgba(244,121,32,0.55), inset 0 1px 0 rgba(255,255,255,0.35);
 }
 .dco-step__label { color: rgba(255,255,255,0.36); }
 .dco-step.active .dco-step__label { color: rgba(160,220,255,0.92); font-weight: 700; }
@@ -354,22 +374,22 @@ body {
   transition: background 0.2s, box-shadow 0.2s, transform 0.15s, border-color 0.2s;
 }
 .dco-btn--primary {
-  background: linear-gradient(150deg, rgba(46,155,190,0.92) 0%, rgba(18,86,128,0.96) 100%);
+  background: linear-gradient(150deg, rgba(244,121,32,0.92) 0%, rgba(180,70,5,0.96) 100%);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255,255,255,0.32);
   color: #fff;
   text-shadow: 0 1px 2px rgba(0,0,0,0.14);
   box-shadow:
-    0 8px 26px rgba(46,134,171,0.52),
+    0 8px 26px rgba(244,121,32,0.52),
     0 2px 8px  rgba(0,0,0,0.22),
     inset 0 1px 0 rgba(255,255,255,0.44),
     inset 0 -1px 0 rgba(0,0,0,0.09);
 }
 .dco-btn--primary:hover {
-  background: linear-gradient(150deg, rgba(60,170,208,0.95) 0%, rgba(26,102,150,0.98) 100%);
+  background: linear-gradient(150deg, rgba(255,145,45,0.95) 0%, rgba(200,80,5,0.98) 100%);
   box-shadow:
-    0 14px 38px rgba(46,134,171,0.62),
+    0 14px 38px rgba(244,121,32,0.62),
     0 4px 14px  rgba(0,0,0,0.26),
     inset 0 1px 0 rgba(255,255,255,0.52);
   transform: translateY(-2px);
@@ -384,11 +404,11 @@ body {
   box-shadow: 0 2px 12px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.72);
 }
 .dco-btn--secondary:hover {
-  background: rgba(46,134,171,0.10);
-  border-color: rgba(46,134,171,0.36);
+  background: rgba(244,121,32,0.10);
+  border-color: rgba(244,121,32,0.36);
   color: var(--dco-teal);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(46,134,171,0.18), inset 0 1px 0 rgba(255,255,255,0.72);
+  box-shadow: 0 6px 20px rgba(244,121,32,0.18), inset 0 1px 0 rgba(255,255,255,0.72);
 }
 .dco-btn:disabled { opacity: 0.45; transform: none !important; }
 
@@ -403,8 +423,8 @@ body {
 }
 .dco-input:focus {
   background: rgba(255,255,255,0.90);
-  border-color: rgba(46,134,171,0.46);
-  box-shadow: 0 0 0 3px rgba(46,134,171,0.13), inset 0 1px 3px rgba(0,0,0,0.04);
+  border-color: rgba(244,121,32,0.46);
+  box-shadow: 0 0 0 3px rgba(244,121,32,0.13), inset 0 1px 3px rgba(0,0,0,0.04);
 }
 
 /* ── Custom dropdown button ── */
@@ -419,8 +439,8 @@ body {
 .dco-custom-select.open .dco-custom-select__btn,
 .dco-custom-select__btn:focus {
   background-color: rgba(255,255,255,0.90);
-  border-color: rgba(46,134,171,0.46);
-  box-shadow: 0 0 0 3px rgba(46,134,171,0.13);
+  border-color: rgba(244,121,32,0.46);
+  box-shadow: 0 0 0 3px rgba(244,121,32,0.13);
 }
 .dco-custom-select__list {
   background: rgba(250,253,255,0.88);
@@ -431,8 +451,8 @@ body {
   border-radius: 14px;
   box-shadow: 0 22px 52px rgba(0,0,0,0.24), inset 0 1px 0 rgba(255,255,255,0.92);
 }
-.dco-custom-select__item:hover  { background: rgba(46,134,171,0.08); }
-.dco-custom-select__item.selected { background: rgba(46,134,171,0.12); }
+.dco-custom-select__item:hover  { background: rgba(244,121,32,0.08); }
+.dco-custom-select__item.selected { background: rgba(244,121,32,0.12); }
 
 /* ── Internal info boxes ── */
 .dco-summary {
@@ -442,22 +462,22 @@ body {
 }
 .dco-result__reasoning {
   background: rgba(27,58,92,0.04);
-  border-left-color: rgba(46,134,171,0.55);
+  border-left-color: rgba(244,121,32,0.55);
   border-radius: 0 10px 10px 0;
 }
 .dco-includes {
-  background: rgba(46,134,171,0.05);
-  border-color: rgba(46,134,171,0.14);
+  background: rgba(244,121,32,0.05);
+  border-color: rgba(244,121,32,0.14);
   border-radius: 12px;
 }
 .dco-ach-info {
-  background: rgba(46,134,171,0.06);
-  border-color: rgba(46,134,171,0.18);
+  background: rgba(244,121,32,0.06);
+  border-color: rgba(244,121,32,0.18);
   border-radius: 12px;
 }
 .dco-suggestions        { border-color: rgba(243,156,18,0.28); border-radius: 12px; }
 .dco-suggestions__header { background: rgba(243,156,18,0.06); }
-.dco-revise-cta          { background: rgba(46,134,171,0.04); border-color: rgba(46,134,171,0.22); border-radius: 12px; }
+.dco-revise-cta          { background: rgba(244,121,32,0.04); border-color: rgba(244,121,32,0.22); border-radius: 12px; }
 .dco-result__contact     { border-top-color: rgba(27,58,92,0.10); }
 .dco-webhook-box         { background: rgba(255,255,255,0.38); border-radius: 8px; backdrop-filter: blur(8px); }
 
@@ -473,14 +493,14 @@ body {
 }
 .dco-pay-method-card:hover {
   background: rgba(255,255,255,0.88);
-  border-color: rgba(46,134,171,0.28);
+  border-color: rgba(244,121,32,0.28);
   transform: translateY(-2px);
   box-shadow: 0 10px 28px rgba(0,0,0,0.11), inset 0 1px 0 rgba(255,255,255,0.92);
 }
 .dco-pay-method-card.selected {
-  background: rgba(46,134,171,0.10);
-  border-color: rgba(46,134,171,0.48);
-  box-shadow: 0 0 0 3px rgba(46,134,171,0.14), 0 8px 24px rgba(46,134,171,0.22);
+  background: rgba(244,121,32,0.10);
+  border-color: rgba(244,121,32,0.48);
+  box-shadow: 0 0 0 3px rgba(244,121,32,0.14), 0 8px 24px rgba(244,121,32,0.22);
 }
 
 /* ── Media drop zones ── */
@@ -490,8 +510,8 @@ body {
   border-radius: 14px;
 }
 .dco-media-drop:hover {
-  background: rgba(46,134,171,0.07);
-  border-color: rgba(46,134,171,0.36);
+  background: rgba(244,121,32,0.07);
+  border-color: rgba(244,121,32,0.36);
 }
 
 /* ── Video file list cards ── */
@@ -510,8 +530,8 @@ body {
   border-radius: 10px;
 }
 .dco-add-video-btn:hover {
-  background: rgba(46,134,171,0.07);
-  border-color: rgba(46,134,171,0.32);
+  background: rgba(244,121,32,0.07);
+  border-color: rgba(244,121,32,0.32);
 }
 .dco-or-divider::before,
 .dco-or-divider::after { background: rgba(27,58,92,0.14); }
@@ -547,7 +567,7 @@ body {
 }
 .dco-admin-save {
   border-radius: 22px;
-  box-shadow: 0 4px 16px rgba(46,134,171,0.40);
+  box-shadow: 0 4px 16px rgba(244,121,32,0.40);
 }
 
 /* ── Unit toggle (Months / Days) ── */
@@ -578,18 +598,18 @@ body {
   line-height: 1;
 }
 .dco-unit-btn.active {
-  background: linear-gradient(150deg, rgba(46,155,190,0.90) 0%, rgba(18,86,128,0.94) 100%);
+  background: linear-gradient(150deg, rgba(244,121,32,0.90) 0%, rgba(180,70,5,0.94) 100%);
   color: #fff;
   text-shadow: 0 1px 2px rgba(0,0,0,0.14);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.36), 0 2px 8px rgba(46,134,171,0.35);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.36), 0 2px 8px rgba(244,121,32,0.35);
 }
 .dco-unit-btn:hover:not(.active) {
-  background: rgba(46,134,171,0.10);
+  background: rgba(244,121,32,0.10);
   color: var(--dco-teal);
 }
 
 /* ── Loading dots ── */
-.dco-loading__dots span { background: rgba(46,134,171,0.65); }
+.dco-loading__dots span { background: rgba(244,121,32,0.65); }
 
 /* ── Password strength bar bg ── */
 .dco-password-strength { background: rgba(27,58,92,0.10); }
@@ -612,7 +632,7 @@ body {
   -webkit-backdrop-filter: blur(10px);
   transition: background 0.2s, transform 0.15s;
 }
-.dco-reach-refresh:hover { background: rgba(46,134,171,0.10); color: var(--dco-teal); transform: translateY(-1px); }
+.dco-reach-refresh:hover { background: rgba(244,121,32,0.10); color: var(--dco-teal); transform: translateY(-1px); }
 .dco-reach-summary {
   display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
   padding: 12px 18px; background: rgba(27,58,92,0.05);
@@ -638,8 +658,8 @@ body {
   box-shadow: 0 4px 20px rgba(0,0,0,0.09), inset 0 1px 0 rgba(255,255,255,0.92);
 }
 .dco-reach-card--accent {
-  background: linear-gradient(145deg, rgba(46,134,171,0.13) 0%, rgba(27,58,92,0.08) 100%);
-  border-color: rgba(46,134,171,0.24);
+  background: linear-gradient(145deg, rgba(244,121,32,0.13) 0%, rgba(27,58,92,0.08) 100%);
+  border-color: rgba(244,121,32,0.24);
 }
 .dco-reach-card__icon { font-size: 22px; margin-bottom: 10px; display: block; }
 .dco-reach-card__label { font-size: 11px; font-weight: 700; color: var(--dco-teal); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
@@ -678,7 +698,7 @@ body {
 .dco-reach-mini__title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--dco-muted); margin-bottom: 12px; }
 .dco-reach-mini-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
 .dco-reach-mini-card {
-  background: rgba(46,134,171,0.07); border: 1px solid rgba(46,134,171,0.16);
+  background: rgba(244,121,32,0.07); border: 1px solid rgba(244,121,32,0.16);
   border-radius: 12px; padding: 14px 16px; text-align: center;
 }
 .dco-reach-mini-card__val { font-size: 22px; font-weight: 800; color: var(--dco-navy); letter-spacing: -0.5px; }
@@ -707,8 +727,8 @@ body {
   box-shadow: 0 6px 24px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.96);
 }
 .dco-client-card--teal {
-  background: linear-gradient(145deg, rgba(46,134,171,0.16) 0%, rgba(27,58,92,0.10) 100%);
-  border-color: rgba(46,134,171,0.28);
+  background: linear-gradient(145deg, rgba(244,121,32,0.16) 0%, rgba(27,58,92,0.10) 100%);
+  border-color: rgba(244,121,32,0.28);
 }
 .dco-client-card__icon { font-size: 26px; margin-bottom: 12px; display: block; }
 .dco-client-card__label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--dco-teal); margin-bottom: 5px; }
@@ -720,7 +740,7 @@ body {
 }
 .dco-client-empty__icon { color: rgba(27,58,92,0.16); margin-bottom: 16px; }
 .dco-client-empty__title { font-size: 17px; font-weight: 700; color: var(--dco-navy); margin-bottom: 8px; }
-.dco-next-steps { margin: 0 0 24px; padding: 20px 24px; background: rgba(46,134,171,0.06); border: 1px solid rgba(46,134,171,0.15); border-radius: 14px; }
+.dco-next-steps { margin: 0 0 24px; padding: 20px 24px; background: rgba(244,121,32,0.06); border: 1px solid rgba(244,121,32,0.15); border-radius: 14px; }
 .dco-next-steps__title { font-size: 13px; font-weight: 700; color: var(--dco-navy); margin: 0 0 14px; }
 .dco-next-steps__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
 .dco-next-steps__item { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--dco-text); line-height: 1.5; }
@@ -750,13 +770,13 @@ body {
 .dco-chat-fab {
   position: fixed; bottom: 26px; right: 26px;
   width: 54px; height: 54px; border-radius: 50%;
-  background: linear-gradient(135deg, #2E86AB 0%, #1B3A5C 100%);
+  background: linear-gradient(135deg, #F47920 0%, #1B3A5C 100%);
   border: none; cursor: pointer;
-  box-shadow: 0 4px 22px rgba(46,134,171,0.50);
+  box-shadow: 0 4px 22px rgba(244,121,32,0.50);
   display: flex; align-items: center; justify-content: center;
   z-index: 9000; transition: transform 0.18s, box-shadow 0.18s;
 }
-.dco-chat-fab:hover { transform: scale(1.09); box-shadow: 0 6px 30px rgba(46,134,171,0.65); }
+.dco-chat-fab:hover { transform: scale(1.09); box-shadow: 0 6px 30px rgba(244,121,32,0.65); }
 .dco-chat-fab svg { width: 24px; height: 24px; color: #fff; pointer-events: none; }
 .dco-chat-panel {
   position: fixed; bottom: 92px; right: 26px;
@@ -772,7 +792,7 @@ body {
 }
 .dco-chat-panel.dco-chat--open { opacity: 1; pointer-events: all; transform: translateY(0) scale(1); }
 .dco-chat-head {
-  background: linear-gradient(135deg, #1B3A5C 0%, #2E86AB 100%);
+  background: linear-gradient(135deg, #1B3A5C 0%, #F47920 100%);
   padding: 13px 16px; display: flex; align-items: center; gap: 10px; flex-shrink: 0;
 }
 .dco-chat-head__icon {
@@ -783,7 +803,7 @@ body {
 }
 .dco-chat-head__info { flex: 1; min-width: 0; }
 .dco-chat-head__name { font-size: 14px; font-weight: 700; color: #fff; }
-.dco-chat-head__sub { font-size: 11px; color: #A8C8D8; display: flex; align-items: center; gap: 4px; margin-top: 1px; }
+.dco-chat-head__sub { font-size: 11px; color: #8DE2ED; display: flex; align-items: center; gap: 4px; margin-top: 1px; }
 .dco-chat-head__dot { width: 6px; height: 6px; border-radius: 50%; background: #2ecc71; flex-shrink: 0; }
 .dco-chat-head__close {
   background: none; border: none; cursor: pointer;
@@ -804,10 +824,10 @@ body {
 }
 @keyframes dcoChatIn { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:translateY(0)} }
 .dco-chat-bubble--agent { background: #f0f4f8; color: #2c3e50; border-bottom-left-radius: 4px; align-self: flex-start; }
-.dco-chat-bubble--user  { background: linear-gradient(135deg,#2E86AB,#1B3A5C); color:#fff; border-bottom-right-radius:4px; align-self:flex-end; }
+.dco-chat-bubble--user  { background: linear-gradient(135deg,#F47920,#1B3A5C); color:#fff; border-bottom-right-radius:4px; align-self:flex-end; }
 .dco-chat-bubble--typing { background: #f0f4f8; align-self: flex-start; padding: 11px 14px; }
 .dco-chat-typing { display: flex; gap: 4px; align-items: center; }
-.dco-chat-typing span { width: 7px; height: 7px; border-radius: 50%; background: #A8C8D8; animation: dco-bounce 1.2s infinite; }
+.dco-chat-typing span { width: 7px; height: 7px; border-radius: 50%; background: #8DE2ED; animation: dco-bounce 1.2s infinite; }
 .dco-chat-typing span:nth-child(2){animation-delay:.2s} .dco-chat-typing span:nth-child(3){animation-delay:.4s}
 .dco-chat-foot {
   padding: 9px 11px; border-top: 1px solid #eef2f6;
@@ -819,10 +839,10 @@ body {
   resize: none; min-height: 36px; max-height: 90px; outline: none;
   overflow-y: auto; transition: border-color 0.18s; line-height: 1.4;
 }
-.dco-chat-input:focus { border-color: #2E86AB; }
+.dco-chat-input:focus { border-color: #F47920; }
 .dco-chat-send-btn {
   width: 36px; height: 36px; flex-shrink: 0; border-radius: 9px;
-  background: #2E86AB; border: none; cursor: pointer;
+  background: #F47920; border: none; cursor: pointer;
   display: flex; align-items: center; justify-content: center; transition: background 0.18s;
 }
 .dco-chat-send-btn:hover { background: #1B3A5C; }
@@ -881,7 +901,7 @@ body {
   }
   .dco-client-card--teal[style] > div[style*="border-right"] {
     border-right: none !important;
-    border-bottom: 1px solid rgba(46,134,171,0.22) !important;
+    border-bottom: 1px solid rgba(244,121,32,0.22) !important;
     padding-right: 0 !important;
     padding-bottom: 14px !important;
     margin-right: 0 !important;
@@ -1047,11 +1067,11 @@ body {
 .dco-modal__label    { display: block; font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.6); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.05em; }
 .dco-modal__input    { width: 100%; padding: 11px 14px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18); border-radius: 10px; color: #fff; font-size: 14px; font-family: inherit; outline: none; transition: border-color 0.2s; }
 .dco-modal__input::placeholder { color: rgba(255,255,255,0.30); }
-.dco-modal__input:focus         { border-color: rgba(46,134,171,0.80); }
+.dco-modal__input:focus         { border-color: rgba(244,121,32,0.80); }
 .dco-modal__err     { font-size: 12px; color: #ff7675; min-height: 16px; margin-top: 6px; }
 .dco-modal__actions { display: flex; gap: 10px; margin-top: 20px; }
 .dco-modal__btn     { flex: 1; padding: 11px 16px; border-radius: 12px; font-size: 14px; font-weight: 600; font-family: inherit; cursor: pointer; border: none; transition: all 0.2s; }
-.dco-modal__btn--primary { background: linear-gradient(135deg,#2E86AB,#1a5e7b); color: #fff; }
+.dco-modal__btn--primary { background: linear-gradient(135deg,#F47920,#c05a10); color: #fff; }
 .dco-modal__btn--primary:hover { filter: brightness(1.12); }
 .dco-modal__btn--ghost   { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.65); border: 1px solid rgba(255,255,255,0.16); }
 .dco-modal__btn--ghost:hover   { background: rgba(255,255,255,0.13); }
@@ -1064,8 +1084,8 @@ body {
   color: rgba(255,255,255,0.70); font-size: 12px; font-weight: 600; font-family: inherit;
   cursor: pointer; white-space: nowrap; transition: all 0.2s;
 }
-.dco-admin-access-btn:hover { background: rgba(46,134,171,0.22); border-color: rgba(46,134,171,0.55); color: #fff; }
-.dco-admin-access-btn.active { background: linear-gradient(135deg,#2E86AB,#1a5e7b); border-color: transparent; color: #fff; }
+.dco-admin-access-btn:hover { background: rgba(244,121,32,0.22); border-color: rgba(244,121,32,0.55); color: #fff; }
+.dco-admin-access-btn.active { background: linear-gradient(135deg,#F47920,#c05a10); border-color: transparent; color: #fff; }
 
 /* Admin badge chip on tabs */
 .dco-tab-admin-badge { display: inline-block; background: linear-gradient(135deg,#e67e22,#c0392b); color: #fff; font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 5px; margin-left: 4px; vertical-align: middle; text-transform: uppercase; }
@@ -1087,7 +1107,7 @@ body {
 
 /* Meta leads input */
 .dco-meta-inp { width: 72px; padding: 5px 8px; background: rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.18); border-radius: 8px; color: #111; font-size: 12px; font-family: inherit; text-align: center; }
-.dco-meta-inp:focus { outline: none; border-color: rgba(46,134,171,0.70); }
+.dco-meta-inp:focus { outline: none; border-color: rgba(244,121,32,0.70); }
 
 /* Match bar */
 .dco-match-wrap { min-width: 72px; }
@@ -1118,16 +1138,16 @@ body {
 .dco-camp-card__actions { display: flex; gap: 8px; margin-top: 6px; }
 .dco-camp-card__btn {
   flex: 1; padding: 8px 10px; border-radius: 10px; font-size: 12px; font-weight: 600;
-  font-family: inherit; cursor: pointer; border: 1px solid rgba(46,134,171,0.45);
-  background: rgba(46,134,171,0.14); color: #7ec8e3; transition: all 0.18s;
+  font-family: inherit; cursor: pointer; border: 1px solid rgba(244,121,32,0.45);
+  background: rgba(244,121,32,0.14); color: #c0a8f8; transition: all 0.18s;
 }
-.dco-camp-card__btn:hover { background: rgba(46,134,171,0.32); color: #fff; }
+.dco-camp-card__btn:hover { background: rgba(244,121,32,0.32); color: #fff; }
 .dco-camp-card__btn--new  { border-color: rgba(39,174,96,0.45); background: rgba(39,174,96,0.12); color: #6fcf97; }
 .dco-camp-card__btn--new:hover { background: rgba(39,174,96,0.28); color: #fff; }
 .dco-camp-card--link { cursor: pointer; }
 .dco-camp-card--link:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(0,0,0,0.28); }
-.dco-camp-card__reach-hint { font-size: 11px; font-weight: 600; color: rgba(46,134,171,0.80); margin-top: 6px; display: flex; align-items: center; gap: 4px; }
-#screen-dashboard .dco-camp-card__reach-hint { color: rgba(0,90,140,0.70); }
+.dco-camp-card__reach-hint { font-size: 11px; font-weight: 600; color: rgba(244,121,32,0.80); margin-top: 6px; display: flex; align-items: center; gap: 4px; }
+#screen-dashboard .dco-camp-card__reach-hint { color: rgba(244,121,32,0.70); }
 
 /* Status badges */
 .dco-status-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
@@ -1155,6 +1175,43 @@ body {
 <body>
 
 <div class="preview-tabs" id="main-tab-bar">
+  <!-- Diversia Health Brand Logo -->
+  <div class="dco-logo-wrap">
+    <svg viewBox="0 0 56 56" width="34" height="34" xmlns="http://www.w3.org/2000/svg">
+      <g transform="translate(28,28)">
+        <!-- Back-layer petals (wider, rounder) -->
+        <g transform="rotate(22)"> <ellipse cx="0" cy="-10" rx="5.5" ry="11.5" fill="#6CC8EA" opacity="0.92"/></g>
+        <g transform="rotate(67)"> <ellipse cx="0" cy="-10" rx="5.5" ry="11.5" fill="#D94020" opacity="0.92"/></g>
+        <g transform="rotate(112)"><ellipse cx="0" cy="-10" rx="5.5" ry="11.5" fill="#3A9E30" opacity="0.92"/></g>
+        <g transform="rotate(157)"><ellipse cx="0" cy="-10" rx="5.5" ry="11.5" fill="#3A8ED0" opacity="0.92"/></g>
+        <g transform="rotate(202)"><ellipse cx="0" cy="-10" rx="5.5" ry="11.5" fill="#C03018" opacity="0.92"/></g>
+        <g transform="rotate(247)"><ellipse cx="0" cy="-10" rx="5.5" ry="11.5" fill="#2A6E26" opacity="0.92"/></g>
+        <g transform="rotate(292)"><ellipse cx="0" cy="-10" rx="5.5" ry="11.5" fill="#1A2E58" opacity="0.95"/></g>
+        <g transform="rotate(337)"><ellipse cx="0" cy="-10" rx="5.5" ry="11.5" fill="#5AB8DC" opacity="0.92"/></g>
+        <!-- Front-layer petals (narrower, pointed — the prominent ones) -->
+        <g transform="rotate(0)">  <ellipse cx="0" cy="-9" rx="3.8" ry="10" fill="#88D4F0" opacity="0.98"/></g>
+        <g transform="rotate(45)"> <ellipse cx="0" cy="-9" rx="3.8" ry="10" fill="#E05030" opacity="0.98"/></g>
+        <g transform="rotate(90)"> <ellipse cx="0" cy="-9" rx="3.8" ry="10" fill="#46B036" opacity="0.98"/></g>
+        <g transform="rotate(135)"><ellipse cx="0" cy="-9" rx="3.8" ry="10" fill="#4AAAE0" opacity="0.98"/></g>
+        <g transform="rotate(180)"><ellipse cx="0" cy="-9" rx="3.8" ry="10" fill="#1A2858" opacity="0.98"/></g>
+        <g transform="rotate(225)"><ellipse cx="0" cy="-9" rx="3.8" ry="10" fill="#36883A" opacity="0.98"/></g>
+        <g transform="rotate(270)"><ellipse cx="0" cy="-9" rx="3.8" ry="10" fill="#C83820" opacity="0.98"/></g>
+        <g transform="rotate(315)"><ellipse cx="0" cy="-9" rx="3.8" ry="10" fill="#70CAEE" opacity="0.98"/></g>
+        <!-- White starburst center -->
+        <circle r="7" fill="white"/>
+        <!-- Outer colored dots (matches logo: navy + green alternating) -->
+        <circle cx="0"      cy="-22"   r="1.8" fill="#1A3060"/>
+        <circle cx="15.6"   cy="-15.6" r="1.8" fill="#46B036"/>
+        <circle cx="22"     cy="0"     r="1.8" fill="#1A3060"/>
+        <circle cx="15.6"   cy="15.6"  r="1.8" fill="#46B036"/>
+        <circle cx="0"      cy="22"    r="1.8" fill="#1A3060"/>
+        <circle cx="-15.6"  cy="15.6"  r="1.8" fill="#46B036"/>
+        <circle cx="-22"    cy="0"     r="1.8" fill="#1A3060"/>
+        <circle cx="-15.6"  cy="-15.6" r="1.8" fill="#46B036"/>
+      </g>
+    </svg>
+    <div class="dco-logo-text">Diversia<span>— Health —</span></div>
+  </div>
   <div class="preview-tab" id="tab-login" onclick="showScreen('login',this)">🔐 Login</div>
   <div class="preview-tab" id="tab-dashboard" style="display:none" onclick="showScreen('dashboard',this)">📋 Dashboard</div>
   <div class="preview-tab" id="tab-step1" onclick="showScreen('step1',this)">Step 1 — Account</div>
@@ -1557,7 +1614,7 @@ body {
     <div class="dco-panel">
       <div class="dco-loading">
         <div class="dco-loading__spinner">
-          <svg viewBox="0 0 50 50"><circle cx="25" cy="25" r="20" fill="none" stroke="#2E86AB" stroke-width="4" stroke-dasharray="80 40" stroke-linecap="round"><animateTransform attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="1s" repeatCount="indefinite"/></circle></svg>
+          <svg viewBox="0 0 50 50"><circle cx="25" cy="25" r="20" fill="none" stroke="#F47920" stroke-width="4" stroke-dasharray="80 40" stroke-linecap="round"><animateTransform attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="1s" repeatCount="indefinite"/></circle></svg>
         </div>
         <h2 id="loading-title" class="dco-loading__title lang-text" data-en="Evaluating your application..." data-es="Evaluando su solicitud...">Evaluating your application...</h2>
         <p id="loading-body" class="dco-loading__body lang-text" data-en="Our AI system is reviewing your profile. This may take a few seconds." data-es="Nuestro sistema de inteligencia artificial está revisando su perfil. Esto puede tardar unos segundos.">Our AI system is reviewing your profile. This may take a few seconds.</p>
@@ -1835,21 +1892,16 @@ body {
     <div class="dco-admin-header" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px"><h1>⚙ Client Onboarding Settings</h1><button id="adm-change-pw-link" class="dco-admin-btn" onclick="showChangePasscodeModal()" style="font-size:12px;padding:6px 14px;display:none">🔒 Change My Passcode</button></div>
     <div class="dco-admin-body">
       <div class="dco-admin-section">
-        <h2>AI Providers</h2>
-        <p style="font-size:13px;color:var(--dco-muted);margin:0 0 10px">Add one or more AI providers. When multiple are enabled, evaluations are cross-referenced for higher accuracy.</p>
-        <div id="adm-site-ai-status" style="font-size:12px;padding:8px 12px;background:rgba(46,134,171,0.08);border:1px solid rgba(46,134,171,0.20);border-radius:8px;margin-bottom:14px;display:flex;align-items:center;flex-wrap:wrap;gap:6px">
-          <span style="color:var(--dco-muted)">Loading site default…</span>
+        <h2>AI Runtime</h2>
+        <p style="font-size:13px;color:var(--dco-muted);margin:0 0 10px">The live WordPress plugin saves the OpenAI API key once in the backend and reuses it automatically for every evaluation. This standalone preview does not use live API keys and runs a local mock evaluation instead.</p>
+        <div id="adm-site-ai-status" style="font-size:12px;padding:8px 12px;background:rgba(244,121,32,0.08);border:1px solid rgba(244,121,32,0.20);border-radius:8px;margin-bottom:14px;display:flex;align-items:center;flex-wrap:wrap;gap:6px">
+          <span style="color:var(--dco-muted)">Preview mode: local mock evaluation only.</span>
         </div>
-        <div id="adm-ai-providers-list"></div>
-        <div class="dco-add-provider-row">
-          <select id="adm-ai-prov-select" class="dco-admin-select" style="width:180px;max-width:100%">
-            <option value="openai">OpenAI (GPT)</option>
-            <option value="anthropic">Anthropic (Claude)</option>
-            <option value="google">Google (Gemini)</option>
-            <option value="xai">xAI (Grok)</option>
-            <option value="mistral">Mistral</option>
-          </select>
-          <button class="dco-admin-btn" onclick="addAIProvider()">+ Add Provider</button>
+        <div style="font-size:12px;color:var(--dco-muted);line-height:1.7">
+          Live site setup:
+          <strong>WordPress Admin → Settings → Client Onboarding</strong>,
+          then save the <strong>OpenAI API Key</strong> and <strong>OpenAI Model</strong>.
+          The production plugin uses those saved credentials server-side.
         </div>
       </div>
       <div class="dco-admin-section">
@@ -1891,55 +1943,13 @@ body {
           <tr><th>Admin Email</th><td><input id="adm-email" class="dco-admin-input" type="email" value="admin@diversiahealth.com"></td></tr>
         </table>
       </div>
-      <div class="dco-admin-section">
-        <h2>Email (Gmail via EmailJS)</h2>
-        <p style="font-size:13px;color:var(--dco-muted);margin:0 0 10px">Sends welcome emails from your <strong>Gmail account</strong> using <a href="https://www.emailjs.com" target="_blank" style="color:var(--dco-teal)">EmailJS</a> as the bridge (free — 200 emails/month). Fires automatically on registration in the client's language.</p>
-        <div id="adm-emailjs-status" style="font-size:12px;padding:7px 12px;background:rgba(231,76,60,0.08);border:1px solid rgba(231,76,60,0.22);border-radius:8px;margin-bottom:14px;color:#c0392b">⚠ Not configured — welcome emails will not be sent</div>
-        <table class="dco-admin-table">
-          <tr>
-            <th>Public Key</th>
-            <td><input id="adm-ejs-pubkey" class="dco-admin-input" type="password" placeholder="••••••••••••••••••••"><span class="dco-admin-desc">EmailJS dashboard → Account → Public Key</span></td>
-          </tr>
-          <tr>
-            <th>Service ID</th>
-            <td><input id="adm-ejs-service" class="dco-admin-input" type="text" placeholder="service_xxxxxxx"><span class="dco-admin-desc">EmailJS → Email Services → connect Gmail → copy Service ID</span></td>
-          </tr>
-          <tr>
-            <th>Template — English</th>
-            <td><input id="adm-ejs-tmpl-en" class="dco-admin-input" type="text" placeholder="template_xxxxxxx"><span class="dco-admin-desc">EmailJS template ID for English clients</span></td>
-          </tr>
-          <tr>
-            <th>Template — Spanish</th>
-            <td><input id="adm-ejs-tmpl-es" class="dco-admin-input" type="text" placeholder="template_xxxxxxx"><span class="dco-admin-desc">EmailJS template ID for Spanish clients (falls back to English if blank)</span></td>
-          </tr>
-        </table>
-        <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-          <button class="dco-admin-btn" onclick="saveEmailConfig()">💾 Save Email Config</button>
-          <button class="dco-admin-btn" onclick="testEmailConfig()" style="background:rgba(46,134,171,0.10);color:var(--dco-teal);border-color:rgba(46,134,171,0.30)">✉ Send Test Email</button>
-        </div>
-        <p style="font-size:12px;color:var(--dco-muted);margin-top:8px">
-          <strong>Quick setup:</strong> emailjs.com → Add Service → Gmail → copy Service ID &amp; Public Key → create templates.<br>
-          Variables you can use in your templates: <code>{{first_name}}</code> <code>{{last_name}}</code> <code>{{to_name}}</code> <code>{{org_name}}</code> <code>{{to_email}}</code>
-        </p>
-      </div>
-
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
         <button class="dco-admin-save" onclick="saveAdminSettings()">Save Settings</button>
-        <button class="dco-admin-save" onclick="exportAdminSettings()" style="background:var(--dco-navy)" title="Download all settings as a JSON file to use on any device">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Export Settings
-        </button>
-        <label class="dco-admin-save" style="background:#27ae60;cursor:pointer;margin:0" title="Load a previously exported settings file">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Import Settings
-          <input type="file" accept=".json" style="display:none" onchange="importAdminSettings(event)">
-        </label>
         <span id="adm-save-toast" style="display:none;font-size:13px;font-weight:700;color:var(--dco-success);align-items:center;gap:5px">
           <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
           <span id="adm-save-toast-msg">Settings saved</span>
         </span>
       </div>
-      <p style="font-size:12px;color:var(--dco-muted);margin-top:10px">
-        Use <strong>Export</strong> to download your settings as a file and <strong>Import</strong> on any browser or device to restore them instantly.
-      </p>
       <div class="dco-webhook-box">
         <strong>Stripe Webhook URL</strong><br>
         Configure in Stripe Dashboard → Developers → Webhooks:<br><br>
@@ -2146,7 +2156,7 @@ body {
           </div>
           <div class="dco-client-card dco-client-card--teal" style="grid-column:1/-1;display:flex;align-items:center;gap:0">
             <!-- Duration — left column -->
-            <div style="flex:0 0 auto;padding-right:28px;margin-right:28px;border-right:1px solid rgba(46,134,171,0.22);text-align:center">
+            <div style="flex:0 0 auto;padding-right:28px;margin-right:28px;border-right:1px solid rgba(244,121,32,0.22);text-align:center">
               <span class="dco-client-card__icon">📅</span>
               <div class="dco-client-card__label">Campaign Window</div>
               <div class="dco-client-card__value" id="cl-timeline-duration">—</div>
@@ -2207,15 +2217,15 @@ body {
     <!-- Control bar -->
     <div class="dco-email-ctrl-bar">
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-        <span id="email-cfg-badge" class="dco-email-cfg-badge dco-email-cfg-badge--err">⚠ EmailJS not configured</span>
-        <button class="dco-btn" onclick="showScreen('admin',document.getElementById('tab-admin'))" style="font-size:11px;padding:5px 12px;background:rgba(0,0,0,0.07);color:rgba(0,0,0,0.60);border:1px solid rgba(0,0,0,0.16)">⚙ Configure</button>
+        <span id="email-cfg-badge" class="dco-email-cfg-badge dco-email-cfg-badge--ok">✓ Template preview only</span>
+        <button class="dco-btn" onclick="showScreen('admin',document.getElementById('tab-admin'))" style="font-size:11px;padding:5px 12px;background:rgba(0,0,0,0.07);color:rgba(0,0,0,0.60);border:1px solid rgba(0,0,0,0.16)">⚙ View Settings</button>
       </div>
       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
         <label style="font-size:12px;font-weight:600;color:rgba(0,0,0,0.50)">Client:</label>
         <select id="email-client-select" class="dco-admin-select" onchange="renderEmailPreview(this.value)" style="min-width:190px;font-size:12px">
-          <option value="">— Select to preview / resend —</option>
+          <option value="">— Select to preview —</option>
         </select>
-        <button class="dco-btn dco-btn--primary" onclick="resendWelcomeEmail()" style="font-size:12px;padding:7px 16px">✉ Resend</button>
+        <button class="dco-btn dco-btn--primary" onclick="resendWelcomeEmail()" style="font-size:12px;padding:7px 16px">ℹ Delivery Options</button>
       </div>
     </div>
 
@@ -2226,10 +2236,10 @@ body {
       <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f7f9;padding:30px 0;">
         <tr><td align="center">
           <table width="540" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,0.08);">
-            <tr><td style="background:#1B3A5C;padding:32px 40px;text-align:center;"><h1 style="color:#fff;margin:0;font-size:24px;">Diversia Health</h1><p style="color:#A8C8D8;margin:6px 0 0;font-size:12px;text-transform:uppercase;letter-spacing:1px;">Clinical Trial Recruitment Platform</p></td></tr>
+            <tr><td style="background:linear-gradient(135deg,#F47920 0%,#c05a10 100%);padding:32px 40px;text-align:center;"><h1 style="color:#fff;margin:0;font-size:24px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;letter-spacing:0.5px;">Diversia Health</h1><p style="color:#8DE2ED;margin:6px 0 0;font-size:12px;text-transform:uppercase;letter-spacing:1px;">Clinical Trial Recruitment Platform</p></td></tr>
             <!-- Spanish section -->
             <tr><td style="padding:36px 40px 20px;">
-              <div style="border-left:4px solid #2E86AB;padding-left:14px;margin-bottom:20px;"><span style="color:#2E86AB;font-size:11px;font-weight:bold;text-transform:uppercase;letter-spacing:1px;">ESPAÑOL</span></div>
+              <div style="border-left:4px solid #F47920;padding-left:14px;margin-bottom:20px;"><span style="color:#F47920;font-size:11px;font-weight:bold;text-transform:uppercase;letter-spacing:1px;">ESPAÑOL</span></div>
               <h2 id="em-greeting-es" style="color:#1B3A5C;margin:0 0 14px;font-size:20px;">¡Bienvenido(a) a Diversia Health!</h2>
               <p style="color:#444;line-height:1.7;margin:0 0 16px;">Es un placer darle la bienvenida. Su organización, <strong id="em-org-es">—</strong>, ha completado el proceso de incorporación y su cuenta de cliente ya está activa.</p>
               <div style="background:#f0f7fb;border-radius:6px;padding:18px;margin-bottom:20px;">
@@ -2238,12 +2248,12 @@ body {
                   <tr><td style="padding:3px 0;color:#444;width:100px;">Correo:</td><td id="em-email-es" style="color:#1B3A5C;font-weight:bold;">—</td></tr>
                 </table>
               </div>
-              <div style="text-align:center;margin-bottom:4px;"><a href="#" style="display:inline-block;background:#2E86AB;color:#fff;padding:13px 28px;border-radius:6px;text-decoration:none;font-size:14px;font-weight:bold;">Acceder al Panel →</a></div>
+              <div style="text-align:center;margin-bottom:4px;"><a href="#" style="display:inline-block;background:linear-gradient(135deg,#F47920,#c05a10);color:#fff;padding:13px 28px;border-radius:50px;text-decoration:none;font-size:14px;font-weight:bold;">Acceder al Panel →</a></div>
             </td></tr>
             <tr><td style="padding:0 40px;"><hr style="border:none;border-top:2px dashed #e0e8ef;"></td></tr>
             <!-- English section -->
             <tr><td style="padding:20px 40px 36px;">
-              <div style="border-left:4px solid #1B3A5C;padding-left:14px;margin-bottom:20px;"><span style="color:#1B3A5C;font-size:11px;font-weight:bold;text-transform:uppercase;letter-spacing:1px;">ENGLISH</span></div>
+              <div style="border-left:4px solid #F47920;padding-left:14px;margin-bottom:20px;"><span style="color:#F47920;font-size:11px;font-weight:bold;text-transform:uppercase;letter-spacing:1px;">ENGLISH</span></div>
               <h2 id="em-greeting-en" style="color:#1B3A5C;margin:0 0 14px;font-size:20px;">Welcome to Diversia Health!</h2>
               <p style="color:#444;line-height:1.7;margin:0 0 16px;">We are delighted to welcome <strong id="em-org-en">—</strong> to the Diversia Health platform. Your client account is now fully active.</p>
               <div style="background:#f0f7fb;border-radius:6px;padding:18px;margin-bottom:20px;">
@@ -2253,7 +2263,7 @@ body {
                 </table>
                 <p style="margin:10px 0 0;color:#888;font-size:11px;">Please change your password after first login.</p>
               </div>
-              <div style="text-align:center;"><a href="#" style="display:inline-block;background:#1B3A5C;color:#fff;padding:13px 28px;border-radius:6px;text-decoration:none;font-size:14px;font-weight:bold;">Access Your Dashboard →</a></div>
+              <div style="text-align:center;"><a href="#" style="display:inline-block;background:linear-gradient(135deg,#F47920,#c05a10);color:#fff;padding:13px 28px;border-radius:50px;text-decoration:none;font-size:14px;font-weight:bold;">Access Your Dashboard →</a></div>
             </td></tr>
             <tr><td style="background:#f4f7f9;padding:18px 40px;text-align:center;border-top:1px solid #e0e8ef;"><p style="color:#999;font-size:11px;margin:0;">© 2026 Diversia Health. All rights reserved.</p></td></tr>
           </table>
@@ -3557,16 +3567,8 @@ function clearSiteDefaultAI() {
 function _showAdmSiteAIStatus() {
   var el = document.getElementById('adm-site-ai-status');
   if (!el) return;
-  var cfg = _getSiteDefaultAI();
-  if (cfg && cfg.key && cfg.key.length >= 20) {
-    var label = _AI_PROVIDER_LABELS[cfg.provider] || cfg.provider;
-    var masked = cfg.key.slice(0, 6) + '••••••••' + cfg.key.slice(-4);
-    el.innerHTML = '<span style="color:#27ae60;font-weight:600">🌐 Site Default Active:</span>'
-      + '<span style="color:var(--dco-text);margin-left:4px">' + label + ' · ' + (cfg.model || '') + ' · <code style="font-size:11px">' + masked + '</code></span>'
-      + '<button class="dco-admin-btn" onclick="clearSiteDefaultAI()" style="font-size:11px;padding:4px 10px;margin-left:auto;background:#e74c3c;color:#fff;border-color:#e74c3c">✕ Clear</button>';
-  } else {
-    el.innerHTML = '<span style="color:var(--dco-muted)">⚠ No site default set — AI only works for sessions where a provider is configured. Set one below.</span>';
-  }
+  el.innerHTML = '<span style="color:var(--dco-text);font-weight:600">Preview mode:</span>'
+    + '<span style="color:var(--dco-muted)"> This HTML demo uses local mock scoring only. In production, save the OpenAI API key once in WordPress Admin → Settings → Client Onboarding and the site reuses it automatically.</span>';
 }
 
 /* ── Pick best available provider (Anthropic preferred) ── */
@@ -4074,6 +4076,13 @@ function runAIEvaluation() {
   var evalParams = { disease:disease, diseaseKey:diseaseKey, orgType:orgType, budget:budget,
                      enrollGoal:enrollGoal, timeline:timeline, targetPop:targetPop,
                      minBudget:minBudget, criteriaJson:criteriaJson, allowedOrgs:allowedOrgs };
+
+  _setLoadingStatus(
+    'Running preview evaluation…',
+    'This standalone preview uses local rule-based scoring. The live WordPress plugin uses the OpenAI API key saved in backend settings.'
+  );
+  setTimeout(function() { _applyEvalResult(_localEvaluate(evalParams)); }, 1800);
+  return;
 
   // If an Anthropic key is configured, use the full agentic evaluation loop
   var _agentCfg = _getAgentCfg();
@@ -4962,7 +4971,7 @@ function populateAdminDashboard() {
       + '</td>';
 
     // AI leads
-    html += '<td style="text-align:center;font-weight:600;color:#2E86AB">' + (aiLeads || '<span style="color:rgba(0,0,0,0.25)">—</span>') + '</td>';
+    html += '<td style="text-align:center;font-weight:600;color:#F47920">' + (aiLeads || '<span style="color:rgba(0,0,0,0.25)">—</span>') + '</td>';
 
     // Meta leads input
     html += '<td>'
@@ -5143,20 +5152,15 @@ function populateEmailScreen() {
   // Config status badge
   var badge = document.getElementById('email-cfg-badge');
   if (badge) {
-    if (_emailCfgIsValid()) {
-      badge.className   = 'dco-email-cfg-badge dco-email-cfg-badge--ok';
-      badge.textContent = '✓ Gmail (EmailJS) configured';
-    } else {
-      badge.className   = 'dco-email-cfg-badge dco-email-cfg-badge--err';
-      badge.textContent = '⚠ Email not configured';
-    }
+    badge.className   = 'dco-email-cfg-badge dco-email-cfg-badge--ok';
+    badge.textContent = '✓ Production delivery handled in WordPress';
   }
   // Populate client selector with all registered clients
   var sel = document.getElementById('email-client-select');
   if (sel) {
     var clients = _getClients();
     var keys    = Object.keys(clients);
-    sel.innerHTML = '<option value="">— Select to preview / resend —</option>'
+    sel.innerHTML = '<option value="">— Select to preview —</option>'
       + keys.map(function(k) {
           var a = clients[k];
           return '<option value="' + _esc(k) + '">'
@@ -5191,14 +5195,10 @@ function renderEmailPreview(clientEmail) {
 }
 
 function resendWelcomeEmail() {
-  var sel = document.getElementById('email-client-select');
-  var clientEmail = sel && sel.value;
-  if (!clientEmail) { alert('Please select a client first.'); return; }
-  var clients = _getClients();
-  var acct    = clients[clientEmail];
-  if (!acct) return;
-  _sendWelcomeEmail({ email: clientEmail, firstName: acct.firstName || '', lastName: acct.lastName || '', org: acct.org || '', lang: acct.lang || 'en' });
-  _showAdmToast('Email queued for ' + clientEmail);
+  alert(
+    'The live WordPress plugin already sends the welcome email automatically after provisioning. ' +
+    'Use a site-level delivery method such as SMTP or a transactional email provider to send your templates in production.'
+  );
 }
 
 function _renderEmailLog(filterEmail) {
