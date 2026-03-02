@@ -975,28 +975,36 @@
 .dco-custom-select__arrow { flex-shrink: 0; transition: transform 0.2s; color: var(--dco-muted); }
 .dco-custom-select.open .dco-custom-select__arrow { transform: rotate(180deg); }
 .dco-custom-select__list {
-    display: none; position: absolute; z-index: 999; top: calc(100% + 4px); left: 0; right: 0;
+    display: none !important; position: absolute; z-index: 9999; top: calc(100% + 4px); left: 0; right: 0;
     background: var(--dco-white); border: 1.5px solid var(--dco-border);
     border-radius: var(--dco-radius); box-shadow: 0 8px 24px rgba(27,58,92,0.12);
-    max-height: 280px; overflow-y: auto; list-style: none; margin: 0; padding: 6px 0;
+    max-height: 280px; overflow-y: auto;
+    /* Reset WordPress theme list styles */
+    list-style: none !important; margin: 0 !important; padding: 6px 0 !important;
 }
-.dco-custom-select.open .dco-custom-select__list { display: block; }
+.dco-custom-select.open .dco-custom-select__list { display: block !important; }
+/* Reset any theme bullets on list items */
+.dco-custom-select__list li { list-style: none !important; margin: 0 !important; padding: 0 !important; }
+.dco-custom-select__list li::before,
+.dco-custom-select__list li::after { display: none !important; content: none !important; }
 .dco-custom-select__item {
-    display: flex; align-items: center; justify-content: space-between;
+    display: flex !important; align-items: center; justify-content: space-between;
     padding: 9px 16px; font-size: 13px; color: var(--dco-text);
     cursor: pointer; transition: background 0.15s;
 }
 .dco-custom-select__item:hover { background: rgba(244,121,32,0.07); color: #F47920; }
 .dco-custom-select__sep {
-    padding: 8px 16px 4px; font-size: 10px; font-weight: 700;
+    display: block !important;
+    padding: 8px 16px 4px !important; font-size: 10px; font-weight: 700;
     text-transform: uppercase; letter-spacing: 0.06em; color: var(--dco-muted);
-    border-top: 1px solid var(--dco-border); margin-top: 4px; pointer-events: none;
+    border-top: 1px solid var(--dco-border); margin-top: 4px !important; pointer-events: none;
 }
 
 /* ── RARE badge ── */
 .dco-rare-badge {
+    display: inline-block !important;
     font-size: 9px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase;
-    padding: 2px 6px; border-radius: 20px; flex-shrink: 0;
+    padding: 2px 6px; border-radius: 20px; flex-shrink: 0; margin-left: 6px;
     background: rgba(231,76,60,0.10); color: #e74c3c; border: 1px solid rgba(231,76,60,0.25);
 }
 
@@ -1037,9 +1045,9 @@
 }
 .dco-media-tab--active,
 .dco-media-tab.dco-media-tab--active { color: #F47920; border-bottom-color: #F47920; }
-.dco-media-pane { display: none; }
+.dco-media-pane { display: none !important; }
 .dco-media-pane--active,
-.dco-media-pane.dco-media-pane--active { display: block; }
+.dco-media-pane.dco-media-pane--active { display: block !important; }
 
 /* ── Drop zone ── */
 .dco-media-drop {
