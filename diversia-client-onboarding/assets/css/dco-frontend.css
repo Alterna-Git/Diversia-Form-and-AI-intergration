@@ -1,22 +1,23 @@
 /* ==========================================================================
    Diversia Client Onboarding — Frontend Styles
-   Colors: #1B3A5C (navy), #2E86AB (teal)
+   Aligned with diversiahealth.com (Hello Biz + Elementor Pro)
+   Primary blue: #1e9cd7 | Deep navy: #001f50 | Orange CTA: #F47920
    ========================================================================== */
 
 :root {
-    --dco-navy:       #1B3A5C;
-    --dco-teal:       #2E86AB;
-    --dco-teal-light: #A8C8D8;
-    --dco-bg:         #f4f7f9;
+    --dco-navy:       #001f50;
+    --dco-teal:       #1e9cd7;
+    --dco-teal-light: #a9d4ea;
+    --dco-bg:         #f5faff;
     --dco-white:      #ffffff;
-    --dco-border:     #d6e0ea;
-    --dco-text:       #2c3e50;
+    --dco-border:     #c8dff0;
+    --dco-text:       #1a2a3a;
     --dco-muted:      #6b7e8f;
-    --dco-success:    #27ae60;
+    --dco-success:    #388128;
     --dco-error:      #e74c3c;
     --dco-warning:    #f39c12;
-    --dco-radius:     8px;
-    --dco-shadow:     0 2px 12px rgba(27, 58, 92, 0.10);
+    --dco-radius:     10px;
+    --dco-shadow:     0 4px 24px rgba(30, 120, 180, 0.08);
 }
 
 /* ==========================================================================
@@ -26,7 +27,7 @@
     max-width: 700px;
     margin: 0 auto;
     padding: 0 16px 40px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
     color: var(--dco-text);
 }
 
@@ -142,7 +143,7 @@
    ========================================================================== */
 .dco-panel {
     background: var(--dco-white);
-    border-radius: var(--dco-radius);
+    border-radius: 16px;
     box-shadow: var(--dco-shadow);
     border: 1px solid var(--dco-border);
     padding: 36px 40px;
@@ -183,7 +184,7 @@
 
 @media (max-width: 560px) {
     .dco-form__row--2col { grid-template-columns: 1fr; }
-    .dco-panel { padding: 24px 20px; }
+    .dco-panel { padding: 24px 20px; border-radius: 12px; }
 }
 
 .dco-label {
@@ -387,12 +388,12 @@
     box-shadow: none !important;
     cursor: pointer;
     padding: 4px;
-    color: var(--dco-text-muted, #a0a0b0);
+    color: var(--dco-muted);
     line-height: 0;
     transition: color 0.2s;
 }
 .dco-peek-btn:hover {
-    color: var(--dco-text, #e0e0ff);
+    color: var(--dco-teal);
 }
 
 /* Password criteria checklist */
@@ -444,25 +445,31 @@
     justify-content: center;
     gap: 8px;
     padding: 12px 28px;
-    border-radius: 6px;
+    border-radius: 50px;
     border: none;
     cursor: pointer;
     font-size: 15px;
-    font-weight: 600;
+    font-weight: 700;
     text-decoration: none;
-    transition: background 0.2s, transform 0.1s, opacity 0.2s;
+    transition: background 0.2s, transform 0.1s, opacity 0.2s, box-shadow 0.2s;
     line-height: 1;
+    font-family: "Segoe UI", system-ui, sans-serif;
 }
 
 .dco-btn:active { transform: scale(0.98); }
 .dco-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
 .dco-btn--primary {
-    background: var(--dco-teal);
+    background: linear-gradient(135deg, #F47920 0%, #EF660B 100%);
     color: var(--dco-white);
+    box-shadow: 0 4px 14px rgba(244, 121, 32, 0.30);
 }
 
-.dco-btn--primary:hover:not(:disabled) { background: #2573a0; }
+.dco-btn--primary:hover:not(:disabled) {
+    background: linear-gradient(135deg, #d46010 0%, #c05a10 100%);
+    box-shadow: 0 6px 20px rgba(244, 121, 32, 0.40);
+    transform: translateY(-1px);
+}
 
 .dco-btn--secondary {
     background: transparent;
