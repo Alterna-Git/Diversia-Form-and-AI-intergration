@@ -21,6 +21,7 @@ class DCO_Admin_Settings {
     const OPT_ADMIN_NOTIFICATION_EMAIL = 'dco_admin_notification_email';
     const OPT_META_ACCESS_TOKEN        = 'dco_meta_access_token';
     const OPT_META_APP_ID              = 'dco_meta_app_id';
+    const OPT_ZAPIER_WEBHOOK_SECRET    = 'dco_zapier_webhook_secret';
 
     public static function init(): void {
         add_action('admin_menu',  array(__CLASS__, 'add_settings_page'));
@@ -66,7 +67,6 @@ class DCO_Admin_Settings {
         // Section: Qualification
         add_settings_section('dco_qualification', 'Qualification Criteria', array(__CLASS__, 'render_section_qualification'), 'dco-settings');
         register_setting('dco_settings_group', self::OPT_QUALIFICATION_CRITERIA, array('sanitize_callback' => 'sanitize_textarea_field'));
-        register_setting('dco_settings_group', self::OPT_MIN_BUDGET_THRESHOLD,   array('sanitize_callback' => 'intval'));
         register_setting('dco_settings_group', self::OPT_ALLOWED_ORG_TYPES,      array('sanitize_callback' => array(__CLASS__, 'sanitize_json_field')));
         register_setting('dco_settings_group', self::OPT_ENROLLMENT_TIMELINE,    array('sanitize_callback' => array(__CLASS__, 'sanitize_json_field')));
         add_settings_field(self::OPT_MIN_BUDGET_THRESHOLD,   'Minimum Budget Threshold',    array(__CLASS__, 'render_field_min_budget_threshold'),    'dco-settings', 'dco_qualification');
@@ -78,8 +78,10 @@ class DCO_Admin_Settings {
         add_settings_section('dco_meta', 'Meta Integration', array(__CLASS__, 'render_section_meta'), 'dco-settings');
         register_setting('dco_settings_group', self::OPT_META_ACCESS_TOKEN, array('sanitize_callback' => array(__CLASS__, 'sanitize_api_key')));
         register_setting('dco_settings_group', self::OPT_META_APP_ID,       array('sanitize_callback' => 'sanitize_text_field'));
-        add_settings_field(self::OPT_META_ACCESS_TOKEN, 'Access Token',  array(__CLASS__, 'render_field_meta_access_token'), 'dco-settings', 'dco_meta');
-        add_settings_field(self::OPT_META_APP_ID,       'App ID',        array(__CLASS__, 'render_field_meta_app_id'),       'dco-settings', 'dco_meta');
+        add_settings_field(self::OPT_META_ACCESS_TOKEN,     'Access Token',          array(__CLASS__, 'render_field_meta_access_token'),       'dco-settings', 'dco_meta');
+        add_settings_field(self::OPT_META_APP_ID,           'App ID',                array(__CLASS__, 'render_field_meta_app_id'),             'dco-settings', 'dco_meta');
+        register_setting('dco_settings_group', self::OPT_ZAPIER_WEBHOOK_SECRET, array('sanitize_callback' => array(__CLASS__, 'sanitize_api_key')));
+        add_settings_field(self::OPT_ZAPIER_WEBHOOK_SECRET, 'Zapier Webhook Secret', array(__CLASS__, 'render_field_zapier_webhook_secret'), 'dco-settings', 'dco_meta');
 
         // Section: Security & Notifications
         add_settings_section('dco_security', 'Security & Notifications', array(__CLASS__, 'render_section_security'), 'dco-settings');
@@ -144,10 +146,28 @@ class DCO_Admin_Settings {
                 <span class="description" style="margin-left:8px;">Tests the currently saved Meta access token.</span>
             </form>
             <hr>
-            <h2>Webhook Endpoint</h2>
-            <p>Configure this URL in your Stripe Dashboard under <strong>Developers → Webhooks</strong>:</p>
-            <code><?php echo esc_url(rest_url('dco/v1/stripe-webhook')); ?></code>
-            <p>Event to listen for: <strong>checkout.session.completed</strong></p>
+            <h2>Webhook Endpoints</h2>
+            <table class="widefat fixed" style="max-width:700px;border-collapse:collapse;">
+                <thead>
+                    <tr>
+                        <th style="width:180px;">Service</th>
+                        <th>Endpoint URL</th>
+                        <th style="width:180px;">Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Stripe</strong></td>
+                        <td><code><?php echo esc_url(rest_url('dco/v1/stripe-webhook')); ?></code></td>
+                        <td>Event: <strong>checkout.session.completed</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Zapier / Meta Leads</strong></td>
+                        <td><code><?php echo esc_url(rest_url('dco/v1/meta-lead')); ?></code></td>
+                        <td>POST · JSON · <code>Authorization: Bearer &lt;secret&gt;</code></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
         <?php
     }
@@ -270,12 +290,8 @@ class DCO_Admin_Settings {
     }
 
     public static function render_field_min_budget_threshold(): void {
-        $val = intval(self::get_option(self::OPT_MIN_BUDGET_THRESHOLD, 10000));
-        echo '<div style="display:flex;align-items:center;gap:6px;">';
-        echo '<span style="font-size:15px;font-weight:600;color:#444;">$</span>';
-        echo '<input type="number" name="' . esc_attr(self::OPT_MIN_BUDGET_THRESHOLD) . '" value="' . esc_attr($val) . '" min="0" step="1000" class="regular-text">';
-        echo '</div>';
-        echo '<p class="description">Applications stating a total budget below this amount are automatically disqualified. Enter a whole number (e.g. <code>50000</code> for $50,000).</p>';
+        echo '<strong style="font-size:15px;">$500</strong> <span style="margin-left:6px;color:#666;">(fixed — not editable)</span>';
+        echo '<p class="description">Applications stating a total budget below $500 are automatically disqualified. This value is fixed.</p>';
     }
 
     public static function render_field_enrollment_timeline(): void {
@@ -359,6 +375,19 @@ class DCO_Admin_Settings {
         $val = self::get_option(self::OPT_META_APP_ID, '');
         echo '<input type="text" name="' . esc_attr(self::OPT_META_APP_ID) . '" value="' . esc_attr($val) . '" class="regular-text" placeholder="1234567890123456">';
         echo '<p class="description">Your Meta App ID (optional — for reference and future webhook setup).</p>';
+    }
+
+    public static function render_field_zapier_webhook_secret(): void {
+        $val         = self::get_option(self::OPT_ZAPIER_WEBHOOK_SECRET, '');
+        $webhook_url = rest_url('dco/v1/meta-lead');
+        echo '<input type="password" name="' . esc_attr(self::OPT_ZAPIER_WEBHOOK_SECRET) . '" value="' . esc_attr($val) . '" class="regular-text" autocomplete="off" placeholder="Enter a strong random secret...">';
+        echo '<p class="description">A secret string you choose. Zapier will send it as an <code>Authorization: Bearer &lt;secret&gt;</code> header so only Zapier can post leads here.</p>';
+        echo '<table style="margin-top:10px;border-collapse:collapse;">';
+        echo '<tr><td style="padding-right:8px;font-weight:600;white-space:nowrap;">Webhook URL</td>';
+        echo '<td><input type="text" readonly value="' . esc_attr($webhook_url) . '" class="regular-text" id="dco-zapier-url" style="background:#f6f7f7;"></td>';
+        echo '<td style="padding-left:6px;"><button type="button" class="button" onclick="(function(){var el=document.getElementById(\'dco-zapier-url\');el.select();document.execCommand(\'copy\');this.textContent=\'Copied!\';setTimeout(function(){this.textContent=\'Copy\';}.bind(this),2000);}).call(this)">Copy</button></td>';
+        echo '</tr></table>';
+        echo '<p class="description" style="margin-top:8px;">Paste this URL into <strong>Zapier → Webhooks by Zapier → POST</strong>. Set payload type to <strong>JSON</strong> and map: <code>email</code>, <code>first_name</code>, <code>last_name</code>, <code>phone</code>, <code>form_id</code> from your Facebook Lead Ad fields. Add a custom header: <code>Authorization: Bearer &lt;your-secret&gt;</code>.</p>';
     }
 
     // --- Sanitization ---

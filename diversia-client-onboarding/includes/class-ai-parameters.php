@@ -36,8 +36,8 @@ class DCO_AI_Parameters {
             'min_years_experience'        => 0,
             'require_prior_trials'        => 'preferred',
 
-            // Section 5 — Budget
-            'min_budget_usd'              => 10000,
+            // Section 5 — Budget (fixed at $500)
+            'min_budget_usd'              => 500,
             'budget_action_below_min'     => 'disqualify',
 
             // Section 6 — Scoring Weights
@@ -126,8 +126,8 @@ class DCO_AI_Parameters {
             'min_years_experience'        => max(0, intval($p['min_years_experience']        ?? 0)),
             'require_prior_trials'        => self::whitelist($p['require_prior_trials'] ?? 'preferred', array('required', 'preferred', 'none'), 'preferred'),
 
-            // Section 5
-            'min_budget_usd'              => max(0, intval($p['min_budget_usd']              ?? 10000)),
+            // Section 5 — min_budget_usd is fixed at $500, ignore submitted value
+            'min_budget_usd'              => 500,
             'budget_action_below_min'     => self::whitelist($p['budget_action_below_min'] ?? 'disqualify', array('disqualify', 'reduce_score'), 'disqualify'),
 
             // Section 6
@@ -155,8 +155,8 @@ class DCO_AI_Parameters {
         $criteria = self::generate_criteria_text($data);
         update_option(DCO_Admin_Settings::OPT_QUALIFICATION_CRITERIA, $criteria);
 
-        // Sync min budget threshold (store as USD integer for AI; settings page stores old string format)
-        update_option(DCO_Admin_Settings::OPT_MIN_BUDGET_THRESHOLD, '$' . number_format($data['min_budget_usd']));
+        // Min budget is fixed at $500
+        update_option(DCO_Admin_Settings::OPT_MIN_BUDGET_THRESHOLD, 500);
 
         wp_redirect(add_query_arg(array('page' => 'dco-ai-parameters', 'saved' => '1'), admin_url('options-general.php')));
         exit;
@@ -237,7 +237,7 @@ class DCO_AI_Parameters {
         $lines[] = '';
 
         // Budget
-        $lines[] = 'MINIMUM ACCEPTABLE BUDGET: $' . number_format($d['min_budget_usd']);
+        $lines[] = 'MINIMUM ACCEPTABLE BUDGET: $500';
         $budget_action = ($d['budget_action_below_min'] === 'disqualify')
             ? 'AUTOMATICALLY DISQUALIFY if budget is below minimum.'
             : 'Heavily penalize (score 0 on budget criterion) if budget is below minimum.';
@@ -523,13 +523,13 @@ class DCO_AI_Parameters {
                             </div>
 
                             <div class="dco-aq-field">
-                                <label for="aq-min-budget">Minimum budget to be considered a serious applicant (USD)</label>
+                                <label>Minimum budget to be considered a serious applicant (USD)</label>
                                 <div class="dco-aq-number-wrap">
                                     <span class="dco-aq-prefix">$</span>
-                                    <input type="number" id="aq-min-budget" name="min_budget_usd"
-                                           value="<?php echo esc_attr($data['min_budget_usd']); ?>"
-                                           min="0" step="1000">
+                                    <strong style="font-size:16px;line-height:1;">500</strong>
+                                    <span style="margin-left:8px;color:#888;font-size:13px;">(fixed — not editable)</span>
                                 </div>
+                                <input type="hidden" name="min_budget_usd" value="500">
                             </div>
 
                             <div class="dco-aq-field">

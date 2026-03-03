@@ -86,11 +86,8 @@ class DCO_OpenAI_Client {
     // ---------------------------------------------------------------------------
 
     private function build_system_prompt(): string {
-        // Budget: stored as integer, format for display
-        $min_budget_raw   = DCO_Admin_Settings::get_option(DCO_Admin_Settings::OPT_MIN_BUDGET_THRESHOLD, 10000);
-        $min_budget       = is_numeric($min_budget_raw)
-            ? '$' . number_format((int) $min_budget_raw)
-            : sanitize_text_field($min_budget_raw);
+        // Minimum budget is fixed at $500
+        $min_budget = '$500';
 
         $custom_criteria  = DCO_Admin_Settings::get_option(DCO_Admin_Settings::OPT_QUALIFICATION_CRITERIA, '');
         $allowed_org_raw  = DCO_Admin_Settings::get_option(DCO_Admin_Settings::OPT_ALLOWED_ORG_TYPES, '[]');

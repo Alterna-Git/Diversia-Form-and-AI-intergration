@@ -3,7 +3,7 @@
  * Plugin Name: Diversia Client Onboarding
  * Plugin URI: https://diversiahealth.com
  * Description: Multi-step client registration with AI qualification (OpenAI GPT-4o) and Stripe payment gating. Only qualified clients gain access to payment and are provisioned as active clients.
- * Version: 1.4.0
+ * Version: 1.5.0
  * Author: Jimmy
  * Author URI: mailto:Jimmy@alternaagancy.com
  * License: GPL v2 or later
@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Plugin constants
-define('DCO_VERSION',     '1.4.0');
+define('DCO_VERSION',     '1.5.0');
 define('DCO_PLUGIN_DIR',  plugin_dir_path(__FILE__));
 define('DCO_PLUGIN_URL',  plugin_dir_url(__FILE__));
 define('DCO_TEXT_DOMAIN', 'diversia-client-onboarding');
@@ -29,6 +29,7 @@ require_once DCO_PLUGIN_DIR . 'includes/class-rate-limiter.php';
 require_once DCO_PLUGIN_DIR . 'includes/class-qualification-token.php';
 require_once DCO_PLUGIN_DIR . 'includes/class-openai-client.php';
 require_once DCO_PLUGIN_DIR . 'includes/class-meta-client.php';
+require_once DCO_PLUGIN_DIR . 'includes/class-meta-webhook.php';
 require_once DCO_PLUGIN_DIR . 'includes/class-stripe-client.php';
 require_once DCO_PLUGIN_DIR . 'includes/class-stripe-webhook.php';
 require_once DCO_PLUGIN_DIR . 'includes/class-client-provisioner.php';
@@ -49,7 +50,8 @@ class Diversia_Client_Onboarding {
     private function __construct() {
         add_action('init',               array($this, 'init'));
         add_action('admin_init',         array('DCO_Database', 'check_version'));
-        add_action('rest_api_init',      array('DCO_Stripe_Webhook', 'register_route'));
+        add_action('rest_api_init',      array('DCO_Stripe_Webhook',  'register_route'));
+        add_action('rest_api_init',      array('DCO_Meta_Webhook',   'register_route'));
         add_action('wp_enqueue_scripts', array($this, 'enqueue_frontend_assets'));
 
         // Admin pages must be registered before admin_menu fires, so call init() directly
