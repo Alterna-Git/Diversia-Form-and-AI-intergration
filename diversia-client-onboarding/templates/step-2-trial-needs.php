@@ -112,6 +112,46 @@
         </div>
     </div>
 
+    <!-- ── Campaign Location ────────────────────────────────────────────── -->
+    <div class="dco-field">
+        <label class="dco-label">
+            <span data-i18n data-en="Campaign Location" data-es="Ubicación de la Campaña">Campaign Location</span>
+            <span class="dco-required">*</span>
+        </label>
+        <p class="dco-hint" data-i18n
+           data-en="Select the country where you plan to recruit trial participants."
+           data-es="Seleccione el país donde planea reclutar participantes del ensayo.">Select the country where you plan to recruit trial participants.</p>
+
+        <select class="dco-input dco-select" id="dco-campaign-country" name="campaign_country"
+                required onchange="dcoUpdateCampaignRegions(this.value)">
+            <option value="" data-i18n data-en="— Select country —" data-es="— Seleccione país —">— Select country —</option>
+            <option value="US">United States / Estados Unidos</option>
+            <option value="MX">Mexico / México</option>
+            <option value="CO">Colombia</option>
+            <option value="PR">Puerto Rico</option>
+            <option value="DO">Dominican Republic / República Dominicana</option>
+            <option value="AR">Argentina</option>
+            <option value="ES">Spain / España</option>
+            <option value="OTHER">Other / Otro</option>
+        </select>
+
+        <!-- State / region checkboxes (populated by JS) -->
+        <div id="dco-campaign-regions-wrap" style="display:none;margin-top:14px;">
+            <p class="dco-hint" style="margin-bottom:8px;font-weight:600;"
+               data-i18n data-en="Select states / regions (optional — leave blank for all)"
+               data-es="Seleccione estados / regiones (opcional — deje en blanco para todos)">Select states / regions (optional)</p>
+            <div class="dco-checkboxes dco-checkboxes--regions" id="dco-regions-grid"></div>
+        </div>
+
+        <!-- Other country text input -->
+        <input id="dco-campaign-country-other" class="dco-input" type="text"
+               name="campaign_country_other"
+               data-placeholder-en="Specify country or countries..."
+               data-placeholder-es="Especifique el país o países..."
+               placeholder="Specify country or countries..."
+               style="display:none;margin-top:8px;">
+    </div>
+
     <!-- ── Organization Type — select ───────────────────────────────────── -->
     <div class="dco-field">
         <label class="dco-label" for="dco-org-type">

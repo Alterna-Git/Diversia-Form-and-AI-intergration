@@ -159,6 +159,27 @@ class DCO_Ajax_Handlers {
         $organization_website = esc_url_raw($_POST['organization_website'] ?? '');
         $additional_notes     = sanitize_textarea_field($_POST['additional_notes'] ?? '');
 
+        // Campaign location
+        $campaign_country_code  = sanitize_text_field($_POST['campaign_country'] ?? '');
+        $campaign_country_other = sanitize_text_field($_POST['campaign_country_other'] ?? '');
+        $campaign_regions_raw   = array_map('sanitize_text_field', (array) ($_POST['campaign_regions'] ?? array()));
+        $campaign_regions       = array_values(array_filter($campaign_regions_raw));
+
+        $country_names = array(
+            'US' => 'United States', 'MX' => 'Mexico', 'CO' => 'Colombia',
+            'PR' => 'Puerto Rico',   'DO' => 'Dominican Republic',
+            'AR' => 'Argentina',     'ES' => 'Spain',
+        );
+        $campaign_country_name = ($campaign_country_code === 'OTHER')
+            ? ($campaign_country_other ?: 'Other')
+            : ($country_names[$campaign_country_code] ?? $campaign_country_code);
+
+        $campaign_location = wp_json_encode(array(
+            'country_code' => $campaign_country_code,
+            'country'      => $campaign_country_name,
+            'regions'      => $campaign_regions,
+        ));
+
         // Compose a human-readable budget range string for storage and AI context
         if ($budget_min > 0 && $budget_max > 0) {
             $estimated_budget = '$' . number_format($budget_min) . ' – $' . number_format($budget_max);
@@ -170,7 +191,7 @@ class DCO_Ajax_Handlers {
             $estimated_budget = '';
         }
 
-        if (empty($trial_type) || empty($estimated_budget) || empty($organization_type)) {
+        if (empty($trial_type) || empty($estimated_budget) || empty($organization_type) || empty($campaign_country_code)) {
             wp_send_json_error(array('message' => 'Required fields are missing. / Faltan campos obligatorios.'));
             return;
         }
@@ -189,10 +210,11 @@ class DCO_Ajax_Handlers {
                 'organization_type'    => $organization_type,
                 'organization_website' => $organization_website,
                 'additional_notes'     => $additional_notes,
+                'campaign_location'    => $campaign_location,
                 'status'               => 'pending_ai',
             ),
             array('id' => $application_id),
-            array('%s', '%s', '%s', '%d', '%d', '%s', '%s', '%s', '%s'),
+            array('%s', '%s', '%s', '%d', '%d', '%s', '%s', '%s', '%s', '%s'),
             array('%d')
         );
 
@@ -209,6 +231,8 @@ class DCO_Ajax_Handlers {
             'timeline_label'       => $timeline_label,
             'estimated_budget'     => $estimated_budget,
             'additional_notes'     => $additional_notes,
+            'campaign_country'     => $campaign_country_name,
+            'campaign_regions'     => $campaign_regions,
         ));
 
         $qualified = (bool) $result['qualified'];

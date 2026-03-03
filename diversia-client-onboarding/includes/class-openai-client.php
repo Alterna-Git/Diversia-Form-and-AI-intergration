@@ -219,6 +219,12 @@ PROMPT;
             ? implode(', ', array_map('sanitize_text_field', $data['target_population']))
             : sanitize_textarea_field($data['target_population'] ?? '');
 
+        $country = wp_strip_all_tags($data['campaign_country'] ?? '');
+        $regions = $data['campaign_regions'] ?? array();
+        $location_line = $country
+            ? ($country . ((!empty($regions)) ? ' — ' . implode(', ', array_map('wp_strip_all_tags', (array) $regions)) : ' (all regions)'))
+            : 'Not specified';
+
         return "APPLICANT INFORMATION:\n\n"
             . "Company/Organization: " . wp_strip_all_tags($data['company_name'] ?? '') . "\n"
             . "Organization Type: "    . wp_strip_all_tags($data['organization_type'] ?? '') . "\n"
@@ -226,6 +232,7 @@ PROMPT;
             . "TRIAL DETAILS:\n"
             . "Trial Type: "           . wp_strip_all_tags($data['trial_type'] ?? '') . "\n"
             . "Target Population: "    . wp_strip_all_tags($population) . "\n"
+            . "Campaign Location: "    . $location_line . "\n"
             . "Enrollment Goal: "      . intval($data['enrollment_goal'] ?? 0) . " participants\n"
             . "Estimated Timeline: "   . wp_strip_all_tags(!empty($data['timeline_label']) ? $data['timeline_label'] : intval($data['timeline_months'] ?? 0) . ' months') . "\n"
             . "Estimated Budget: "     . wp_strip_all_tags($data['estimated_budget'] ?? '') . "\n\n"

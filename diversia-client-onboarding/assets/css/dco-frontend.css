@@ -334,8 +334,24 @@
     margin-top: 8px;
 }
 
+/* Region checkboxes — 3 columns to handle long lists */
+.dco-checkboxes--regions {
+    grid-template-columns: repeat(3, 1fr);
+    max-height: 260px;
+    overflow-y: auto;
+    padding: 10px 12px;
+    background: rgba(255,255,255,0.5);
+    border: 1px solid var(--dco-border);
+    border-radius: var(--dco-radius);
+}
+
+@media (max-width: 640px) {
+    .dco-checkboxes--regions { grid-template-columns: 1fr 1fr; }
+}
+
 @media (max-width: 480px) {
     .dco-checkboxes { grid-template-columns: 1fr; }
+    .dco-checkboxes--regions { grid-template-columns: 1fr; max-height: 200px; }
 }
 
 .dco-checkbox-label {

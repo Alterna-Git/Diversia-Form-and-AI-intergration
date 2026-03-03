@@ -652,6 +652,46 @@ window.dcoPreviewVideos = function(input) {
     });
 };
 
+// ── Campaign Location — region data + dynamic checkboxes ─────────────────────
+var DCO_REGIONS = {
+    US: ['Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Carolina','North Dakota','Ohio','Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming','Washington D.C.'],
+    MX: ['Aguascalientes','Baja California','Baja California Sur','Campeche','Chiapas','Chihuahua','Coahuila','Colima','Ciudad de México','Durango','Guanajuato','Guerrero','Hidalgo','Jalisco','México','Michoacán','Morelos','Nayarit','Nuevo León','Oaxaca','Puebla','Querétaro','Quintana Roo','San Luis Potosí','Sinaloa','Sonora','Tabasco','Tamaulipas','Tlaxcala','Veracruz','Yucatán','Zacatecas'],
+    CO: ['Amazonas','Antioquia','Arauca','Atlántico','Bogotá D.C.','Bolívar','Boyacá','Caldas','Caquetá','Casanare','Cauca','Cesar','Chocó','Córdoba','Cundinamarca','Guainía','Guaviare','Huila','La Guajira','Magdalena','Meta','Nariño','Norte de Santander','Putumayo','Quindío','Risaralda','San Andrés y Providencia','Santander','Sucre','Tolima','Valle del Cauca','Vaupés','Vichada'],
+    AR: ['Buenos Aires','Catamarca','Chaco','Chubut','Ciudad de Buenos Aires','Córdoba','Corrientes','Entre Ríos','Formosa','Jujuy','La Pampa','La Rioja','Mendoza','Misiones','Neuquén','Río Negro','Salta','San Juan','San Luis','Santa Cruz','Santa Fe','Santiago del Estero','Tierra del Fuego','Tucumán'],
+    ES: ['Andalucía','Aragón','Asturias','Baleares','Canarias','Cantabria','Castilla-La Mancha','Castilla y León','Cataluña','Extremadura','Galicia','La Rioja','Madrid','Murcia','Navarra','País Vasco','Valencia']
+};
+
+window.dcoUpdateCampaignRegions = function(countryCode) {
+    var wrap    = document.getElementById('dco-campaign-regions-wrap');
+    var grid    = document.getElementById('dco-regions-grid');
+    var other   = document.getElementById('dco-campaign-country-other');
+
+    // Reset
+    if (wrap)  wrap.style.display  = 'none';
+    if (other) other.style.display = 'none';
+    if (grid)  grid.innerHTML      = '';
+
+    if (!countryCode) return;
+
+    if (countryCode === 'OTHER') {
+        if (other) other.style.display = '';
+        return;
+    }
+
+    // Puerto Rico and Dominican Republic have no sub-regions in our list
+    if (!DCO_REGIONS[countryCode]) return;
+
+    var regions = DCO_REGIONS[countryCode];
+    regions.forEach(function(region) {
+        var label = document.createElement('label');
+        label.className = 'dco-checkbox-label';
+        label.innerHTML = '<input type="checkbox" name="campaign_regions[]" value="' + region + '"> <span>' + region + '</span>';
+        grid.appendChild(label);
+    });
+
+    if (wrap) wrap.style.display = '';
+};
+
 // Password peek toggle
 window.dcoPeekToggle = function(inputId, btnId) {
     var input = document.getElementById(inputId);

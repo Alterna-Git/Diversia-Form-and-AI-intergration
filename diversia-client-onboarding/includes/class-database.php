@@ -3,7 +3,7 @@ if (!defined('ABSPATH')) exit;
 
 class DCO_Database {
 
-    const DB_VERSION        = '1.2.0';
+    const DB_VERSION        = '1.3.0';
     const DB_VERSION_OPTION = 'dco_db_version';
 
     /**
@@ -70,6 +70,7 @@ class DCO_Database {
             organization_type       VARCHAR(100) NOT NULL DEFAULT '',
             organization_website    VARCHAR(500) DEFAULT NULL,
             additional_notes        TEXT DEFAULT NULL,
+            campaign_location       TEXT DEFAULT NULL,
 
             -- AI evaluation
             ai_qualified            TINYINT(1) DEFAULT NULL,
