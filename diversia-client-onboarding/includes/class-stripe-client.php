@@ -53,6 +53,7 @@ class DCO_Stripe_Client {
             'line_items[0][quantity]'               => '1',
             'metadata[application_id]'              => (string) $params['application_id'],
             'metadata[company_name]'                => sanitize_text_field($params['company_name']),
+            'metadata[package_tier]'                => sanitize_text_field($params['package_tier'] ?? 'basic'),
             'success_url'                           => $success_url,
             'cancel_url'                            => $cancel_url,
             'billing_address_collection'            => 'required',

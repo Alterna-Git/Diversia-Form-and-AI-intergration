@@ -24,24 +24,106 @@ class DCO_OpenAI_Client {
      *   'raw'            => string,
      * }
      */
+    /**
+     * Evaluates a client application using 3 independent GPT-4o passes.
+     * Returns majority-vote qualified/rejected with an averaged score and
+     * deduplicated suggestions from all three passes.
+     */
     public function evaluate_application(array $application_data): array {
         if (empty($this->api_key)) {
             error_log('[DCO] OpenAI API key not configured.');
             return $this->fallback_rejection('OpenAI API key not configured.');
         }
 
+        $results = array();
+        for ($pass = 1; $pass <= 3; $pass++) {
+            try {
+                $result    = $this->evaluate_single($application_data);
+                $results[] = $result;
+                error_log(sprintf(
+                    '[DCO] Evaluation pass %d/3 complete. score=%.1f qualified=%s',
+                    $pass,
+                    $result['score'],
+                    $result['qualified'] ? 'yes' : 'no'
+                ));
+            } catch (Exception $e) {
+                error_log("[DCO] OpenAI error on pass {$pass}/3: " . $e->getMessage());
+            }
+        }
+
+        if (empty($results)) {
+            return $this->fallback_rejection('All 3 evaluation passes failed.');
+        }
+
+        return $this->aggregate_results($results);
+    }
+
+    /**
+     * Runs a single GPT-4o evaluation call and returns the parsed result.
+     */
+    private function evaluate_single(array $application_data): array {
         $messages = array(
             array('role' => 'system', 'content' => $this->build_system_prompt()),
             array('role' => 'user',   'content' => $this->build_user_message($application_data)),
         );
+        $raw_body = $this->call_api($messages);
+        return $this->parse_ai_response($raw_body);
+    }
 
-        try {
-            $raw_body = $this->call_api($messages);
-            return $this->parse_ai_response($raw_body);
-        } catch (Exception $e) {
-            error_log('[DCO] OpenAI error: ' . $e->getMessage());
-            return $this->fallback_rejection('AI evaluation unavailable: ' . $e->getMessage());
+    /**
+     * Aggregates multiple single-pass results into one consensus result:
+     * - majority vote for qualified/rejected
+     * - averaged score (rounded to 1 decimal)
+     * - reasoning from the pass closest to the average score
+     * - suggestions deduplicated by field (first occurrence wins)
+     */
+    private function aggregate_results(array $results): array {
+        $qualified_count = 0;
+        $total_score     = 0.0;
+        $all_suggestions = array();
+
+        foreach ($results as $r) {
+            if (!empty($r['qualified'])) {
+                $qualified_count++;
+            }
+            $total_score += (float) $r['score'];
+            $all_suggestions = array_merge($all_suggestions, $r['suggestions'] ?? array());
         }
+
+        $count     = count($results);
+        $qualified = $qualified_count >= (int) ceil($count / 2); // majority vote
+        $avg_score = round($total_score / $count, 1);
+
+        // Use reasoning from the pass whose score is closest to the average
+        usort($results, function($a, $b) use ($avg_score) {
+            return abs($a['score'] - $avg_score) <=> abs($b['score'] - $avg_score);
+        });
+        $best = $results[0];
+
+        // Deduplicate suggestions by field (keep first occurrence, cap at 3)
+        $seen        = array();
+        $suggestions = array();
+        foreach ($all_suggestions as $s) {
+            $field = $s['field'] ?? 'additional_notes';
+            if (!isset($seen[$field]) && count($suggestions) < 3) {
+                $seen[$field]  = true;
+                $suggestions[] = $s;
+            }
+        }
+
+        $scores_str = implode(' / ', array_map(
+            function($r) { return (string) round($r['score']); },
+            $results
+        ));
+
+        return array(
+            'qualified'    => $qualified,
+            'score'        => $avg_score,
+            'reasoning_es' => $best['reasoning_es'],
+            'reasoning_en' => $best['reasoning_en'],
+            'suggestions'  => $suggestions,
+            'raw'          => 'Consensus of ' . $count . ' passes (' . $scores_str . '). ' . $best['raw'],
+        );
     }
 
     /**
@@ -124,6 +206,40 @@ clinical research opportunities.
 Your task is to evaluate whether an organization is a legitimate and viable client for our
 recruitment services based on the onboarding application they have submitted.
 
+LEADENGINE CROSS-REFERENCE (Alterna Agency benchmarks for Latino Meta Ads recruitment):
+Use these data points to verify whether the applicant's budget is realistically aligned with
+their enrollment goal. Extract the budget as a number from the application.
+
+Formula: leads = floor(budget / CPL_realistic); net_rate = ps×bk×at×en; projected = round(leads × net_rate)
+budget_needed = ceil(enrollment_goal / net_rate) × CPL
+
+CPL (Cost-Per-Lead, realistic/mid scenario, Latino Meta Ads):
+- Obesity $28 | Prediabetes $35 | Type 2 Diabetes $38 | Metabolic Syndrome $48 | Cholesterol $32
+- Hypertension $32 | CVD $55 | Heart Failure $68 | Afib $65
+- Asthma/COPD $35 | Sleep Apnea $40
+- Anxiety $25 | Depression $25 | ADHD $32
+- Alzheimer's $85 | Parkinson's $90 | Migraine $28 | Cognitive Impairment $60
+- Lupus $95 | Arthritis $32 | Autoimmune(other) $55 | Oncology $70 | Rare Cancer $120
+- CKD $52 | Liver Disease $58 | Chronic Pain $28 | GERD $28 | Osteoporosis $38
+- Diabetic Neuropathy $52 | Glaucoma $42 | HIV/AIDS $55 | Rare Genetic $140 | Rare Pediatric $150
+- Default for unlisted conditions: $45
+
+NET ENROLLMENT RATES (ps×bk×at×en) for Latino populations:
+- Obesity 22% | Prediabetes 12% | T2D 17% | MetSyn 9% | Cholesterol 19%
+- Hypertension 19% | CVD 8% | Heart Failure 5% | Afib 7%
+- Asthma 17% | Sleep Apnea 11% | Anxiety 22% | Depression 18% | ADHD 13%
+- Alzheimer's 4% | Parkinson's 5% | Migraine 19% | Cognitive Imp 4%
+- Lupus 6% | Arthritis 15% | Autoimmune 8% | Oncology 7% | Rare Cancer 3%
+- CKD 11% | Liver 9% | Chronic Pain 19% | GERD 17% | Osteoporosis 13%
+- Diabetic Neuropathy 10% | Glaucoma 12% | HIV 10% | Rare Genetic 2% | Rare Pediatric 1%
+- Default: 15%
+
+RARE DISEASES (do NOT penalize lower enrollment goals 10–75):
+Alzheimer's, Parkinson's, Lupus, Rare Cancer, Rare Genetic Disorders, Rare Pediatric Conditions.
+
+HIGH SCREEN-FAILURE (flag in suggestions if applicable):
+Alzheimer's 50% | Rare Cancer 48% | Rare Genetic 52% | Rare Pediatric 55% | Heart Failure 40% | Oncology 42%
+
 EVALUATION CRITERIA (total: 100 points):
 
 1. ORGANIZATIONAL LEGITIMACY (0–25 points)
@@ -134,7 +250,7 @@ EVALUATION CRITERIA (total: 100 points):
 
 2. TRIAL VIABILITY (0–25 points)
    - Is the trial type described coherently?
-   - Is the enrollment goal realistic for the budget and timeline?
+   - Use LeadEngine to verify: does the budget project enough enrolled patients to meet the enrollment goal?
    - Score 0 and DISQUALIFY if no coherent trial type is stated.
    {$timeline_text}
 
@@ -145,8 +261,9 @@ EVALUATION CRITERIA (total: 100 points):
 
 4. BUDGET SERIOUSNESS (0–25 points)
    - Minimum acceptable budget: {$min_budget}
-   - Does the stated budget match the scope of enrollment goal and timeline?
-   - Score 0 and DISQUALIFY if budget is below the minimum threshold.
+   - Use LeadEngine CPL to calculate projected leads and enrolled patients.
+   - Score 0 and DISQUALIFY if budget is below minimum or insufficient to generate even 20% of enrollment goal.
+   - Deduct points proportionally if projected enrollment is below goal.
 
 DISQUALIFICATION CONDITIONS — any single condition triggers an automatic rejection:
    - Budget below minimum threshold ({$min_budget})
@@ -158,9 +275,9 @@ DISQUALIFICATION CONDITIONS — any single condition triggers an automatic rejec
 OUTPUT RULES:
 - Respond ONLY with a valid JSON object. Do not include any text outside the JSON.
 - reasoning_es and reasoning_en should be 2–4 sentences, professional and respectful.
-- If rejecting, the reasoning should be constructive without disclosing internal scoring details.
-- If rejecting, populate "suggestions" with 1–3 specific, actionable items the applicant can change
-  to improve their chances. Each suggestion must reference a real field from the application.
+- If rejecting, include SPECIFIC NUMBERS in reasoning: budget provided, CPL used, leads projected, enrolled projected, budget needed.
+- If rejecting, populate "suggestions" with 1–3 specific, actionable items with real numbers.
+  Each suggestion must reference a real field from the application.
   Use these field names: estimated_budget, trial_type, target_population, organization_type,
   enrollment_goal, timeline_months, additional_notes, organization_website.
 - If qualifying, set "suggestions" to an empty array [].
@@ -181,33 +298,26 @@ JSON FORMAT:
   }
 }
 
-REJECTION EXAMPLE (suggestions populated):
+REJECTION EXAMPLE (with LeadEngine numbers in suggestions):
 {
   "qualified": false,
-  "score": 32,
-  "reasoning_es": "Su solicitud no cumple con los requisitos mínimos en este momento...",
-  "reasoning_en": "Your application does not meet our minimum requirements at this time...",
-  "disqualification_reason": "budget_below_threshold",
+  "score": 38,
+  "reasoning_es": "Su presupuesto de $3,000 genera aproximadamente 86 leads a $35 CPL para Prediabetes, proyectando solo ~10 participantes inscritos contra su meta de 50. Para alcanzar su objetivo necesita aproximadamente $12,250.",
+  "reasoning_en": "Your $3,000 budget generates approximately 86 leads at $35 CPL for Prediabetes, projecting only ~10 enrolled participants against your goal of 50. To reach your target you need approximately $12,250.",
+  "disqualification_reason": "budget_insufficient_for_enrollment_goal",
   "suggestions": [
     {
       "field": "estimated_budget",
-      "issue_en": "Your stated budget falls below our minimum threshold for viable trial recruitment.",
-      "issue_es": "Su presupuesto declarado está por debajo de nuestro umbral mínimo para reclutamiento viable.",
-      "suggestion_en": "Consider revising your budget to at least $50,000–$200,000 to meet our service requirements.",
-      "suggestion_es": "Considere revisar su presupuesto a al menos $50,000–$200,000 para cumplir con nuestros requisitos."
-    },
-    {
-      "field": "target_population",
-      "issue_en": "Your target population does not include Latino or Hispanic communities.",
-      "issue_es": "Su población objetivo no incluye comunidades latinas o hispanas.",
-      "suggestion_en": "Specify Latino or Hispanic communities as part of your target enrollment population to align with Diversia Health's mission.",
-      "suggestion_es": "Especifique comunidades latinas o hispanas como parte de su población objetivo de inscripción."
+      "issue_en": "Budget shortfall: $3,000 at $35 CPL (Prediabetes) → ~86 leads → ~10 enrolled (12% net rate). Goal: 50.",
+      "issue_es": "Déficit de presupuesto: $3,000 a $35 CPL (Prediabetes) → ~86 leads → ~10 inscritos (12% tasa neta). Meta: 50.",
+      "suggestion_en": "Increase budget to ~$12,250 (50 patients ÷ 12% rate × $35 CPL). Or lower enrollment goal to ~10 participants.",
+      "suggestion_es": "Aumente el presupuesto a ~$12,250 (50 pacientes ÷ 12% tasa × $35 CPL). O reduzca la meta a ~10 participantes."
     }
   ],
   "criteria_scores": {
-    "organizational_legitimacy": 18,
-    "trial_viability": 14,
-    "latino_community_relevance": 0,
+    "organizational_legitimacy": 20,
+    "trial_viability": 8,
+    "latino_community_relevance": 10,
     "budget_seriousness": 0
   }
 }

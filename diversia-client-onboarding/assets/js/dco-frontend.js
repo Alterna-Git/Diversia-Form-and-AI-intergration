@@ -2,6 +2,105 @@
  * Diversia Client Onboarding — Frontend JavaScript
  * Handles multi-step form transitions, AJAX calls, and UI state management.
  */
+
+// ---------------------------------------------------------------------------
+// Global suggestion data (used by updateSuggestions() below)
+// ---------------------------------------------------------------------------
+
+var enrollmentSuggestions = {
+    'obesity':             120,
+    'prediabetes':         150,
+    'diabetes':            200,
+    'metabolic':           150,
+    'cholesterol':         200,
+    'thyroid':             100,
+    'pcos':                 80,
+    'cardiovascular':      250,
+    'hypertension':        200,
+    'heart-failure':       150,
+    'afib':                180,
+    'asthma':              150,
+    'sleep-apnea':         100,
+    'anxiety':             200,
+    'depression':          200,
+    'adhd':                150,
+    'alzheimers':           50,
+    'parkinsons':           60,
+    'migraine':            150,
+    'cognitive':            80,
+    'lupus':                40,
+    'arthritis':           150,
+    'autoimmune':          100,
+    'oncology':            200,
+    'rare-cancer':          30,
+    'ckd':                 150,
+    'liver':               100,
+    'chronic-pain':        150,
+    'gerd':                100,
+    'osteoporosis':        150,
+    'diabetic-neuropathy': 100,
+    'glaucoma':            100,
+    'hiv':                 200,
+    'infectious':          200,
+    'rare-genetic':         25,
+    'rare-pediatric':       25
+};
+
+var timelineSuggestions = {
+    'obesity':              12,
+    'prediabetes':          18,
+    'diabetes':             24,
+    'metabolic':            18,
+    'cholesterol':          12,
+    'thyroid':              12,
+    'pcos':                 18,
+    'cardiovascular':       36,
+    'hypertension':         24,
+    'heart-failure':        36,
+    'afib':                 30,
+    'asthma':               18,
+    'sleep-apnea':          12,
+    'anxiety':              12,
+    'depression':           18,
+    'adhd':                 12,
+    'alzheimers':           48,
+    'parkinsons':           36,
+    'migraine':             12,
+    'cognitive':            24,
+    'lupus':                30,
+    'arthritis':            24,
+    'autoimmune':           24,
+    'oncology':             36,
+    'rare-cancer':          48,
+    'ckd':                  36,
+    'liver':                30,
+    'chronic-pain':         18,
+    'gerd':                 12,
+    'osteoporosis':         24,
+    'diabetic-neuropathy':  18,
+    'glaucoma':             18,
+    'hiv':                  36,
+    'infectious':           24,
+    'rare-genetic':         48,
+    'rare-pediatric':       48
+};
+
+// Disease-value → LeadEngine condition key mapping (mirrors _LE.keyMap from dco-estimator.js)
+var _LE_KEY_MAP = {
+    'obesity':'OB',         'prediabetes':'PRE',  'diabetes':'DT2',  'metabolic':'SM',
+    'cholesterol':'COL',    'thyroid':'TIR',       'pcos':'SOP',
+    'cardiovascular':'CVD', 'hypertension':'HTA',  'heart-failure':'IC', 'afib':'FA',
+    'asthma':'ASM',         'sleep-apnea':'APN',
+    'anxiety':'ANX',        'depression':'DEP',    'adhd':'TDAH',
+    'alzheimers':'ALZ',     'parkinsons':'PK',     'migraine':'MIG',  'cognitive':'DCG',
+    'lupus':'LUP',          'arthritis':'ART',     'autoimmune':'AUR',
+    'oncology':'ONC',       'rare-cancer':'CRH',
+    'ckd':'ERC',            'liver':'HEP',         'chronic-pain':'DOL', 'gerd':'ERG',
+    'osteoporosis':'OST',   'diabetic-neuropathy':'NDB', 'glaucoma':'GLC',
+    'hiv':'VIH',            'infectious':'INF',
+    'rare-genetic':'TGR',   'rare-pediatric':'CPR'
+};
+
 (function ($) {
     'use strict';
 
@@ -30,6 +129,13 @@
         initPayButton();
         initPasswordStrength();
         initCharCounter();
+        initNewCampaignButton();
+        initSuggestionWiring();
+
+        // Revise button — delegated click handler (belt-and-suspenders alongside initReviseButton)
+        $(document).on('click', '#dco-btn-revise', function () {
+            goToStep(2);
+        });
     });
 
     // ---------------------------------------------------------------------------
@@ -101,6 +207,12 @@
         if (state.aiSuggestions && state.aiSuggestions.length) {
             renderSuggestions(state.aiSuggestions, lang);
         }
+
+        // Translate viability cards (use data-en / data-es, not data-i18n)
+        $wrapper.find('.lang-text').each(function () {
+            var val = $(this).data(lang);
+            if (val !== undefined) { $(this).text(val); }
+        });
     }
 
     /**
@@ -217,10 +329,17 @@
             // Show loading screen immediately for better UX
             goToStep(3);
 
+            // Build form data and append location_code
+            var formData = $form.serialize();
+            var locationCode = $('#dco-location').val() || '';
+            if (locationCode) {
+                formData += '&location_code=' + encodeURIComponent(locationCode);
+            }
+
             $.ajax({
                 url:     dcoData.ajaxurl,
                 type:    'POST',
-                data:    $form.serialize(),
+                data:    formData,
                 timeout: 60000, // 60s timeout for AI call
                 success: function (res) {
                     if (res.success) {
@@ -291,6 +410,9 @@
         // Show reasoning in the currently active language
         var reasoning = '<p>' + escHtml(state.lang === 'es' ? state.aiReasoningEs : state.aiReasoningEn) + '</p>';
 
+        // Run recruitment viability analysis client-side (requires dco-estimator.js)
+        _runLeViability();
+
         if (qualified) {
             state.token       = data.token;
             state.nonceStripe = data.nonce_stripe;
@@ -298,6 +420,9 @@
             $('#dco-token').val(state.token);
             $('#dco-reasoning-qualified').html(reasoning);
             goToStep('4a');
+
+            // Render viability card on qualified screen
+            _s2RenderLeViability('dco-le-viability-q');
         } else {
             // Store suggestions and refresh nonce for potential resubmission
             state.aiSuggestions = data.suggestions || [];
@@ -315,6 +440,9 @@
                 $('#dco-suggestions-rejected').show();
                 $('#dco-revise-cta').show();
             }
+
+            // Render viability card on rejected screen
+            _s2RenderLeViability('dco-le-viability-r');
         }
     }
 
@@ -348,6 +476,46 @@
             setBtnLoading($('#dco-btn-step2'), false);
             hideError();
             goToStep(2);
+        });
+    }
+
+    // ---------------------------------------------------------------------------
+    // New Campaign Button — Returning client entry screen
+    // ---------------------------------------------------------------------------
+    function initNewCampaignButton() {
+        $('#dco-btn-new-campaign').on('click', function () {
+            var $btn = $(this);
+            setBtnLoading($btn, true);
+            hideError();
+
+            $.ajax({
+                url:  dcoData.ajaxurl,
+                type: 'POST',
+                data: {
+                    action: 'dco_start_new_campaign',
+                    nonce:  dcoData.nonce_new_campaign,
+                },
+                success: function (res) {
+                    if (res.success) {
+                        state.applicationId = res.data.application_id;
+                        state.nonceStep2    = res.data.nonce_step2;
+
+                        $('#dco-app-id-step2').val(state.applicationId);
+                        $('#dco-nonce-step2').val(state.nonceStep2);
+                        $('#dco-application-id').val(state.applicationId);
+
+                        goToStep(2);
+                    } else {
+                        var msg = (res.data && res.data.message) ? res.data.message : 'Could not start campaign. Please try again.';
+                        showError(msg);
+                        setBtnLoading($btn, false);
+                    }
+                },
+                error: function () {
+                    showError('Connection error. Please try again. / Error de conexión.');
+                    setBtnLoading($btn, false);
+                }
+            });
         });
     }
 
@@ -438,6 +606,14 @@
             var len = $(this).val().length;
             $(this).siblings('.dco-char-count').text(len + ' / 1000');
         });
+    }
+
+    // ---------------------------------------------------------------------------
+    // Suggestion Wiring — disease/budget/org change events
+    // ---------------------------------------------------------------------------
+    function initSuggestionWiring() {
+        $(document).on('change', '#dco-org-type, #dco-location', updateSuggestions);
+        $(document).on('input', '#dco-budget-min, #dco-budget, #dco-budget-max, #dco-enrollment-goal', updateSuggestions);
     }
 
     // ---------------------------------------------------------------------------
@@ -549,6 +725,11 @@ window.dcoSelectTrialType = function(el, labelEn, labelEs, isOther) {
     if (wrap)    wrap.classList.remove('open');
     if (other)   other.style.display = isOther ? 'block' : 'none';
     if (!isOther && other) other.value = '';
+
+    // Trigger enrollment/timeline suggestions whenever disease changes
+    if (typeof updateSuggestions === 'function') {
+        updateSuggestions();
+    }
 };
 
 window.dcoToggleOrgOther = function(sel) {
@@ -559,12 +740,33 @@ window.dcoToggleOrgOther = function(sel) {
 };
 
 window.dcoSetTimelineUnit = function(unit) {
-    var hidden = document.getElementById('dco-timeline-unit');
-    var btnM   = document.getElementById('dco-unit-months');
-    var btnD   = document.getElementById('dco-unit-days');
+    var hidden  = document.getElementById('dco-timeline-unit');
+    var btnM    = document.getElementById('dco-unit-months');
+    var btnW    = document.getElementById('dco-unit-weeks');
+    // Legacy support: some templates still use 'dco-unit-days'
+    var btnD    = document.getElementById('dco-unit-days');
+    var prevUnit = hidden ? hidden.value : 'months';
+
     if (hidden) hidden.value = unit;
-    if (btnM)   btnM.classList.toggle('dco-unit-btn--active', unit === 'months');
-    if (btnD)   btnD.classList.toggle('dco-unit-btn--active', unit === 'days');
+    if (btnM) btnM.classList.toggle('dco-unit-btn--active', unit === 'months');
+    if (btnW) btnW.classList.toggle('dco-unit-btn--active', unit === 'weeks');
+    if (btnD) btnD.classList.toggle('dco-unit-btn--active', unit === 'weeks' || unit === 'days');
+
+    // Convert existing timeline value when switching units
+    var input = document.getElementById('dco-timeline');
+    if (input && input.value) {
+        var val = parseFloat(input.value);
+        if (!isNaN(val) && val > 0) {
+            if (prevUnit === 'months' && unit === 'weeks')  { input.value = Math.round(val * 4.33); }
+            if (prevUnit === 'weeks'  && unit === 'months') { input.value = Math.max(1, Math.round(val / 4.33)); }
+            if (prevUnit === 'days'   && unit === 'months') { input.value = Math.max(1, Math.round(val / 30.4)); }
+            if (prevUnit === 'months' && unit === 'days')   { input.value = Math.round(val * 30.4); }
+        }
+    }
+
+    if (typeof updateSuggestions === 'function') {
+        updateSuggestions();
+    }
 };
 
 window.dcoSwitchMediaTab = function(tab, btn) {
@@ -662,20 +864,27 @@ var DCO_REGIONS = {
 };
 
 window.dcoUpdateCampaignRegions = function(countryCode) {
-    var wrap    = document.getElementById('dco-campaign-regions-wrap');
-    var grid    = document.getElementById('dco-regions-grid');
-    var other   = document.getElementById('dco-campaign-country-other');
+    var wrap      = document.getElementById('dco-campaign-regions-wrap');
+    var grid      = document.getElementById('dco-regions-grid');
+    var other     = document.getElementById('dco-campaign-country-other');
+    var locWrap   = document.getElementById('dco-location-wrap');
 
     // Reset
-    if (wrap)  wrap.style.display  = 'none';
-    if (other) other.style.display = 'none';
-    if (grid)  grid.innerHTML      = '';
+    if (wrap)    wrap.style.display    = 'none';
+    if (other)   other.style.display   = 'none';
+    if (locWrap) locWrap.style.display = 'none';
+    if (grid)    grid.innerHTML        = '';
 
     if (!countryCode) return;
 
     if (countryCode === 'OTHER') {
         if (other) other.style.display = '';
         return;
+    }
+
+    // Show US state select when US is chosen
+    if (countryCode === 'US') {
+        if (locWrap) locWrap.style.display = '';
     }
 
     // Puerto Rico and Dominican Republic have no sub-regions in our list
@@ -704,6 +913,224 @@ window.dcoPeekToggle = function(inputId, btnId) {
     if (iconShow) iconShow.style.display = show ? 'none' : '';
     if (iconHide) iconHide.style.display = show ? ''     : 'none';
 };
+
+// ── Enrollment & Timeline Suggestion Engine ───────────────────────────────────
+
+/**
+ * updateSuggestions()
+ * Called whenever disease, budget, or org type changes.
+ * Reads current Step 2 field values and updates #dco-enrollment-hint
+ * and #dco-timeline-hint with smart recommendations.
+ */
+function updateSuggestions() {
+    var diseaseKey = (document.getElementById('dco-trial-type-value') || {}).value || '';
+    if (!diseaseKey || !enrollmentSuggestions[diseaseKey]) return;
+
+    var lang = (document.getElementById('dco-lang-btn') &&
+                document.getElementById('dco-lang-btn').classList.contains('dco-lang-toggle--active'))
+        ? 'es' : 'en';
+
+    // Budget multiplier (based on min budget field; fall back to single budget field)
+    var budgetMinEl = document.getElementById('dco-budget-min') || document.getElementById('dco-budget');
+    var budgetMin = parseFloat(budgetMinEl ? budgetMinEl.value : 0) || 0;
+    var budgetMult;
+    if      (budgetMin < 1000)   { budgetMult = 0.50; }
+    else if (budgetMin < 5000)   { budgetMult = 0.70; }
+    else if (budgetMin < 20000)  { budgetMult = 0.85; }
+    else if (budgetMin < 100000) { budgetMult = 1.00; }
+    else                         { budgetMult = 1.30; }
+
+    // Org multipliers
+    var orgSel = document.getElementById('dco-org-type');
+    var orgVal = orgSel ? orgSel.value.toLowerCase() : '';
+    var orgEnrollMult = { researcher: 0.70, cro: 1.00, university: 0.85, pharmaceutical: 1.20 }[orgVal] || 1.00;
+    var orgTimeMult   = { researcher: 0.80, cro: 1.00, university: 1.20, pharmaceutical: 1.20 }[orgVal] || 1.00;
+
+    // --- Enrollment hint ---
+    var baseEnroll = enrollmentSuggestions[diseaseKey];
+    if (baseEnroll) {
+        var suggestedEnroll = Math.max(5, Math.round(baseEnroll * budgetMult * orgEnrollMult));
+        var hintEnroll = document.getElementById('dco-enrollment-hint');
+        if (hintEnroll) {
+            hintEnroll.textContent = lang === 'es'
+                ? 'Sugerido: ~' + suggestedEnroll + ' participantes para ' + diseaseKey
+                : 'Suggested: ~' + suggestedEnroll + ' participants for ' + diseaseKey;
+            hintEnroll.style.display = 'block';
+        }
+    }
+
+    // --- Timeline hint ---
+    var baseMonths = timelineSuggestions[diseaseKey];
+    if (baseMonths) {
+        var suggestedMonths = Math.max(1, Math.round(baseMonths * orgTimeMult));
+        var timeUnitEl = document.getElementById('dco-timeline-unit');
+        var currentUnit = timeUnitEl ? timeUnitEl.value : 'months';
+        var displayVal  = (currentUnit === 'weeks') ? Math.round(suggestedMonths * 4.33) : suggestedMonths;
+        var unitLabel;
+        if (currentUnit === 'weeks') {
+            unitLabel = (lang === 'es') ? 'semanas' : 'weeks';
+        } else {
+            unitLabel = (lang === 'es') ? 'meses' : 'months';
+        }
+        var hintTimeline = document.getElementById('dco-timeline-hint');
+        if (hintTimeline) {
+            hintTimeline.textContent = lang === 'es'
+                ? 'Sugerido: ~' + displayVal + ' ' + unitLabel + ' para ' + diseaseKey
+                : 'Suggested: ~' + displayVal + ' ' + unitLabel + ' for ' + diseaseKey;
+            hintTimeline.style.display = 'block';
+        }
+    }
+}
+
+/**
+ * dcoTimelineAutoConvert(input)
+ * oninput handler for the timeline field.
+ * - Clears values < 1.
+ * - Auto-converts weeks >= 4 to months and switches the unit toggle.
+ */
+window.dcoTimelineAutoConvert = function(input) {
+    var v = parseInt(input.value, 10);
+    if (isNaN(v) || v < 1) { input.value = ''; return; }
+    // Strip decimals
+    if (v !== parseFloat(input.value)) { input.value = v; }
+
+    var unitEl = document.getElementById('dco-timeline-unit');
+    var currentUnit = unitEl ? unitEl.value : 'months';
+
+    if (currentUnit === 'weeks' && v >= 4) {
+        input.value = Math.round(v / 4.33);
+        window.dcoSetTimelineUnit('months');
+    } else {
+        if (typeof updateSuggestions === 'function') {
+            updateSuggestions();
+        }
+    }
+};
+
+/**
+ * _runLeViability()
+ * Internal — runs the LeadEngine viability analysis after AI evaluation
+ * and stores the result in window._s2LeResult.
+ * Requires window._leAnalyze and window._EL (from dco-estimator.js).
+ */
+function _runLeViability() {
+    window._s2LeResult = null;
+
+    if (typeof window._leAnalyze !== 'function' || typeof window._EL === 'undefined') {
+        return;
+    }
+
+    try {
+        var diseaseKey = (document.getElementById('dco-trial-type-value') || {}).value || '';
+        // Use _LE_KEY_MAP (global above) or fall back to window._LE.keyMap if estimator loaded first
+        var keyMap  = (window._LE && window._LE.keyMap) ? window._LE.keyMap : _LE_KEY_MAP;
+        var leKey   = keyMap[diseaseKey] || null;
+        var budget  = parseInt((document.getElementById('dco-budget-min') || document.getElementById('dco-budget') || {}).value) || 0;
+        var enrollGoal = parseInt((document.getElementById('dco-enrollment-goal') || {}).value) || 0;
+        var locCode = (document.getElementById('dco-location') || {}).value || '';
+
+        if (!leKey || budget <= 0 || enrollGoal <= 0) { return; }
+
+        var tlInput  = document.getElementById('dco-timeline');
+        var tlUnitEl = document.getElementById('dco-timeline-unit');
+        var tlVal    = parseInt(tlInput ? tlInput.value : 12) || 12;
+        var tlUnit   = tlUnitEl ? tlUnitEl.value : 'months';
+        var tlWeeks  = (tlUnit === 'weeks') ? tlVal : Math.round(tlVal * 4.33);
+
+        var locs = (window._EL && window._EL[locCode]) ? [locCode] : ['CA', 'TX', 'FL', 'NY', 'AZ'];
+
+        window._s2LeResult = window._leAnalyze({
+            conditionKey:    leKey,
+            locations:       locs,
+            budget:          budget,
+            targetEnrolled:  enrollGoal,
+            timeWeeks:       Math.max(1, tlWeeks)
+        });
+    } catch(e) {
+        window._s2LeResult = null;
+    }
+}
+
+/**
+ * _s2RenderLeViability(targetId)
+ * Renders the recruitment viability card inside element #targetId.
+ * Uses window._s2LeResult (set by _runLeViability above).
+ */
+function _s2RenderLeViability(targetId) {
+    var el = document.getElementById(targetId);
+    if (!el) return;
+    var le = window._s2LeResult;
+    if (!le) { el.style.display = 'none'; return; }
+
+    function _esc(s) {
+        return String(s || '')
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    var verdictClass = le.verdict === 'APROBADO'       ? 's2-le-verdict--ok'
+                     : le.verdict === 'NO VIABLE'      ? 's2-le-verdict--no'
+                     : 's2-le-verdict--adj';
+    var verdictIcon  = le.verdict === 'APROBADO' ? '✓' : le.verdict === 'NO VIABLE' ? '✗' : '⚠';
+    var verdictEn    = le.verdict === 'APROBADO'  ? 'APPROVED'
+                     : le.verdict === 'NO VIABLE' ? 'NOT VIABLE'
+                     : 'VIABLE WITH ADJUSTMENTS';
+    var verdictEs    = le.verdict === 'APROBADO'  ? 'APROBADO'
+                     : le.verdict === 'NO VIABLE' ? 'NO VIABLE'
+                     : 'VIABLE CON AJUSTES';
+    var locNames = le.locations.map(function(l) { return l.n; }).join(', ');
+    var scen     = le.scenarios.realista;
+    var topHint  = le.hints.find(function(h) { return h.priority === 'alta'; });
+
+    el.innerHTML = '<div class="s2-le-card">'
+        + '<div class="s2-le-card__header">'
+        +   '<span class="s2-le-card__icon">&#128300;</span>'
+        +   '<span class="s2-le-card__title lang-text"'
+        +     ' data-en="Recruitment Estimator — Latino Community Viability"'
+        +     ' data-es="Estimador de Reclutamiento — Viabilidad en la Comunidad Latina">'
+        +     'Recruitment Estimator — Latino Community Viability'
+        +   '</span>'
+        + '</div>'
+        + '<div class="s2-le-verdict ' + verdictClass + '">'
+        +   '<span class="lang-text"'
+        +     ' data-en="' + verdictIcon + ' ' + _esc(verdictEn) + '"'
+        +     ' data-es="' + verdictIcon + ' ' + _esc(verdictEs) + '">'
+        +     verdictIcon + ' ' + verdictEn
+        +   '</span>'
+        + '</div>'
+        + '<div class="s2-le-metrics">'
+        +   '<div class="s2-le-metric">'
+        +     '<div class="s2-le-metric__val">' + le.population.pool.toLocaleString() + '</div>'
+        +     '<div class="s2-le-metric__lbl lang-text"'
+        +       ' data-en="Reachable Latinos &middot; ' + _esc(locNames) + '"'
+        +       ' data-es="Latinos Alcanzables &middot; ' + _esc(locNames) + '">'
+        +       'Reachable Latinos &middot; ' + _esc(locNames)
+        +     '</div>'
+        +   '</div>'
+        +   '<div class="s2-le-metric">'
+        +     '<div class="s2-le-metric__val">$' + scen.cpl + '</div>'
+        +     '<div class="s2-le-metric__lbl lang-text" data-en="Realistic CPL" data-es="CPL Realista">Realistic CPL</div>'
+        +   '</div>'
+        +   '<div class="s2-le-metric">'
+        +     '<div class="s2-le-metric__val">~' + scen.enrolled + '</div>'
+        +     '<div class="s2-le-metric__lbl lang-text" data-en="Projected Enrolled" data-es="Participantes Proyectados">Projected Enrolled</div>'
+        +   '</div>'
+        + '</div>'
+        + (topHint
+            ? '<div class="s2-le-hint">&#128161; <strong>' + _esc(topHint.title) + ':</strong> ' + _esc(topHint.desc) + '</div>'
+            : '')
+        + '</div>';
+
+    el.style.display = 'block';
+
+    // If the wrapper is already in Spanish when the card renders, apply translations immediately
+    var wrapper = el.closest('.dco-wrapper');
+    if (wrapper && wrapper.dataset && wrapper.dataset.lang === 'es') {
+        el.querySelectorAll('.lang-text').forEach(function(t) {
+            if (t.dataset.es !== undefined) { t.textContent = t.dataset.es; }
+        });
+    }
+}
 
 // Close dropdown on outside click — runs after DOM ready
 document.addEventListener('DOMContentLoaded', function() {

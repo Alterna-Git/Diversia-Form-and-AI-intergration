@@ -2,6 +2,16 @@
 <?php
 // Variables available: $app (application row object), $application_id (int),
 //                      $token (string), $nonce_stripe (string)
+
+// ── Pre-select package tier based on AI score ────────────────────────────────
+$ai_score = (float) $app->ai_score;
+if ($ai_score >= 92) {
+    $default_pkg = 'pro';
+} elseif ($ai_score >= 83) {
+    $default_pkg = 'standard';
+} else {
+    $default_pkg = 'basic';
+}
 ?>
 
 <div class="dco-wrapper dco-payment-gate" data-lang="en">
@@ -36,9 +46,9 @@
                 You Have Been Approved!
             </h2>
             <p class="dco-panel__subtitle" data-i18n
-               data-en="Complete your payment to activate your Diversia Health client account."
-               data-es="Complete su pago para activar su cuenta de cliente Diversia Health.">
-                Complete your payment to activate your Diversia Health client account.
+               data-en="Select a service package and complete your payment to activate your Diversia Health client account."
+               data-es="Seleccione un paquete de servicio y complete su pago para activar su cuenta de cliente Diversia Health.">
+                Select a service package and complete your payment to activate your Diversia Health client account.
             </p>
         </div>
 
@@ -71,92 +81,289 @@
             </table>
         </div>
 
-        <!-- What's Included -->
-        <div class="dco-includes">
-            <h3 class="dco-includes__title" data-i18n data-en="What's Included" data-es="Qué Está Incluido">
-                What's Included
+        <!-- ═══════════════════════════════════════════════════════════
+             PRICING PACKAGES
+        ═══════════════════════════════════════════════════════════════ -->
+        <div class="dco-packages">
+            <h3 class="dco-packages__title" data-i18n
+                data-en="Choose Your Service Package"
+                data-es="Elija su Paquete de Servicio">
+                Choose Your Service Package
             </h3>
-            <ul class="dco-includes__list">
-                <li class="dco-includes__item">
-                    <span class="dco-includes__check" aria-hidden="true">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-                             stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <p class="dco-packages__subtitle" data-i18n
+               data-en="Each tier is engineered for a distinct operational profile. Your AI qualification score pre-selected the package that best fits your trial's scope and complexity."
+               data-es="Cada nivel está diseñado para un perfil operativo distinto. Su puntuación de calificación IA pre-seleccionó el paquete más adecuado para su ensayo.">
+                Each tier is engineered for a distinct operational profile. Your AI qualification score pre-selected the package that best fits your trial's scope and complexity.
+            </p>
+
+            <!-- Hidden input — updated by JS on package selection -->
+            <input type="hidden" id="dco-selected-package" value="<?php echo esc_attr($default_pkg); ?>">
+
+            <div class="dco-packages__grid">
+
+                <!-- ── BASIC: Foundation ─────────────────────────────── -->
+                <div class="dco-pkg-card <?php echo ($default_pkg === 'basic') ? 'dco-pkg-card--selected' : ''; ?>"
+                     data-package="basic" tabindex="0" role="button" aria-pressed="<?php echo ($default_pkg === 'basic') ? 'true' : 'false'; ?>">
+
+                    <div class="dco-pkg-card__selected-check" aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
+                             fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="20 6 9 17 4 12"/>
                         </svg>
-                    </span>
-                    <span data-i18n
-                          data-en="Full access to the Clinical Trial Dashboard"
-                          data-es="Acceso completo al Panel de Ensayos Clínicos">
-                        Full access to the Clinical Trial Dashboard
-                    </span>
-                </li>
-                <li class="dco-includes__item">
-                    <span class="dco-includes__check" aria-hidden="true">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-                             stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    </div>
+
+                    <div class="dco-pkg-card__tier" data-i18n data-en="Basic" data-es="Básico">Basic</div>
+                    <div class="dco-pkg-card__name" data-i18n data-en="Foundation" data-es="Foundation">Foundation</div>
+                    <div class="dco-pkg-card__price">$4,500 <span data-i18n data-en="/ engagement" data-es="/ proyecto">/ engagement</span></div>
+                    <div class="dco-pkg-card__billing" data-i18n
+                         data-en="One-time onboarding + campaign activation fee"
+                         data-es="Cargo único de incorporación y activación de campaña">
+                        One-time onboarding + campaign activation fee
+                    </div>
+
+                    <div class="dco-pkg-card__ideal" data-i18n
+                         data-en="Ideal for: CROs launching a first digital Latino recruitment channel for a single Phase II/III trial with a structured 6–12 month timeline."
+                         data-es="Ideal para: CROs que lanzan su primer canal digital de reclutamiento Latino para un ensayo Phase II/III con cronograma de 6–12 meses.">
+                        <strong data-i18n data-en="Ideal for:" data-es="Ideal para:">Ideal for:</strong>
+                        CROs launching a first digital Latino recruitment channel for a single Phase II/III trial with a structured 6–12 month timeline.
+                    </div>
+
+                    <hr class="dco-pkg-card__divider">
+
+                    <ul class="dco-pkg-card__features">
+                        <li>
+                            <span class="dco-pkg-card__check" aria-hidden="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            </span>
+                            <span data-i18n data-en="AI-assisted patient matching from Diversia's Latino participant network" data-es="Concordancia de pacientes por IA desde la red de participantes Latinos de Diversia">AI-assisted patient matching from Diversia's Latino participant network</span>
+                        </li>
+                        <li>
+                            <span class="dco-pkg-card__check" aria-hidden="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            </span>
+                            <span data-i18n data-en="Meta Ads campaign — 1 audience segment, 1 creative variant" data-es="Campaña Meta Ads — 1 segmento de audiencia, 1 variante creativa">Meta Ads campaign — 1 audience segment, 1 creative variant</span>
+                        </li>
+                        <li>
+                            <span class="dco-pkg-card__check" aria-hidden="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            </span>
+                            <span data-i18n data-en="Bilingual HIPAA-compliant pre-screening landing page (EN/ES)" data-es="Página de pre-selección bilingüe compatible con HIPAA (EN/ES)">Bilingual HIPAA-compliant pre-screening landing page (EN/ES)</span>
+                        </li>
+                        <li>
+                            <span class="dco-pkg-card__check" aria-hidden="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            </span>
+                            <span data-i18n data-en="Protocol-informed audience targeting (ICD-10 condition mapping)" data-es="Segmentación de audiencia basada en protocolo (mapeo ICD-10)">Protocol-informed audience targeting (ICD-10 condition mapping)</span>
+                        </li>
+                        <li>
+                            <span class="dco-pkg-card__check" aria-hidden="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            </span>
+                            <span data-i18n data-en="IRB/IEC compliance review for all advertising assets" data-es="Revisión de cumplimiento IRB/IEC para todos los materiales publicitarios">IRB/IEC compliance review for all advertising assets</span>
+                        </li>
+                        <li>
+                            <span class="dco-pkg-card__check" aria-hidden="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            </span>
+                            <span data-i18n data-en="Bi-weekly recruitment performance reports + Clinical Trial Dashboard" data-es="Informes de rendimiento quincenales + Panel de Ensayos Clínicos">Bi-weekly recruitment performance reports + Clinical Trial Dashboard</span>
+                        </li>
+                    </ul>
+
+                    <div class="dco-pkg-card__value" data-i18n
+                         data-en="Reduces recruitment lag 30–45% vs. site-only enrollment."
+                         data-es="Reduce el retraso de reclutamiento 30–45% frente a la inscripción solo en sitio.">
+                        Reduces recruitment lag 30–45% vs. site-only enrollment.
+                    </div>
+
+                    <button type="button" class="dco-pkg-select-btn" data-package="basic">
+                        <span data-i18n data-en="Select Foundation" data-es="Seleccionar Foundation">Select Foundation</span>
+                    </button>
+                </div>
+
+                <!-- ── STANDARD: Accelerate ──────────────────────────── -->
+                <div class="dco-pkg-card dco-pkg-card--featured <?php echo ($default_pkg === 'standard') ? 'dco-pkg-card--selected' : ''; ?>"
+                     data-package="standard" tabindex="0" role="button" aria-pressed="<?php echo ($default_pkg === 'standard') ? 'true' : 'false'; ?>">
+
+                    <div class="dco-pkg-card__popular-ribbon" data-i18n data-en="Most Selected" data-es="Más Elegido">Most Selected</div>
+
+                    <div class="dco-pkg-card__selected-check" aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
+                             fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="20 6 9 17 4 12"/>
                         </svg>
-                    </span>
-                    <span data-i18n
-                          data-en="Access to Diversia's Latino participant recruitment network"
-                          data-es="Acceso a la red de reclutamiento de participantes latinos de Diversia">
-                        Access to Diversia's Latino participant recruitment network
-                    </span>
-                </li>
-                <li class="dco-includes__item">
-                    <span class="dco-includes__check" aria-hidden="true">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-                             stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    </div>
+
+                    <div class="dco-pkg-card__tier" data-i18n data-en="Standard" data-es="Estándar">Standard</div>
+                    <div class="dco-pkg-card__name" data-i18n data-en="Accelerate" data-es="Accelerate">Accelerate</div>
+                    <div class="dco-pkg-card__price">$11,500 <span data-i18n data-en="/ engagement" data-es="/ proyecto">/ engagement</span></div>
+                    <div class="dco-pkg-card__billing" data-i18n
+                         data-en="Comprehensive multi-site campaign infrastructure"
+                         data-es="Infraestructura completa para campaña multi-sitio">
+                        Comprehensive multi-site campaign infrastructure
+                    </div>
+
+                    <div class="dco-pkg-card__ideal" data-i18n
+                         data-en="Ideal for: CROs managing multi-site Phase II/III trials requiring coordinated outreach across 3–5 investigator sites with competing patient pools."
+                         data-es="Ideal para: CROs que gestionan ensayos multi-sitio Phase II/III con reclutamiento coordinado en 3–5 sitios de investigación.">
+                        <strong data-i18n data-en="Ideal for:" data-es="Ideal para:">Ideal for:</strong>
+                        CROs managing multi-site Phase II/III trials requiring coordinated outreach across 3–5 investigator sites with competing patient pools.
+                    </div>
+
+                    <hr class="dco-pkg-card__divider">
+
+                    <ul class="dco-pkg-card__features">
+                        <li>
+                            <span class="dco-pkg-card__check" aria-hidden="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            </span>
+                            <span data-i18n data-en="Everything in Foundation, plus:" data-es="Todo lo de Foundation, más:"><strong>Everything in Foundation, plus:</strong></span>
+                        </li>
+                        <li>
+                            <span class="dco-pkg-card__check" aria-hidden="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            </span>
+                            <span data-i18n data-en="Multi-audience targeting — up to 4 segments, 3 creative variants per condition" data-es="Segmentación múltiple — hasta 4 segmentos, 3 variantes creativas por condición">Multi-audience targeting — up to 4 segments, 3 creative variants per condition</span>
+                        </li>
+                        <li>
+                            <span class="dco-pkg-card__check" aria-hidden="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            </span>
+                            <span data-i18n data-en="Referral tracking integration (UTM + CRM webhook delivery)" data-es="Integración de rastreo de referidos (UTM + entrega vía webhook CRM)">Referral tracking integration (UTM + CRM webhook delivery)</span>
+                        </li>
+                        <li>
+                            <span class="dco-pkg-card__check" aria-hidden="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            </span>
+                            <span data-i18n data-en="CTMS-compatible structured data export + real-time eligibility pre-screening" data-es="Exportación de datos compatible con CTMS + pre-selección de elegibilidad en tiempo real">CTMS-compatible structured data export + real-time eligibility pre-screening</span>
+                        </li>
+                        <li>
+                            <span class="dco-pkg-card__check" aria-hidden="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            </span>
+                            <span data-i18n data-en="Enrollment velocity dashboard with 30/60/90-day projections" data-es="Panel de velocidad de inscripción con proyecciones a 30/60/90 días">Enrollment velocity dashboard with 30/60/90-day projections</span>
+                        </li>
+                        <li>
+                            <span class="dco-pkg-card__check" aria-hidden="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            </span>
+                            <span data-i18n data-en="Lookalike modeling + site-level lead attribution and geo-distribution reporting" data-es="Modelado lookalike + atribución de leads por sitio y reporte de distribución geográfica">Lookalike modeling + site-level lead attribution and geo-distribution reporting</span>
+                        </li>
+                        <li>
+                            <span class="dco-pkg-card__check" aria-hidden="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            </span>
+                            <span data-i18n data-en="Monthly strategy calls with dedicated campaign strategist + A/B optimization cadence" data-es="Llamadas estratégicas mensuales con estratega dedicado + cadencia de optimización A/B">Monthly strategy calls with dedicated campaign strategist + A/B optimization cadence</span>
+                        </li>
+                    </ul>
+
+                    <div class="dco-pkg-card__value" data-i18n
+                         data-en="Delivers pre-qualified candidate profiles to site coordinators before ICA — reducing screen failure rate at source."
+                         data-es="Entrega perfiles de candidatos pre-calificados a coordinadores de sitio antes de la ICA — reduciendo la tasa de falla de cribado en la fuente.">
+                        Delivers pre-qualified candidate profiles to site coordinators before ICA — reducing screen failure rate at source.
+                    </div>
+
+                    <button type="button" class="dco-pkg-select-btn" data-package="standard">
+                        <span data-i18n data-en="Select Accelerate" data-es="Seleccionar Accelerate">Select Accelerate</span>
+                    </button>
+                </div>
+
+                <!-- ── PRO: Command ──────────────────────────────────── -->
+                <div class="dco-pkg-card <?php echo ($default_pkg === 'pro') ? 'dco-pkg-card--selected' : ''; ?>"
+                     data-package="pro" tabindex="0" role="button" aria-pressed="<?php echo ($default_pkg === 'pro') ? 'true' : 'false'; ?>">
+
+                    <div class="dco-pkg-card__selected-check" aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
+                             fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="20 6 9 17 4 12"/>
                         </svg>
-                    </span>
-                    <span data-i18n
-                          data-en="AI-powered patient matching and eligibility screening"
-                          data-es="Concordancia de pacientes impulsada por IA y evaluación de elegibilidad">
-                        AI-powered patient matching and eligibility screening
-                    </span>
-                </li>
-                <li class="dco-includes__item">
-                    <span class="dco-includes__check" aria-hidden="true">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-                             stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="20 6 9 17 4 12"/>
-                        </svg>
-                    </span>
-                    <span data-i18n
-                          data-en="Bilingual patient outreach and community engagement (English & Spanish)"
-                          data-es="Difusión bilingüe a pacientes y participación comunitaria (inglés y español)">
-                        Bilingual patient outreach and community engagement (English &amp; Spanish)
-                    </span>
-                </li>
-                <li class="dco-includes__item">
-                    <span class="dco-includes__check" aria-hidden="true">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-                             stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="20 6 9 17 4 12"/>
-                        </svg>
-                    </span>
-                    <span data-i18n
-                          data-en="Real-time enrollment tracking and trial progress reports"
-                          data-es="Seguimiento de inscripción en tiempo real e informes de progreso del ensayo">
-                        Real-time enrollment tracking and trial progress reports
-                    </span>
-                </li>
-                <li class="dco-includes__item">
-                    <span class="dco-includes__check" aria-hidden="true">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-                             stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="20 6 9 17 4 12"/>
-                        </svg>
-                    </span>
-                    <span data-i18n
-                          data-en="Dedicated account manager for your trial"
-                          data-es="Gerente de cuenta dedicado para su ensayo">
-                        Dedicated account manager for your trial
-                    </span>
-                </li>
-            </ul>
-        </div>
+                    </div>
+
+                    <div class="dco-pkg-card__tier" data-i18n data-en="Pro" data-es="Pro">Pro</div>
+                    <div class="dco-pkg-card__name" data-i18n data-en="Command" data-es="Command">Command</div>
+                    <div class="dco-pkg-card__price" data-i18n data-en="Custom" data-es="A Medida">Custom</div>
+                    <div class="dco-pkg-card__billing" data-i18n
+                         data-en="Enterprise scope — contact us for custom pricing"
+                         data-es="Alcance empresarial — contáctenos para precios personalizados">
+                        Enterprise scope — contact us for custom pricing
+                    </div>
+
+                    <div class="dco-pkg-card__ideal" data-i18n
+                         data-en="Ideal for: Enterprise CROs and sponsors running multi-regional, multi-indication programs across 10+ investigator sites requiring clinical-grade data infrastructure."
+                         data-es="Ideal para: CROs empresariales y patrocinadores con programas multi-regionales y multi-indicación en 10+ sitios que requieren infraestructura de datos de grado clínico.">
+                        <strong data-i18n data-en="Ideal for:" data-es="Ideal para:">Ideal for:</strong>
+                        Enterprise CROs and sponsors running multi-regional, multi-indication programs across 10+ investigator sites requiring clinical-grade data infrastructure.
+                    </div>
+
+                    <hr class="dco-pkg-card__divider">
+
+                    <ul class="dco-pkg-card__features">
+                        <li>
+                            <span class="dco-pkg-card__check" aria-hidden="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            </span>
+                            <span data-i18n data-en="Everything in Accelerate, plus:" data-es="Todo lo de Accelerate, más:"><strong>Everything in Accelerate, plus:</strong></span>
+                        </li>
+                        <li>
+                            <span class="dco-pkg-card__check" aria-hidden="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            </span>
+                            <span data-i18n data-en="Multi-platform activation: Meta, Google, Programmatic Display + community partnerships" data-es="Activación multi-plataforma: Meta, Google, Display Programático + alianzas comunitarias">Multi-platform activation: Meta, Google, Programmatic Display + community partnerships</span>
+                        </li>
+                        <li>
+                            <span class="dco-pkg-card__check" aria-hidden="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            </span>
+                            <span data-i18n data-en="CTMS/eTMF API integration (REST/FHIR-compatible participant data output)" data-es="Integración API CTMS/eTMF (salida de datos de participantes compatible con REST/FHIR)">CTMS/eTMF API integration (REST/FHIR-compatible participant data output)</span>
+                        </li>
+                        <li>
+                            <span class="dco-pkg-card__check" aria-hidden="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            </span>
+                            <span data-i18n data-en="21 CFR Part 11 aligned audit trail for all participant touchpoints" data-es="Registro de auditoría alineado a 21 CFR Parte 11 para todos los puntos de contacto con participantes">21 CFR Part 11 aligned audit trail for all participant touchpoints</span>
+                        </li>
+                        <li>
+                            <span class="dco-pkg-card__check" aria-hidden="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            </span>
+                            <span data-i18n data-en="Predictive enrollment modeling with adaptive budget reallocation" data-es="Modelado predictivo de inscripción con reasignación adaptativa de presupuesto">Predictive enrollment modeling with adaptive budget reallocation</span>
+                        </li>
+                        <li>
+                            <span class="dco-pkg-card__check" aria-hidden="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            </span>
+                            <span data-i18n data-en="IRB-approved bilingual pre-screening chatbot (EN/ES) + 4-hour support SLA" data-es="Chatbot bilingüe de pre-selección aprobado por IRB (EN/ES) + SLA de soporte de 4 horas">IRB-approved bilingual pre-screening chatbot (EN/ES) + 4-hour support SLA</span>
+                        </li>
+                        <li>
+                            <span class="dco-pkg-card__check" aria-hidden="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            </span>
+                            <span data-i18n data-en="Enrollment guarantee SLA + dedicated CRO partnership manager with weekly KPI briefings" data-es="SLA de garantía de inscripción + gerente de alianza CRO dedicado con informes semanales de KPIs">Enrollment guarantee SLA + dedicated CRO partnership manager with weekly KPI briefings</span>
+                        </li>
+                        <li>
+                            <span class="dco-pkg-card__check" aria-hidden="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            </span>
+                            <span data-i18n data-en="Annual recruitment intelligence report (market benchmarks + condition-specific outreach data)" data-es="Informe anual de inteligencia de reclutamiento (benchmarks de mercado + datos de alcance por condición)">Annual recruitment intelligence report (market benchmarks + condition-specific outreach data)</span>
+                        </li>
+                    </ul>
+
+                    <div class="dco-pkg-card__value" data-i18n
+                         data-en="Built for CROs where enrollment delays cost $600K–$8M per day. The infrastructure layer for zero-failure, multi-indication programs."
+                         data-es="Diseñado para CROs donde los retrasos en inscripción cuestan $600K–$8M por día. Infraestructura para programas multi-indicación sin margen de error.">
+                        Built for CROs where enrollment delays cost $600K–$8M per day. The infrastructure layer for zero-failure, multi-indication programs.
+                    </div>
+
+                    <button type="button" class="dco-pkg-select-btn" data-package="pro">
+                        <span data-i18n data-en="Select Command" data-es="Seleccionar Command">Select Command</span>
+                    </button>
+                </div>
+
+            </div><!-- /.dco-packages__grid -->
+
+            <!-- Selected package summary (updated by JS) -->
+            <div class="dco-pkg-summary" id="dco-pkg-summary" style="display:none;"></div>
+
+        </div><!-- /.dco-packages -->
 
         <!-- Payment Method Selection -->
         <div class="dco-pay-method-section">
@@ -220,7 +427,7 @@
             </p>
         </div>
 
-        <!-- eCheck / ACH info panel (shown only when eCheck is selected) -->
+        <!-- eCheck / ACH info panel -->
         <div class="dco-ach-info" id="dco-ach-info" style="display:none;">
             <div class="dco-ach-info__header">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
@@ -230,9 +437,7 @@
                     <line x1="12" y1="12" x2="12" y2="17"/>
                     <line x1="9" y1="14.5" x2="15" y2="14.5"/>
                 </svg>
-                <span data-i18n
-                      data-en="How eCheck / ACH works"
-                      data-es="Cómo funciona el Cheque Electrónico / ACH">
+                <span data-i18n data-en="How eCheck / ACH works" data-es="Cómo funciona el Cheque Electrónico / ACH">
                     How eCheck / ACH works
                 </span>
             </div>
@@ -306,81 +511,123 @@
 
 <script>
 jQuery(document).ready(function ($) {
-    var selectedMethod = null;
+    'use strict';
+
+    var selectedMethod  = null;
+    var selectedPackage = '<?php echo esc_js($default_pkg); ?>';
+
     var $payBtn    = $('#dco-gate-pay-btn');
     var $hint      = $('#dco-pay-method-hint');
     var $achInfo   = $('#dco-ach-info');
     var $btnLabel  = $('#dco-gate-pay-label');
     var $hintText  = $('#dco-gate-pay-hint-text');
+    var $pkgInput  = $('#dco-selected-package');
+    var $pkgSummary = $('#dco-pkg-summary');
 
-    // Per-method button labels (en / es)
-    var btnLabels = {
-        card: {
-            en: 'Proceed to Secure Payment',
-            es: 'Proceder al Pago Seguro'
-        },
-        us_bank_account: {
-            en: 'Proceed to Bank Verification',
-            es: 'Proceder a Verificación Bancaria'
-        }
-    };
-    var hintLabels = {
-        card: {
-            en: 'Secure payment via Stripe',
-            es: 'Pago seguro via Stripe'
-        },
-        us_bank_account: {
-            en: 'You\'ll enter your bank details on Stripe\'s secure page',
-            es: 'Ingresará sus datos bancarios en la página segura de Stripe'
-        }
+    // Package meta — names/prices for the summary bar
+    var pkgMeta = {
+        basic:    { en: 'Foundation',  es: 'Foundation',  price: '$4,500'  },
+        standard: { en: 'Accelerate',  es: 'Accelerate',  price: '$11,500' },
+        pro:      { en: 'Command',     es: 'Command',     price: 'Custom'  }
     };
 
     function getLang() {
         return ($('.dco-wrapper').data('lang') || 'en');
     }
 
-    function applyMethodLabels(method) {
-        var lang = getLang();
-        var bLabel = btnLabels[method] || btnLabels.card;
-        var hLabel = hintLabels[method] || hintLabels.card;
+    // ── Package selection ─────────────────────────────────────────────
+    function selectPackage(pkg) {
+        selectedPackage = pkg;
+        $pkgInput.val(pkg);
 
-        // Update text and data-en/es so language toggle keeps them in sync
-        $btnLabel
-            .attr('data-en', bLabel.en)
-            .attr('data-es', bLabel.es)
-            .text(bLabel[lang]);
+        // Update card states
+        $('.dco-pkg-card').removeClass('dco-pkg-card--selected').attr('aria-pressed', 'false');
+        $('.dco-pkg-card[data-package="' + pkg + '"]').addClass('dco-pkg-card--selected').attr('aria-pressed', 'true');
 
-        $hintText
-            .attr('data-en', hLabel.en)
-            .attr('data-es', hLabel.es)
-            .text(hLabel[lang]);
+        // Render summary bar
+        renderPkgSummary(pkg);
     }
 
-    // Payment method card selection
+    function renderPkgSummary(pkg) {
+        var lang = getLang();
+        var meta = pkgMeta[pkg];
+        if (!meta) return;
+
+        var name  = meta[lang] || meta.en;
+        var price = meta.price;
+
+        var summaryHtml = '<div class="dco-pkg-summary__inner">'
+            + '<span class="dco-pkg-summary__label" data-i18n data-en="Selected Package:" data-es="Paquete Seleccionado:">'
+            + (lang === 'es' ? 'Paquete Seleccionado:' : 'Selected Package:')
+            + '</span>'
+            + '<strong class="dco-pkg-summary__name">' + name + '</strong>'
+            + '<span class="dco-pkg-summary__price">' + price + '</span>'
+            + '</div>';
+
+        $pkgSummary.html(summaryHtml).show();
+    }
+
+    // Clicks on card body
+    $('.dco-pkg-card').on('click', function () {
+        selectPackage($(this).data('package'));
+    });
+
+    // Clicks on select button (stop propagation so card click doesn't double-fire)
+    $('.dco-pkg-select-btn').on('click', function (e) {
+        e.stopPropagation();
+        selectPackage($(this).data('package'));
+    });
+
+    // Keyboard support for card selection
+    $('.dco-pkg-card').on('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            selectPackage($(this).data('package'));
+        }
+    });
+
+    // Init default selection
+    selectPackage(selectedPackage);
+
+    // ── Payment method labels ─────────────────────────────────────────
+    var btnLabels = {
+        card:            { en: 'Proceed to Secure Payment',      es: 'Proceder al Pago Seguro'         },
+        us_bank_account: { en: 'Proceed to Bank Verification',   es: 'Proceder a Verificación Bancaria' }
+    };
+    var hintLabels = {
+        card:            { en: 'Secure payment via Stripe',                              es: 'Pago seguro via Stripe'                                  },
+        us_bank_account: { en: "You'll enter your bank details on Stripe's secure page", es: 'Ingresará sus datos bancarios en la página segura de Stripe' }
+    };
+
+    function applyMethodLabels(method) {
+        var lang   = getLang();
+        var bLabel = btnLabels[method]  || btnLabels.card;
+        var hLabel = hintLabels[method] || hintLabels.card;
+
+        $btnLabel.attr('data-en', bLabel.en).attr('data-es', bLabel.es).text(bLabel[lang]);
+        $hintText.attr('data-en', hLabel.en).attr('data-es', hLabel.es).text(hLabel[lang]);
+    }
+
+    // ── Payment method card selection ─────────────────────────────────
     $('#dco-pay-method-grid .dco-pay-method-card').on('click', function () {
         var $card = $(this);
         selectedMethod = $card.data('method');
 
-        // Update card states
         $('#dco-pay-method-grid .dco-pay-method-card').removeClass('dco-pay-method-card--selected').attr('aria-pressed', 'false');
         $card.addClass('dco-pay-method-card--selected').attr('aria-pressed', 'true');
 
-        // Show / hide eCheck info panel
         if (selectedMethod === 'us_bank_account') {
             $achInfo.slideDown(200);
         } else {
             $achInfo.slideUp(150);
         }
 
-        // Update button label and hint
         applyMethodLabels(selectedMethod);
-
-        // Enable pay button, hide validation hint
         $payBtn.prop('disabled', false);
         $hint.hide();
     });
 
-    // Pay button click
+    // ── Pay button click ──────────────────────────────────────────────
     $payBtn.on('click', function () {
         if (!selectedMethod) {
             $hint.show();
@@ -402,6 +649,7 @@ jQuery(document).ready(function ($) {
                 application_id:  $btn.data('application-id'),
                 token:           $btn.data('token'),
                 payment_method:  selectedMethod,
+                package_tier:    selectedPackage,
             },
             success: function (res) {
                 if (res.success && res.data.checkout_url) {

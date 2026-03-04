@@ -135,6 +135,80 @@
             <option value="OTHER">Other / Otro</option>
         </select>
 
+        <!-- Primary US state for viability analysis (shown when US is selected) -->
+        <div id="dco-location-wrap" style="display:none;margin-top:10px;">
+            <label class="dco-label" for="dco-location" style="font-size:13px;margin-bottom:4px;">
+                <span data-i18n data-en="Primary State (optional — improves analysis)" data-es="Estado Principal (opcional — mejora el análisis)">Primary State (optional — improves analysis)</span>
+            </label>
+            <select class="dco-input dco-select" id="dco-location" name="location_code">
+                <option value="" data-i18n data-en="— All US States —" data-es="— Todos los Estados —">— All US States —</option>
+                <optgroup label="Northeast">
+                    <option value="CT">Connecticut</option>
+                    <option value="ME">Maine</option>
+                    <option value="MA">Massachusetts</option>
+                    <option value="NH">New Hampshire</option>
+                    <option value="NJ">New Jersey</option>
+                    <option value="NY">New York</option>
+                    <option value="PA">Pennsylvania</option>
+                    <option value="RI">Rhode Island</option>
+                    <option value="VT">Vermont</option>
+                </optgroup>
+                <optgroup label="Southeast">
+                    <option value="AL">Alabama</option>
+                    <option value="AR">Arkansas</option>
+                    <option value="FL">Florida</option>
+                    <option value="GA">Georgia</option>
+                    <option value="KY">Kentucky</option>
+                    <option value="LA">Louisiana</option>
+                    <option value="MS">Mississippi</option>
+                    <option value="NC">North Carolina</option>
+                    <option value="SC">South Carolina</option>
+                    <option value="TN">Tennessee</option>
+                    <option value="VA">Virginia</option>
+                    <option value="WV">West Virginia</option>
+                </optgroup>
+                <optgroup label="Midwest">
+                    <option value="IL">Illinois</option>
+                    <option value="IN">Indiana</option>
+                    <option value="IA">Iowa</option>
+                    <option value="KS">Kansas</option>
+                    <option value="MI">Michigan</option>
+                    <option value="MN">Minnesota</option>
+                    <option value="MO">Missouri</option>
+                    <option value="NE">Nebraska</option>
+                    <option value="ND">North Dakota</option>
+                    <option value="OH">Ohio</option>
+                    <option value="SD">South Dakota</option>
+                    <option value="WI">Wisconsin</option>
+                </optgroup>
+                <optgroup label="Southwest">
+                    <option value="AZ">Arizona</option>
+                    <option value="NM">New Mexico</option>
+                    <option value="OK">Oklahoma</option>
+                    <option value="TX">Texas</option>
+                </optgroup>
+                <optgroup label="West">
+                    <option value="AK">Alaska</option>
+                    <option value="CA">California</option>
+                    <option value="CO">Colorado</option>
+                    <option value="HI">Hawaii</option>
+                    <option value="ID">Idaho</option>
+                    <option value="MT">Montana</option>
+                    <option value="NV">Nevada</option>
+                    <option value="OR">Oregon</option>
+                    <option value="UT">Utah</option>
+                    <option value="WA">Washington</option>
+                    <option value="WY">Wyoming</option>
+                </optgroup>
+                <optgroup label="Mid-Atlantic / Other">
+                    <option value="DC">District of Columbia</option>
+                    <option value="MD">Maryland</option>
+                    <option value="DE">Delaware</option>
+                    <option value="PR">Puerto Rico</option>
+                </optgroup>
+            </select>
+        </div>
+
         <!-- State / region checkboxes (populated by JS) -->
         <div id="dco-campaign-regions-wrap" style="display:none;margin-top:14px;">
             <p class="dco-hint" style="margin-bottom:8px;font-weight:600;"
@@ -196,9 +270,10 @@
                 <span data-i18n data-en="Enrollment Goal" data-es="Meta de Participantes">Enrollment Goal</span>
                 <span class="dco-required">*</span>
             </label>
-            <input class="dco-input" type="number" id="dco-enrollment" name="enrollment_goal"
+            <input class="dco-input" type="number" id="dco-enrollment-goal" name="enrollment_goal"
                    data-placeholder-en="e.g. 150" data-placeholder-es="ej. 150"
                    placeholder="e.g. 150" min="1" max="100000" required>
+            <p id="dco-enrollment-hint" class="dco-hint dco-hint--suggestion" style="margin-top:4px;display:none;"></p>
         </div>
         <div class="dco-field">
             <label class="dco-label" for="dco-timeline">
@@ -208,18 +283,20 @@
             <div class="dco-input-unit-wrap">
                 <input class="dco-input dco-input--unit" type="number" id="dco-timeline" name="timeline_value"
                        data-placeholder-en="e.g. 18" data-placeholder-es="ej. 18"
-                       placeholder="e.g. 18" min="1" max="9999" required>
+                       placeholder="e.g. 18" min="1" max="9999" required
+                       oninput="dcoTimelineAutoConvert(this)">
                 <div class="dco-unit-toggle">
                     <button type="button" class="dco-unit-btn dco-unit-btn--active" id="dco-unit-months"
                             onclick="dcoSetTimelineUnit('months')">
                         <span data-i18n data-en="Months" data-es="Meses">Months</span>
                     </button>
-                    <button type="button" class="dco-unit-btn" id="dco-unit-days"
-                            onclick="dcoSetTimelineUnit('days')">
-                        <span data-i18n data-en="Days" data-es="Días">Days</span>
+                    <button type="button" class="dco-unit-btn" id="dco-unit-weeks"
+                            onclick="dcoSetTimelineUnit('weeks')">
+                        <span data-i18n data-en="Weeks" data-es="Semanas">Weeks</span>
                     </button>
                 </div>
             </div>
+            <p id="dco-timeline-hint" class="dco-hint dco-hint--suggestion" style="margin-top:4px;display:none;"></p>
         </div>
     </div>
 

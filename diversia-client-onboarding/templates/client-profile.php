@@ -86,22 +86,28 @@ $status = $status_map[$status_key];
 
 // Progress bar color
 $bar_color = ($status_key === 'reached') ? '#1e8449'
-           : (($status_key === 'on_track') ? '#2e86ab'
+           : (($status_key === 'on_track') ? '#1e9cd7'
            : (($status_key === 'in_progress') ? '#f0a500' : '#adb5bd'));
 ?>
 
 <div class="dco-profile-wrap" style="font-family:Arial,Helvetica,sans-serif;max-width:820px;margin:0 auto;color:#1a2e40;">
 
     <!-- Greeting ──────────────────────────────────────────────────── -->
-    <div style="margin-bottom:24px;">
-        <h2 style="margin:0 0 4px;font-size:22px;font-weight:700;color:#1a2e40;">
-            <?php echo esc_html($s['greeting']); ?> <?php echo esc_html($user->display_name); ?>
-        </h2>
-        <?php if ($trial_type): ?>
-            <p style="margin:0;color:#64748b;font-size:14px;">
-                <?php echo esc_html($trial_type); ?>
-            </p>
-        <?php endif; ?>
+    <div style="margin-bottom:24px;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+        <div>
+            <h2 style="margin:0 0 4px;font-size:22px;font-weight:700;color:#1a2e40;">
+                <?php echo esc_html($s['greeting']); ?> <?php echo esc_html($user->display_name); ?>
+            </h2>
+            <?php if ($trial_type): ?>
+                <p style="margin:0;color:#64748b;font-size:14px;">
+                    <?php echo esc_html($trial_type); ?>
+                </p>
+            <?php endif; ?>
+        </div>
+        <a href="<?php echo esc_url($registration_url); ?>"
+           style="display:inline-block;padding:9px 20px;background:linear-gradient(135deg,rgba(244,121,32,0.92),rgba(180,70,5,0.92));color:#fff;border-radius:20px;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap;box-shadow:0 2px 8px rgba(244,121,32,0.25);">
+            + <?php echo ($lang === 'es') ? 'Nueva Campaña' : 'New Campaign'; ?>
+        </a>
     </div>
 
     <?php if (empty($trial_type)): ?>

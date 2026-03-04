@@ -1200,4 +1200,363 @@
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0; transition: border-color 0.2s, color 0.2s; font-family: inherit;
 }
+
+/* ==========================================================================
+   Pricing Packages — Payment Gate
+   ========================================================================== */
+
+/* Widen the payment gate wrapper to accommodate 3 columns */
+.dco-payment-gate.dco-wrapper {
+    max-width: 980px;
+}
+
+.dco-packages {
+    margin-bottom: 36px;
+}
+
+.dco-packages__title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--dco-navy);
+    margin: 0 0 8px;
+}
+
+.dco-packages__subtitle {
+    font-size: 13px;
+    color: var(--dco-muted);
+    margin: 0 0 22px;
+    line-height: 1.6;
+}
+
+.dco-packages__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 18px;
+    align-items: start;
+}
+
+/* ── Individual package card ─────────────────────────────────────── */
+.dco-pkg-card {
+    position: relative;
+    border: 2px solid var(--dco-border);
+    border-radius: 16px;
+    padding: 24px 20px 20px;
+    cursor: pointer;
+    background: #fff;
+    box-shadow: 0 2px 12px rgba(30,120,180,0.05);
+    transition: border-color 0.18s, box-shadow 0.18s, transform 0.15s;
+    outline: none;
+}
+
+.dco-pkg-card:hover {
+    border-color: rgba(244,121,32,0.45);
+    box-shadow: 0 6px 28px rgba(244,121,32,0.10);
+    transform: translateY(-3px);
+}
+
+.dco-pkg-card:focus-visible {
+    outline: 3px solid rgba(244,121,32,0.5);
+    outline-offset: 2px;
+}
+
+.dco-pkg-card--selected {
+    border-color: #F47920;
+    box-shadow: 0 8px 36px rgba(244,121,32,0.18);
+    background: #fffaf5;
+}
+
+.dco-pkg-card--featured {
+    border-color: rgba(244,121,32,0.35);
+}
+
+/* ── Most selected ribbon ────────────────────────────────────────── */
+.dco-pkg-card__popular-ribbon {
+    position: absolute;
+    top: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #F47920, #c05a10);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 4px 16px;
+    border-radius: 0 0 10px 10px;
+    white-space: nowrap;
+}
+
+/* ── Selected checkmark badge ────────────────────────────────────── */
+.dco-pkg-card__selected-check {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 24px;
+    height: 24px;
+    background: #F47920;
+    border-radius: 50%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(244,121,32,0.4);
+}
+
+.dco-pkg-card--selected .dco-pkg-card__selected-check {
+    display: flex;
+}
+
+/* ── Typography ──────────────────────────────────────────────────── */
+.dco-pkg-card__tier {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #F47920;
+    margin-bottom: 4px;
+}
+
+.dco-pkg-card__name {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--dco-navy);
+    margin: 0 0 10px;
+    line-height: 1.1;
+}
+
+.dco-pkg-card__price {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--dco-navy);
+    line-height: 1;
+    margin-bottom: 2px;
+}
+
+.dco-pkg-card__price span {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--dco-muted);
+}
+
+.dco-pkg-card__billing {
+    font-size: 11px;
+    color: var(--dco-muted);
+    margin-bottom: 14px;
+    line-height: 1.4;
+}
+
+.dco-pkg-card__ideal {
+    font-size: 11.5px;
+    color: #475569;
+    line-height: 1.55;
+    margin-bottom: 14px;
+    padding: 10px 12px;
+    background: rgba(244,121,32,0.05);
+    border-left: 3px solid rgba(244,121,32,0.3);
+    border-radius: 0 6px 6px 0;
+}
+
+.dco-pkg-card__divider {
+    border: none;
+    border-top: 1px solid #eef2f7;
+    margin: 14px 0;
+}
+
+/* ── Feature list ────────────────────────────────────────────────── */
+.dco-pkg-card__features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 16px;
+}
+
+.dco-pkg-card__features li {
+    font-size: 12px;
+    color: #334155;
+    padding: 5px 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    line-height: 1.45;
+    border-bottom: 1px solid rgba(238,242,247,0.7);
+}
+
+.dco-pkg-card__features li:last-child {
+    border-bottom: none;
+}
+
+.dco-pkg-card__check {
+    color: #F47920;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+/* ── Value proposition ───────────────────────────────────────────── */
+.dco-pkg-card__value {
+    font-size: 11px;
+    font-style: italic;
+    color: #64748b;
+    line-height: 1.5;
+    margin-bottom: 16px;
+    padding: 8px 10px;
+    background: #f8fafc;
+    border-radius: 6px;
+}
+
+/* ── Select button ───────────────────────────────────────────────── */
+.dco-pkg-select-btn {
+    width: 100%;
+    padding: 10px 16px;
+    border: 2px solid rgba(244,121,32,0.4);
+    border-radius: 8px;
+    background: transparent;
+    color: #F47920;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    font-family: inherit;
+}
+
+.dco-pkg-select-btn:hover {
+    background: rgba(244,121,32,0.08);
+    border-color: #F47920;
+}
+
+.dco-pkg-card--selected .dco-pkg-select-btn {
+    background: linear-gradient(135deg, #F47920, #d46010);
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 3px 12px rgba(244,121,32,0.3);
+}
+
+/* ── Selected package summary bar ───────────────────────────────── */
+.dco-pkg-summary {
+    margin-top: 18px;
+    padding: 14px 20px;
+    background: linear-gradient(135deg, rgba(244,121,32,0.08), rgba(244,121,32,0.03));
+    border: 1px solid rgba(244,121,32,0.25);
+    border-radius: 10px;
+}
+
+.dco-pkg-summary__inner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.dco-pkg-summary__label {
+    font-size: 12px;
+    color: var(--dco-muted);
+    font-weight: 600;
+}
+
+.dco-pkg-summary__name {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--dco-navy);
+}
+
+.dco-pkg-summary__price {
+    font-size: 14px;
+    font-weight: 700;
+    color: #F47920;
+    margin-left: auto;
+}
+
+/* ── Responsive ──────────────────────────────────────────────────── */
+@media (max-width: 780px) {
+    .dco-packages__grid {
+        grid-template-columns: 1fr;
+    }
+    .dco-pkg-card__popular-ribbon {
+        border-radius: 0 10px 10px 0;
+        top: 50%;
+        left: -1px;
+        transform: translateY(-50%);
+    }
+}
+
+@media (max-width: 500px) {
+    .dco-pkg-card {
+        padding: 20px 16px;
+    }
+    .dco-pkg-card__price {
+        font-size: 22px;
+    }
+}
 .dco-video-file-item__rm:hover { border-color: var(--dco-error); color: var(--dco-error); }
+
+/* ── Recruitment Viability Card (.s2-le-*) ──────────────────────────────── */
+.s2-le-card {
+    background: #fff;
+    border: 1px solid #dde4ec;
+    border-radius: 12px;
+    padding: 18px 20px;
+    box-shadow: 0 2px 12px rgba(30,156,215,0.07);
+}
+.s2-le-card__header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+.s2-le-card__icon {
+    font-size: 20px;
+    flex-shrink: 0;
+}
+.s2-le-card__title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #001f50;
+}
+.s2-le-verdict {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: .4px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+}
+.s2-le-verdict--ok  { background: #e8f7ee; color: #1e6b3a; }
+.s2-le-verdict--no  { background: #fde8e8; color: #b91c1c; }
+.s2-le-verdict--adj { background: #fff8e1; color: #92600a; }
+.s2-le-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 12px;
+}
+.s2-le-metric {
+    background: linear-gradient(135deg, #eaf4fb 0%, #f5faff 100%);
+    border-radius: 8px;
+    padding: 10px 12px;
+    text-align: center;
+}
+.s2-le-metric__val {
+    font-size: 18px;
+    font-weight: 800;
+    color: #001f50;
+    line-height: 1.1;
+}
+.s2-le-metric__lbl {
+    font-size: 11px;
+    color: #64748b;
+    margin-top: 3px;
+    line-height: 1.3;
+}
+.s2-le-hint {
+    background: #eaf4fb;
+    border-left: 3px solid #1e9cd7;
+    border-radius: 4px;
+    padding: 9px 12px;
+    font-size: 12px;
+    color: #1a3a4a;
+    line-height: 1.5;
+}
+@media (max-width: 500px) {
+    .s2-le-metrics {
+        grid-template-columns: 1fr 1fr;
+    }
+}

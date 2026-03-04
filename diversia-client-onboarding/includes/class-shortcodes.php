@@ -14,14 +14,15 @@ class DCO_Shortcodes {
      * Multi-step registration form for potential clients.
      */
     public static function render_registration(array $atts = array()): string {
-        // If already an active client, show a message
+        $dco_is_returning_client = false;
+        $dco_returning_user      = null;
+
         if (is_user_logged_in()) {
-            $user = wp_get_current_user();
-            if (in_array('client', (array) $user->roles, true)) {
-                return '<div class="dco-notice dco-notice--info">'
-                     . '<p><strong>¡Ya eres un cliente de Diversia Health!</strong></p>'
-                     . '<p>You already have an active client account. <a href="' . esc_url(wp_login_url()) . '">Go to your dashboard</a>.</p>'
-                     . '</div>';
+            $current_user = wp_get_current_user();
+            if (in_array('client', (array) $current_user->roles, true)) {
+                // Active client — let them start a new campaign instead of blocking
+                $dco_is_returning_client = true;
+                $dco_returning_user      = $current_user;
             }
         }
 
@@ -139,6 +140,8 @@ class DCO_Shortcodes {
         } elseif (strpos(get_locale(), 'es') === 0) {
             $lang = 'es';
         }
+
+        $registration_url = home_url('/client-registration/');
 
         ob_start();
         include DCO_PLUGIN_DIR . 'templates/client-profile.php';

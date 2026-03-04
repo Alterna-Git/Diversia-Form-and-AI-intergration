@@ -19,6 +19,9 @@ class DCO_Ajax_Handlers {
 
         // Create Stripe session (logged in, requires valid token)
         add_action('wp_ajax_dco_create_stripe_session', array(__CLASS__, 'handle_create_stripe_session'));
+
+        // Start new campaign (existing provisioned client only)
+        add_action('wp_ajax_dco_start_new_campaign', array(__CLASS__, 'handle_start_new_campaign'));
     }
 
     // =========================================================================
@@ -164,6 +167,7 @@ class DCO_Ajax_Handlers {
         $campaign_country_other = sanitize_text_field($_POST['campaign_country_other'] ?? '');
         $campaign_regions_raw   = array_map('sanitize_text_field', (array) ($_POST['campaign_regions'] ?? array()));
         $campaign_regions       = array_values(array_filter($campaign_regions_raw));
+        $location_code          = sanitize_text_field($_POST['location_code'] ?? '');
 
         $country_names = array(
             'US' => 'United States', 'MX' => 'Mexico', 'CO' => 'Colombia',
@@ -178,6 +182,7 @@ class DCO_Ajax_Handlers {
             'country_code' => $campaign_country_code,
             'country'      => $campaign_country_name,
             'regions'      => $campaign_regions,
+            'state'        => $location_code,
         ));
 
         // Compose a human-readable budget range string for storage and AI context
@@ -338,10 +343,16 @@ class DCO_Ajax_Handlers {
         $application_id = (int) ($_POST['application_id'] ?? 0);
         $token          = sanitize_text_field($_POST['token'] ?? '');
         $payment_method = sanitize_text_field($_POST['payment_method'] ?? 'card');
+        $package_tier   = sanitize_text_field($_POST['package_tier']   ?? 'basic');
 
         // Whitelist payment method
         if (!in_array($payment_method, array('card', 'us_bank_account'), true)) {
             $payment_method = 'card';
+        }
+
+        // Whitelist package tier
+        if (!in_array($package_tier, array('basic', 'standard', 'pro'), true)) {
+            $package_tier = 'basic';
         }
 
         // Validate token
@@ -369,6 +380,7 @@ class DCO_Ajax_Handlers {
                 'user_email'     => $app->email,
                 'company_name'   => $app->company_name,
                 'payment_method' => $payment_method,
+                'package_tier'   => $package_tier,
             ));
 
             wp_send_json_success(array('checkout_url' => $session['url']));
@@ -377,6 +389,64 @@ class DCO_Ajax_Handlers {
             error_log('[DCO] Stripe session creation failed: ' . $e->getMessage());
             wp_send_json_error(array('message' => 'Could not initiate payment. Please try again or contact us. / No se pudo iniciar el pago.'));
         }
+    }
+
+    // =========================================================================
+    // New Campaign — provisioned client starts a fresh application
+    // =========================================================================
+
+    public static function handle_start_new_campaign(): void {
+        self::verify_nonce('dco_start_new_campaign');
+
+        if (!is_user_logged_in()) {
+            wp_send_json_error(array('message' => 'You must be logged in. / Debe iniciar sesión.'));
+            return;
+        }
+
+        $user = wp_get_current_user();
+        if (!in_array('client', (array) $user->roles, true)) {
+            wp_send_json_error(array('message' => 'Access denied. / Acceso denegado.'));
+            return;
+        }
+
+        // Pull account details from the most recent application row
+        global $wpdb;
+        $last_app = $wpdb->get_row($wpdb->prepare(
+            "SELECT first_name, last_name, email, company_name FROM " . DCO_Database::table() . " WHERE wp_user_id = %d ORDER BY id DESC LIMIT 1",
+            (int) $user->ID
+        ));
+
+        $first_name   = sanitize_text_field($last_app->first_name ?? $user->first_name);
+        $last_name    = sanitize_text_field($last_app->last_name  ?? $user->last_name);
+        $email        = sanitize_email($user->user_email);
+        $company_name = sanitize_text_field($last_app->company_name ?? '');
+
+        $wpdb->insert(
+            DCO_Database::table(),
+            array(
+                'first_name'   => $first_name,
+                'last_name'    => $last_name,
+                'email'        => $email,
+                'company_name' => $company_name,
+                'wp_user_id'   => (int) $user->ID,
+                'status'       => 'step1_complete',
+                'ip_address'   => DCO_Rate_Limiter::get_identifier(),
+                'user_agent'   => sanitize_text_field(substr($_SERVER['HTTP_USER_AGENT'] ?? '', 0, 500)),
+            ),
+            array('%s', '%s', '%s', '%s', '%d', '%s', '%s', '%s')
+        );
+
+        $application_id = (int) $wpdb->insert_id;
+
+        if (!$application_id) {
+            wp_send_json_error(array('message' => 'Could not create campaign. Please try again. / No se pudo crear la campaña.'));
+            return;
+        }
+
+        wp_send_json_success(array(
+            'application_id' => $application_id,
+            'nonce_step2'    => wp_create_nonce('dco_register_step2'),
+        ));
     }
 
     // =========================================================================

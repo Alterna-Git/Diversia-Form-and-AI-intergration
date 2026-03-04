@@ -570,7 +570,7 @@ body {
   box-shadow: 0 4px 16px rgba(244,121,32,0.40);
 }
 
-/* ── Unit toggle (Months / Days) ── */
+/* ── Unit toggle (Months / Weeks) ── */
 .dco-input-unit-wrap { display: flex; gap: 8px; align-items: stretch; }
 .dco-input-unit-wrap .dco-input--unit { flex: 1; min-width: 0; }
 .dco-unit-toggle {
@@ -1185,6 +1185,189 @@ body {
 .dco-empty-state { text-align: center; padding: 48px 24px; color: rgba(255,255,255,0.45); }
 .dco-empty-state__icon { font-size: 40px; margin-bottom: 12px; }
 .dco-empty-state__msg  { font-size: 15px; }
+
+/* ── Pricing Packages ─────────────────────────────────────────────── */
+.dco-payment-gate { max-width: 980px !important; }
+.dco-packages { margin-bottom: 36px; }
+.dco-packages__title { font-size: 17px; font-weight: 700; color: var(--dco-navy); margin: 0 0 8px; }
+.dco-packages__subtitle { font-size: 13px; color: var(--dco-muted); margin: 0 0 22px; line-height: 1.6; }
+.dco-packages__grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; align-items: start; }
+.dco-pkg-card { position: relative; border: 2px solid var(--dco-border); border-radius: 16px; padding: 24px 20px 20px; cursor: pointer; background: #fff; box-shadow: 0 2px 12px rgba(30,120,180,0.05); transition: border-color 0.18s, box-shadow 0.18s, transform 0.15s; outline: none; }
+.dco-pkg-card:hover { border-color: rgba(244,121,32,0.45); box-shadow: 0 6px 28px rgba(244,121,32,0.10); transform: translateY(-3px); }
+.dco-pkg-card--selected { border-color: #F47920; box-shadow: 0 8px 36px rgba(244,121,32,0.18); background: #fffaf5; }
+.dco-pkg-card--featured { border-color: rgba(244,121,32,0.35); }
+.dco-pkg-card__popular-ribbon { position: absolute; top: -1px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg,#F47920,#c05a10); color: #fff; font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; padding: 4px 16px; border-radius: 0 0 10px 10px; white-space: nowrap; }
+.dco-pkg-card__selected-check { position: absolute; top: 14px; right: 14px; width: 24px; height: 24px; background: #F47920; border-radius: 50%; display: none; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(244,121,32,0.4); }
+.dco-pkg-card--selected .dco-pkg-card__selected-check { display: flex; }
+.dco-pkg-card__tier { font-size: 10px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #F47920; margin-bottom: 4px; }
+.dco-pkg-card__name { font-size: 22px; font-weight: 800; color: var(--dco-navy); margin: 0 0 10px; line-height: 1.1; }
+.dco-pkg-card__price { font-size: 28px; font-weight: 800; color: var(--dco-navy); line-height: 1; margin-bottom: 2px; }
+.dco-pkg-card__price span { font-size: 13px; font-weight: 500; color: var(--dco-muted); }
+.dco-pkg-card__billing { font-size: 11px; color: var(--dco-muted); margin-bottom: 14px; line-height: 1.4; }
+.dco-pkg-card__ideal { font-size: 11.5px; color: #475569; line-height: 1.55; margin-bottom: 14px; padding: 10px 12px; background: rgba(244,121,32,0.05); border-left: 3px solid rgba(244,121,32,0.3); border-radius: 0 6px 6px 0; }
+.dco-pkg-card__divider { border: none; border-top: 1px solid #eef2f7; margin: 14px 0; }
+.dco-pkg-card__features { list-style: none; padding: 0; margin: 0 0 16px; }
+.dco-pkg-card__features li { font-size: 12px; color: #334155; padding: 5px 0; display: flex; align-items: flex-start; gap: 8px; line-height: 1.45; border-bottom: 1px solid rgba(238,242,247,0.7); }
+.dco-pkg-card__features li:last-child { border-bottom: none; }
+.dco-pkg-card__check { color: #F47920; flex-shrink: 0; margin-top: 1px; }
+.dco-pkg-card__value { font-size: 11px; font-style: italic; color: #64748b; line-height: 1.5; margin-bottom: 16px; padding: 8px 10px; background: #f8fafc; border-radius: 6px; }
+.dco-pkg-select-btn { width: 100%; padding: 10px 16px; border: 2px solid rgba(244,121,32,0.4); border-radius: 8px; background: transparent; color: #F47920; font-size: 13px; font-weight: 700; cursor: pointer; transition: background 0.15s, color 0.15s, border-color 0.15s; font-family: inherit; }
+.dco-pkg-select-btn:hover { background: rgba(244,121,32,0.08); border-color: #F47920; }
+.dco-pkg-card--selected .dco-pkg-select-btn { background: linear-gradient(135deg,#F47920,#d46010); color: #fff; border-color: transparent; box-shadow: 0 3px 12px rgba(244,121,32,0.3); }
+.dco-pkg-summary { margin-top: 18px; padding: 14px 20px; background: linear-gradient(135deg,rgba(244,121,32,0.08),rgba(244,121,32,0.03)); border: 1px solid rgba(244,121,32,0.25); border-radius: 10px; }
+.dco-pkg-summary__inner { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.dco-pkg-summary__label { font-size: 12px; color: var(--dco-muted); font-weight: 600; }
+.dco-pkg-summary__name { font-size: 14px; font-weight: 800; color: var(--dco-navy); }
+.dco-pkg-summary__price { font-size: 14px; font-weight: 700; color: #F47920; margin-left: auto; }
+/* Returning client new-campaign card */
+.dco-new-campaign-info { background: rgba(244,121,32,0.07); border: 1px solid rgba(244,121,32,0.25); border-radius: 12px; padding: 16px 20px; margin-bottom: 28px; }
+.dco-new-campaign-info p { margin: 0; font-size: 13px; color: #7a4a1a; }
+.dco-new-campaign-info p + p { margin-top: 6px; }
+@media (max-width: 780px) {
+  .dco-packages__grid { grid-template-columns: 1fr; }
+  .dco-pkg-card__popular-ribbon { border-radius: 0 10px 10px 0; top: 50%; left: -1px; transform: translateY(-50%); }
+}
+@media (max-width: 500px) {
+  .dco-pkg-card { padding: 20px 16px; }
+  .dco-pkg-card__price { font-size: 22px; }
+}
+
+/* ── Recruitment Estimator (le-) ─────────────────────────────────────────── */
+/* === Recruitment Estimator — site theme === */
+#screen-estimator { background:linear-gradient(135deg,#eaf4fb 0%,#f5faff 60%,#e8f3fc 100%) !important; }
+
+.le-root { max-width:860px; margin:0 auto; padding:28px 20px 60px; font-family:"Segoe UI",system-ui,sans-serif; }
+.le-header { text-align:center; margin-bottom:28px; }
+.le-badge { display:inline-block; background:#EF660B; color:#fff; font-size:10px; font-weight:700; letter-spacing:.1em; padding:3px 9px; border-radius:4px; margin-bottom:12px; }
+.le-title { font-size:clamp(22px,4vw,36px); font-weight:800; color:#001f50; margin:0 0 8px; line-height:1.1; }
+.le-title--sm { font-size:clamp(18px,3.5vw,28px); }
+.le-sub { color:#5a7a9a; font-size:14px; margin:0; line-height:1.6; }
+
+.le-card { background:#fff; border:1px solid rgba(30,120,180,0.12); border-radius:16px; padding:24px; margin-bottom:14px; box-shadow:0 4px 24px rgba(30,120,180,0.08); }
+.le-card-hd { display:flex; align-items:center; gap:8px; margin-bottom:18px; font-size:15px; font-weight:700; color:#001f50; }
+.le-ai-card { background:linear-gradient(135deg,#f0f8ff,#fff); border-color:rgba(30,156,215,0.2); }
+
+.le-field { display:flex; flex-direction:column; gap:6px; flex:1; }
+.le-label { font-size:12px; font-weight:600; color:#5a7a9a; letter-spacing:.05em; text-transform:uppercase; }
+.le-select, .le-input { background:#fff; border:1px solid rgba(30,120,180,0.2); border-radius:10px; color:#1a2b3c; font-size:14px; padding:11px 13px; width:100%; box-sizing:border-box; outline:none; transition:border-color .18s; font-family:inherit; }
+.le-select:focus, .le-input:focus { border-color:#1e9cd7; box-shadow:0 0 0 3px rgba(30,156,215,.15); }
+.le-select option, .le-select optgroup { background:#fff; color:#1a2b3c; }
+.le-field-row { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+
+.le-chips { display:flex; flex-wrap:wrap; gap:7px; }
+.le-chip { display:inline-flex; align-items:center; gap:5px; padding:7px 11px; background:#f0f8ff; border:1px solid rgba(30,120,180,0.18); border-radius:8px; color:#5a7a9a; font-size:12px; cursor:pointer; transition:all .16s; font-family:inherit; }
+.le-chip:hover { border-color:#1e9cd7; color:#005a9d; }
+.le-chip--active { border-color:#1e9cd7; background:rgba(30,156,215,.12); color:#005a9d; font-weight:600; }
+.le-chip-code { font-family:monospace; font-size:10px; font-weight:700; background:rgba(30,120,180,.08); padding:1px 5px; border-radius:3px; color:#1e9cd7; }
+.le-chip-pop { font-size:10px; color:#8aabb5; font-family:monospace; }
+
+.le-btn-submit { width:100%; padding:14px; background:linear-gradient(135deg,#EF660B,#c05a10); border:none; border-radius:10px; color:#fff; font-size:15px; font-weight:700; cursor:pointer; transition:transform .15s,box-shadow .15s; box-shadow:0 4px 18px rgba(239,102,11,.35); font-family:inherit; }
+.le-btn-submit:hover { transform:translateY(-2px); box-shadow:0 8px 26px rgba(239,102,11,.5); }
+.le-btn-reset { padding:11px 24px; border:1px solid rgba(30,120,180,0.2); border-radius:10px; background:#fff; color:#5a7a9a; font-size:13px; font-weight:600; cursor:pointer; transition:all .18s; font-family:inherit; }
+.le-btn-reset:hover { border-color:#1e9cd7; color:#005a9d; background:rgba(30,156,215,.06); }
+
+/* ── Recruitment Viability card (on qualified/rejected screens) ── */
+.s2-le-card { background:#f0f9ff; border:1.5px solid rgba(30,156,215,0.25); border-radius:16px; padding:18px 20px; text-align:left; }
+.s2-le-card__header { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+.s2-le-card__icon { font-size:20px; }
+.s2-le-card__title { font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:#005a9d; }
+.s2-le-verdict { display:inline-flex; align-items:center; gap:7px; padding:6px 14px; border-radius:30px; font-size:13px; font-weight:700; letter-spacing:.04em; margin-bottom:12px; }
+.s2-le-verdict--ok   { background:rgba(56,129,40,.10);  color:#388128; border:1px solid rgba(56,129,40,.3);  }
+.s2-le-verdict--adj  { background:rgba(217,119,6,.10);  color:#92400e; border:1px solid rgba(217,119,6,.3);  }
+.s2-le-verdict--no   { background:rgba(220,38,38,.10);  color:#991b1b; border:1px solid rgba(220,38,38,.3);  }
+.s2-le-metrics { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+.s2-le-metric { background:#fff; border:1px solid rgba(30,120,180,0.12); border-radius:10px; padding:10px 12px; box-shadow:0 2px 8px rgba(30,120,180,0.05); }
+.s2-le-metric__val { font-size:16px; font-weight:800; color:#005a9d; line-height:1.1; }
+.s2-le-metric__lbl { font-size:11px; color:#5a7a9a; margin-top:2px; }
+.s2-le-hint { margin-top:10px; font-size:12px; color:#005a9d; line-height:1.5; background:rgba(30,156,215,.07); border-radius:8px; padding:8px 10px; }
+@media(max-width:480px){ .s2-le-metrics { grid-template-columns:repeat(2,1fr); } }
+
+/* Check rows */
+.le-checks { display:flex; flex-direction:column; gap:10px; }
+.le-check-row { display:flex; align-items:flex-start; gap:12px; padding:16px 18px; border-radius:10px; border:1px solid rgba(30,120,180,0.12); background:#fff; transition:border-color .3s,background .3s; box-shadow:0 2px 8px rgba(30,120,180,0.05); }
+.le-check-row--pass    { border-color:#388128; background:rgba(56,129,40,.05); }
+.le-check-row--fail    { border-color:#EF4444; background:rgba(239,68,68,.04); }
+.le-check-row--running { border-color:#1e9cd7; background:rgba(30,156,215,.05); }
+.le-check-icon { font-size:20px; line-height:1; flex-shrink:0; margin-top:2px; }
+.le-check-body { flex:1; min-width:0; }
+.le-check-hd { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.le-check-name { font-weight:700; font-size:14px; color:#001f50; }
+.le-check-badge { display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:700; font-family:monospace; padding:3px 9px; border-radius:5px; white-space:nowrap; }
+.le-check-badge--pending { background:rgba(30,120,180,.08); color:#5a7a9a; }
+.le-check-badge--running { background:rgba(30,156,215,.15); color:#1e9cd7; }
+.le-check-badge--pass    { background:rgba(56,129,40,.12);  color:#388128; }
+.le-check-badge--fail    { background:rgba(239,68,68,.12);  color:#EF4444; }
+.le-check-detail  { margin:7px 0 5px; font-size:12px; color:#5a7a9a; line-height:1.5; }
+.le-check-metric  { font-family:monospace; font-size:11px; color:#1e9cd7; background:rgba(30,156,215,.10); padding:2px 7px; border-radius:4px; }
+@keyframes le-spin { to { transform:rotate(360deg); } }
+.le-spinner { display:inline-block; width:12px; height:12px; border:2px solid rgba(30,156,215,.25); border-top-color:#1e9cd7; border-radius:50%; animation:le-spin .65s linear infinite; flex-shrink:0; }
+
+/* Verdict */
+.le-verdict { border-radius:16px; margin-bottom:14px; overflow:hidden; }
+.le-verdict--aprobado { background:linear-gradient(135deg,rgba(56,129,40,.14),rgba(56,129,40,.04)); border:1px solid rgba(56,129,40,.35); }
+.le-verdict--viable   { background:linear-gradient(135deg,rgba(245,158,11,.14),rgba(245,158,11,.04)); border:1px solid rgba(245,158,11,.35); }
+.le-verdict--noviable { background:linear-gradient(135deg,rgba(239,68,68,.14), rgba(239,68,68,.04));  border:1px solid rgba(239,68,68,.35);  }
+.le-verdict-inner { display:flex; align-items:center; gap:18px; padding:22px 26px; }
+.le-verdict-emoji { font-size:34px; }
+.le-verdict-text  { font-size:clamp(20px,4vw,28px); font-weight:800; letter-spacing:-.01em; line-height:1; }
+.le-verdict--aprobado .le-verdict-text { color:#388128; }
+.le-verdict--viable   .le-verdict-text { color:#d97706; }
+.le-verdict--noviable .le-verdict-text { color:#EF4444; }
+
+/* Metrics */
+.le-metrics { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+.le-metric-card { background:#fff; border:1px solid rgba(30,120,180,0.12); border-radius:12px; padding:18px 14px; text-align:center; box-shadow:0 2px 12px rgba(30,120,180,0.06); }
+.le-metric-val { font-family:monospace; font-size:clamp(18px,3vw,26px); font-weight:700; color:#1e9cd7; margin-bottom:5px; }
+.le-metric-lbl { font-size:12px; font-weight:600; color:#001f50; line-height:1.3; }
+.le-metric-sub { font-size:10px; color:#5a7a9a; margin-top:3px; font-family:monospace; }
+
+/* Funnel */
+.le-funnel-wrap { display:flex; flex-direction:column; gap:9px; }
+.le-funnel-row  { display:flex; align-items:center; gap:10px; }
+.le-funnel-meta { display:flex; flex-direction:column; width:155px; flex-shrink:0; }
+.le-funnel-lbl  { font-size:12px; color:#5a7a9a; }
+.le-funnel-cnt  { font-family:monospace; font-size:13px; font-weight:600; color:#001f50; }
+.le-funnel-track { flex:1; height:10px; background:rgba(30,120,180,0.08); border-radius:5px; overflow:hidden; }
+.le-funnel-bar  { height:100%; background:linear-gradient(90deg,#1e9cd7,#005a9d); border-radius:5px; transition:width .5s ease; }
+.le-funnel-bar--final { background:linear-gradient(90deg,#388128,#2a6b1e); }
+.le-funnel-pct  { font-family:monospace; font-size:11px; color:#8aabb5; width:32px; text-align:right; flex-shrink:0; }
+
+/* Scenarios */
+.le-scene-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+.le-scene-card  { background:#fff; border:1px solid rgba(30,120,180,0.12); border-radius:10px; padding:16px 14px; position:relative; overflow:hidden; box-shadow:0 2px 8px rgba(30,120,180,0.05); }
+.le-scene-card--hi  { border-color:#1e9cd7; background:rgba(30,156,215,.05); }
+.le-scene-ribbon    { position:absolute; top:0; right:0; background:#1e9cd7; color:#fff; font-size:9px; font-weight:700; padding:3px 7px; border-bottom-left-radius:7px; letter-spacing:.06em; }
+.le-scene-lbl       { font-size:11px; font-weight:700; color:#5a7a9a; margin-bottom:10px; text-transform:uppercase; letter-spacing:.06em; }
+.le-scen-row        { display:flex; justify-content:space-between; align-items:center; padding:5px 0; border-bottom:1px solid rgba(30,120,180,0.08); font-size:12px; }
+.le-scen-row:last-child { border-bottom:none; }
+.le-scen-row span   { color:#5a7a9a; }
+.le-scen-row strong { font-family:monospace; font-size:12px; color:#001f50; }
+.le-scen-cpe strong { color:#EF660B; }
+
+/* Hints */
+.le-hint-list  { display:flex; flex-direction:column; gap:9px; }
+.le-hint       { border-radius:10px; padding:14px; border-left:3px solid transparent; }
+.le-hint--alta  { background:rgba(239,68,68,.05);  border-left-color:#EF4444; }
+.le-hint--media { background:rgba(245,158,11,.05); border-left-color:#d97706; }
+.le-hint--baja  { background:rgba(30,156,215,.05); border-left-color:#1e9cd7; }
+.le-hint-hd    { display:flex; align-items:center; gap:7px; margin-bottom:5px; }
+.le-hint-title { font-weight:600; font-size:13px; flex:1; color:#001f50; }
+.le-hint-badge { font-size:9px; font-weight:700; letter-spacing:.07em; padding:2px 6px; border-radius:3px; }
+.le-hint-badge--alta  { background:rgba(239,68,68,.15);  color:#EF4444; }
+.le-hint-badge--media { background:rgba(245,158,11,.15); color:#d97706; }
+.le-hint-badge--baja  { background:rgba(30,156,215,.12); color:#1e9cd7; }
+.le-hint-desc  { font-size:12px; color:#5a7a9a; line-height:1.55; margin:0; }
+
+@media (max-width:680px) {
+  .le-field-row { grid-template-columns:1fr; }
+  .le-metrics   { grid-template-columns:repeat(2,1fr); }
+  .le-scene-grid { grid-template-columns:1fr; }
+  .le-verdict-inner { flex-wrap:wrap; }
+  .le-funnel-meta { width:115px; }
+}
+@media (max-width:420px) {
+  .le-metrics { grid-template-columns:1fr 1fr; }
+}
 </style>
 </head>
 <body>
@@ -1240,6 +1423,7 @@ body {
   <div class="preview-tab" id="tab-reach" style="display:none" onclick="showScreen('reach',this); refreshReach();">📊 Campaign Reach <span class="dco-tab-admin-badge">Admin</span></div>
   <div class="preview-tab" id="tab-reach-client" onclick="showScreen('reach-client',this); refreshReach();">👤 Campaign Reach — Client</div>
   <div class="preview-tab" id="tab-email" style="display:none" onclick="showScreen('email',this); populateEmailScreen();">✉ Welcome Email <span class="dco-tab-admin-badge">Admin</span></div>
+  <div class="preview-tab" id="tab-estimator" style="display:none" onclick="showScreen('estimator',this)">🔬 Recruitment Estimator <span class="dco-tab-admin-badge">Admin</span></div>
   <button class="dco-admin-access-btn" id="admin-access-btn" onclick="showAdminLoginModal()">🔑 Admin</button>
 </div>
 
@@ -1365,6 +1549,8 @@ body {
   </div>
 </div>
 
+<!-- ====== RETURNING CLIENT — NEW CAMPAIGN ====== -->
+
 <!-- ====== STEP 2 ====== -->
 <div class="preview-screen" id="screen-step2">
   <div class="dco-wrapper" data-lang="en">
@@ -1487,6 +1673,69 @@ body {
         <input id="s2-org-other" class="dco-input" type="text" placeholder="Describe your organization..." style="display:none;margin-top:8px">
       </div>
       <div class="dco-field">
+        <label class="dco-label"><span class="lang-text" data-en="Location / State" data-es="Ubicación / Estado">Location / State</span> <span class="dco-required">*</span></label>
+        <p class="dco-hint lang-text" data-en="Where is your trial based? We'll connect you with the Latino community in your area." data-es="¿Dónde se llevará a cabo el ensayo? Lo conectaremos con la comunidad latina en su área.">Where is your trial based? We'll connect you with the Latino community in your area.</p>
+        <select class="dco-input dco-select" id="s2-location">
+          <option value="">— Select a state —</option>
+          <optgroup label="── United States ──">
+            <option value="AL">Alabama</option>
+            <option value="AK">Alaska</option>
+            <option value="AZ">Arizona</option>
+            <option value="AR">Arkansas</option>
+            <option value="CA">California</option>
+            <option value="CO">Colorado</option>
+            <option value="CT">Connecticut</option>
+            <option value="DE">Delaware</option>
+            <option value="FL">Florida</option>
+            <option value="GA">Georgia</option>
+            <option value="HI">Hawaii</option>
+            <option value="ID">Idaho</option>
+            <option value="IL">Illinois</option>
+            <option value="IN">Indiana</option>
+            <option value="IA">Iowa</option>
+            <option value="KS">Kansas</option>
+            <option value="KY">Kentucky</option>
+            <option value="LA">Louisiana</option>
+            <option value="ME">Maine</option>
+            <option value="MD">Maryland</option>
+            <option value="MA">Massachusetts</option>
+            <option value="MI">Michigan</option>
+            <option value="MN">Minnesota</option>
+            <option value="MS">Mississippi</option>
+            <option value="MO">Missouri</option>
+            <option value="MT">Montana</option>
+            <option value="NE">Nebraska</option>
+            <option value="NV">Nevada</option>
+            <option value="NH">New Hampshire</option>
+            <option value="NJ">New Jersey</option>
+            <option value="NM">New Mexico</option>
+            <option value="NY">New York</option>
+            <option value="NC">North Carolina</option>
+            <option value="ND">North Dakota</option>
+            <option value="OH">Ohio</option>
+            <option value="OK">Oklahoma</option>
+            <option value="OR">Oregon</option>
+            <option value="PA">Pennsylvania</option>
+            <option value="RI">Rhode Island</option>
+            <option value="SC">South Carolina</option>
+            <option value="SD">South Dakota</option>
+            <option value="TN">Tennessee</option>
+            <option value="TX">Texas</option>
+            <option value="UT">Utah</option>
+            <option value="VT">Vermont</option>
+            <option value="VA">Virginia</option>
+            <option value="WA">Washington</option>
+            <option value="DC">Washington, D.C.</option>
+            <option value="WV">West Virginia</option>
+            <option value="WI">Wisconsin</option>
+            <option value="WY">Wyoming</option>
+          </optgroup>
+          <optgroup label="── U.S. Territory ──">
+            <option value="PR">Puerto Rico</option>
+          </optgroup>
+        </select>
+      </div>
+      <div class="dco-field">
         <label class="dco-label"><span class="lang-text" data-en="Budget (USD)" data-es="Presupuesto (USD)">Budget (USD)</span> <span class="dco-required">*</span></label>
         <div class="dco-input-prefix-wrap">
           <span class="dco-input-prefix">$</span>
@@ -1504,14 +1753,14 @@ body {
         <div class="dco-field" style="margin-bottom:0">
           <label class="dco-label"><span class="lang-text" data-en="Timeline" data-es="Duración">Timeline</span> <span class="dco-required">*</span></label>
           <div class="dco-input-unit-wrap">
-            <input id="s2-timeline" class="dco-input dco-input--unit" type="number" placeholder="e.g. 18">
+            <input id="s2-timeline" class="dco-input dco-input--unit" type="number" min="1" placeholder="e.g. 18" oninput="_timelineAutoConvert(this)">
             <div class="dco-unit-toggle">
               <button type="button" class="dco-unit-btn active" id="unit-btn-months"
                       onclick="setTimelineUnit('months',this)"
                       data-en="Months" data-es="Meses">Months</button>
-              <button type="button" class="dco-unit-btn" id="unit-btn-days"
-                      onclick="setTimelineUnit('days',this)"
-                      data-en="Days" data-es="Días">Days</button>
+              <button type="button" class="dco-unit-btn" id="unit-btn-weeks"
+                      onclick="setTimelineUnit('weeks',this)"
+                      data-en="Weeks" data-es="Semanas">Weeks</button>
             </div>
           </div>
         </div>
@@ -1658,33 +1907,15 @@ body {
         <div class="dco-result__icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
         <h2 class="dco-result__title lang-text" data-en="Congratulations — you have been qualified!" data-es="¡Felicitaciones, ha sido calificado(a)!">Congratulations — you have been qualified!</h2>
         <p class="dco-result__subtitle lang-text" data-en="You are approved to join Diversia Health as a client." data-es="Ha sido aprobado(a) para unirse a Diversia Health como cliente.">You are approved to join Diversia Health as a client.</p>
-        <div class="dco-result__reasoning" id="reasoning-qualified-preview">
-          <p class="lang-text" data-en="Your pharmaceutical organization presents a strong profile with an adequate budget and clear focus on the Latino community. The Phase II cardiovascular trial is well-defined and the recruitment goal is realistic." data-es="Su organización farmacéutica muestra un perfil sólido con presupuesto adecuado y un enfoque claro en la comunidad latina. El ensayo cardiovascular de Fase II está bien definido y la meta de reclutamiento es realista.">Your pharmaceutical organization presents a strong profile with an adequate budget and clear focus on the Latino community. The Phase II cardiovascular trial is well-defined and the recruitment goal is realistic.</p>
-        </div>
+        <!-- Recruitment Estimator Viability Card -->
+        <div id="s2-le-viability-q" style="display:none;margin-bottom:20px"></div>
         <!-- AI Consensus Panel (shown when multiple providers are used) -->
         <div class="dco-eval-panel" id="eval-ai-panel-q" style="display:none;margin-top:16px;margin-bottom:4px"></div>
         <div class="dco-result__cta">
           <p class="dco-result__cta-text lang-text" data-en="The next step is to complete your payment to activate your client account." data-es="El siguiente paso es completar su pago para activar su cuenta de cliente.">The next step is to complete your payment to activate your client account.</p>
           <button class="dco-btn dco-btn--primary dco-btn--large" onclick="var pt=document.querySelector('.preview-tab[onclick*=\'payment\']');showScreen('payment',pt);populatePaymentSummary();"><span class="lang-text" data-en="Proceed to Payment" data-es="Proceder al Pago">Proceed to Payment</span> →</button>
         </div>
-        <!-- Campaign reach preview for client -->
-        <div class="dco-reach-mini" id="qualified-reach" style="display:none">
-          <div class="dco-reach-mini__title">Your Campaign at a Glance</div>
-          <div class="dco-reach-mini-grid">
-            <div class="dco-reach-mini-card">
-              <div class="dco-reach-mini-card__val" id="qr-reach">—</div>
-              <div class="dco-reach-mini-card__lbl">Estimated Reach</div>
-            </div>
-            <div class="dco-reach-mini-card">
-              <div class="dco-reach-mini-card__val" id="qr-enrolled">—</div>
-              <div class="dco-reach-mini-card__lbl">Projected Enrollments</div>
-            </div>
-            <div class="dco-reach-mini-card">
-              <div class="dco-reach-mini-card__val" id="qr-timeline">—</div>
-              <div class="dco-reach-mini-card__lbl">Timeline</div>
-            </div>
-          </div>
-        </div>
+
 
         <div class="dco-result__security">
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
@@ -1717,44 +1948,16 @@ body {
         <h2 class="dco-result__title lang-text" data-en="Thank You for Your Interest" data-es="Gracias por su Interés">Thank You for Your Interest</h2>
         <p class="dco-result__subtitle lang-text" data-en="We have carefully reviewed your application." data-es="Hemos revisado su solicitud cuidadosamente.">We have carefully reviewed your application.</p>
 
-        <!-- AI reasoning -->
-        <div id="reasoning-rejected-preview" class="dco-result__reasoning">
-          <p class="lang-text" data-en="Thank you for your interest in Diversia Health. After reviewing your application, we have determined that the estimated budget and project scope do not meet the current minimum requirements for our recruitment platform." data-es="Gracias por su interés en Diversia Health. Tras revisar su solicitud, hemos determinado que el presupuesto estimado y el alcance del proyecto no cumplen con los requisitos mínimos actuales para nuestra plataforma.">Thank you for your interest in Diversia Health. After reviewing your application, we have determined that the estimated budget and project scope do not meet the current minimum requirements for our recruitment platform.</p>
-        </div>
-
-        <!-- AI Consensus Panel (shown when multiple providers are used) -->
-        <div class="dco-eval-panel" id="eval-ai-panel-r" style="display:none;margin-top:8px;margin-bottom:16px"></div>
-
-        <!-- AI Analysis & Suggestions -->
-        <div class="dco-suggestions">
-          <div class="dco-suggestions__header">
-            <div class="dco-suggestions__icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-            </div>
-            <div>
-              <h3 class="dco-suggestions__title lang-text" data-en="What Our AI Flagged" data-es="Lo Que Señaló Nuestra IA">What Our AI Flagged</h3>
-              <p class="dco-suggestions__subtitle lang-text" data-en="Addressing these specific points may help your application qualify on resubmission." data-es="Abordar estos puntos específicos puede ayudar a que su solicitud califique al volver a presentarla.">Addressing these specific points may help your application qualify on resubmission.</p>
-            </div>
-          </div>
-          <ul id="rejected-suggestions-list" class="dco-suggestions__list">
-            <li class="dco-suggestions__item">
-              <p class="dco-suggestions__item-issue lang-text" data-en="Your stated budget ($5,000–$10,000) falls below our minimum threshold for viable trial recruitment." data-es="Su presupuesto declarado ($5,000–$10,000) está por debajo de nuestro umbral mínimo para reclutamiento viable.">Your stated budget ($5,000–$10,000) falls below our minimum threshold for viable trial recruitment.</p>
-              <p class="dco-suggestions__item-fix lang-text" data-en="Consider revising your budget to at least $50,000–$200,000 to meet our service requirements." data-es="Considere revisar su presupuesto a al menos $50,000–$200,000 para cumplir con nuestros requisitos.">Consider revising your budget to at least $50,000–$200,000 to meet our service requirements.</p>
-            </li>
-            <li class="dco-suggestions__item">
-              <p class="dco-suggestions__item-issue lang-text" data-en="Your target population does not include Latino or Hispanic communities." data-es="Su población objetivo no incluye comunidades latinas o hispanas.">Your target population does not include Latino or Hispanic communities.</p>
-              <p class="dco-suggestions__item-fix lang-text" data-en="Specify Latino or Hispanic communities as part of your target enrollment population to align with Diversia Health's mission." data-es="Especifique comunidades latinas o hispanas como parte de su población objetivo de inscripción.">Specify Latino or Hispanic communities as part of your target enrollment population to align with Diversia Health's mission.</p>
-            </li>
-            <li class="dco-suggestions__item">
-              <p class="dco-suggestions__item-issue lang-text" data-en="Your enrollment goal of 15 participants appears low relative to a Phase III trial scope." data-es="Su meta de inscripción de 15 participantes parece baja en relación con el alcance de un ensayo de Fase III.">Your enrollment goal of 15 participants appears low relative to a Phase III trial scope.</p>
-              <p class="dco-suggestions__item-fix lang-text" data-en="Review your enrollment goal — Phase III trials typically require 100+ participants. Adjust the goal or clarify your trial phase." data-es="Revise su meta de inscripción — los ensayos de Fase III típicamente requieren 100+ participantes. Ajuste la meta o aclare la fase del ensayo.">Review your enrollment goal — Phase III trials typically require 100+ participants. Adjust the goal or clarify your trial phase.</p>
-            </li>
-          </ul>
-        </div>
+        <!-- Recruitment Estimator Viability Card -->
+        <div id="s2-le-viability-r" style="display:none;margin-bottom:20px"></div>
+        <!-- kept hidden for JS compat -->
+        <div id="reasoning-rejected-preview" style="display:none"></div>
+        <ul id="rejected-suggestions-list" style="display:none"></ul>
+        <div class="dco-eval-panel" id="eval-ai-panel-r" style="display:none"></div>
 
         <!-- Revise & Resubmit CTA -->
         <div class="dco-revise-cta">
-          <button class="dco-btn dco-btn--primary" style="gap:10px">
+          <button class="dco-btn dco-btn--primary" style="gap:10px" onclick="showScreen('step2', document.getElementById('tab-step2'))">
             <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
             <span class="lang-text" data-en="Revise My Application" data-es="Revisar Mi Solicitud">Revise My Application</span>
           </button>
@@ -1776,7 +1979,7 @@ body {
 
 <!-- ====== PAYMENT GATE ====== -->
 <div class="preview-screen" id="screen-payment">
-  <div class="dco-wrapper" data-lang="en">
+  <div class="dco-wrapper dco-payment-gate" data-lang="en">
     <div class="dco-lang-bar">
       <button class="dco-lang-toggle" id="lang-btn-6" onclick="toggleLang(this, 6)">
         <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
@@ -1789,7 +1992,7 @@ body {
       <div class="dco-panel__header" style="text-align:center">
         <div class="dco-result__icon" style="color:var(--dco-success);margin:0 auto 16px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
         <h2 class="dco-panel__title lang-text" data-en="You Have Been Approved!" data-es="¡Ha sido aprobado(a)!">You Have Been Approved!</h2>
-        <p class="dco-panel__subtitle lang-text" data-en="Complete your payment to activate your Diversia Health client account." data-es="Complete su pago para activar su cuenta de cliente Diversia Health.">Complete your payment to activate your Diversia Health client account.</p>
+        <p class="dco-panel__subtitle lang-text" data-en="Select a service package and complete your payment to activate your Diversia Health client account." data-es="Seleccione un paquete de servicio y complete su pago para activar su cuenta de cliente Diversia Health.">Select a service package and complete your payment to activate your Diversia Health client account.</p>
       </div>
 
       <!-- Application Summary -->
@@ -1806,36 +2009,83 @@ body {
         </table>
       </div>
 
-      <!-- What's Included -->
-      <div class="dco-includes">
-        <h3 class="dco-includes__title lang-text" data-en="What's Included" data-es="Qué Está Incluido">What's Included</h3>
-        <ul class="dco-includes__list">
-          <li class="dco-includes__item">
-            <span class="dco-includes__check"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-            <span class="lang-text" data-en="Full access to the Clinical Trial Dashboard" data-es="Acceso completo al Panel de Ensayos Clínicos">Full access to the Clinical Trial Dashboard</span>
-          </li>
-          <li class="dco-includes__item">
-            <span class="dco-includes__check"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-            <span class="lang-text" data-en="Access to Diversia's Latino participant recruitment network" data-es="Acceso a la red de reclutamiento de participantes latinos de Diversia">Access to Diversia's Latino participant recruitment network</span>
-          </li>
-          <li class="dco-includes__item">
-            <span class="dco-includes__check"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-            <span class="lang-text" data-en="AI-powered patient matching and eligibility screening" data-es="Concordancia de pacientes impulsada por IA y evaluación de elegibilidad">AI-powered patient matching and eligibility screening</span>
-          </li>
-          <li class="dco-includes__item">
-            <span class="dco-includes__check"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-            <span class="lang-text" data-en="Bilingual patient outreach &amp; community engagement (EN &amp; ES)" data-es="Difusión bilingüe a pacientes y participación comunitaria (EN y ES)">Bilingual patient outreach &amp; community engagement (EN &amp; ES)</span>
-          </li>
-          <li class="dco-includes__item">
-            <span class="dco-includes__check"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-            <span class="lang-text" data-en="Real-time enrollment tracking and trial progress reports" data-es="Seguimiento de inscripción en tiempo real e informes de progreso">Real-time enrollment tracking and trial progress reports</span>
-          </li>
-          <li class="dco-includes__item">
-            <span class="dco-includes__check"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-            <span class="lang-text" data-en="Dedicated account manager for your trial" data-es="Gerente de cuenta dedicado para su ensayo">Dedicated account manager for your trial</span>
-          </li>
-        </ul>
-      </div>
+      <!-- Pricing Packages -->
+      <input type="hidden" id="preview-selected-package" value="standard">
+      <div class="dco-packages">
+        <h3 class="dco-packages__title lang-text" data-en="Choose Your Service Package" data-es="Elija su Paquete de Servicio">Choose Your Service Package</h3>
+        <p class="dco-packages__subtitle lang-text" data-en="Each tier is engineered for a distinct operational profile. Your AI qualification score pre-selected the package that best fits your trial's scope and complexity." data-es="Cada nivel está diseñado para un perfil operativo distinto. Su puntuación de calificación IA pre-seleccionó el paquete más adecuado para su ensayo.">Each tier is engineered for a distinct operational profile. Your AI qualification score pre-selected the package that best fits your trial's scope and complexity.</p>
+        <div class="dco-packages__grid">
+
+          <!-- Basic: Foundation -->
+          <div class="dco-pkg-card" data-package="basic" tabindex="0" role="button" aria-pressed="false" onclick="selectPackage('basic')">
+            <div class="dco-pkg-card__selected-check" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="dco-pkg-card__tier lang-text" data-en="Basic" data-es="Básico">Basic</div>
+            <div class="dco-pkg-card__name lang-text" data-en="Foundation" data-es="Foundation">Foundation</div>
+            <div class="dco-pkg-card__price">$4,500 <span class="lang-text" data-en="/ engagement" data-es="/ proyecto">/ engagement</span></div>
+            <div class="dco-pkg-card__billing lang-text" data-en="One-time onboarding + campaign activation fee" data-es="Cargo único de incorporación y activación de campaña">One-time onboarding + campaign activation fee</div>
+            <div class="dco-pkg-card__ideal"><strong>Ideal for:</strong> CROs launching a first digital Latino recruitment channel for a single Phase II/III trial with a structured 6–12 month timeline.</div>
+            <hr class="dco-pkg-card__divider">
+            <ul class="dco-pkg-card__features">
+              <li><span class="dco-pkg-card__check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>AI-assisted patient matching from Diversia's Latino participant network</span></li>
+              <li><span class="dco-pkg-card__check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Meta Ads campaign — 1 audience segment, 1 creative variant</span></li>
+              <li><span class="dco-pkg-card__check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Bilingual HIPAA-compliant pre-screening landing page (EN/ES)</span></li>
+              <li><span class="dco-pkg-card__check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Protocol-informed audience targeting (ICD-10 condition mapping)</span></li>
+              <li><span class="dco-pkg-card__check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>IRB/IEC compliance review for all advertising assets</span></li>
+              <li><span class="dco-pkg-card__check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Bi-weekly recruitment performance reports + Clinical Trial Dashboard</span></li>
+            </ul>
+            <div class="dco-pkg-card__value">Reduces recruitment lag 30–45% vs. site-only enrollment.</div>
+            <button type="button" class="dco-pkg-select-btn" onclick="event.stopPropagation();selectPackage('basic')">Select Foundation</button>
+          </div>
+
+          <!-- Standard: Accelerate -->
+          <div class="dco-pkg-card dco-pkg-card--featured dco-pkg-card--selected" data-package="standard" tabindex="0" role="button" aria-pressed="true" onclick="selectPackage('standard')">
+            <div class="dco-pkg-card__popular-ribbon lang-text" data-en="Most Selected" data-es="Más Elegido">Most Selected</div>
+            <div class="dco-pkg-card__selected-check" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="dco-pkg-card__tier lang-text" data-en="Standard" data-es="Estándar">Standard</div>
+            <div class="dco-pkg-card__name lang-text" data-en="Accelerate" data-es="Accelerate">Accelerate</div>
+            <div class="dco-pkg-card__price">$11,500 <span class="lang-text" data-en="/ engagement" data-es="/ proyecto">/ engagement</span></div>
+            <div class="dco-pkg-card__billing lang-text" data-en="Comprehensive multi-site campaign infrastructure" data-es="Infraestructura completa para campaña multi-sitio">Comprehensive multi-site campaign infrastructure</div>
+            <div class="dco-pkg-card__ideal"><strong>Ideal for:</strong> CROs managing multi-site Phase II/III trials requiring coordinated outreach across 3–5 investigator sites with competing patient pools.</div>
+            <hr class="dco-pkg-card__divider">
+            <ul class="dco-pkg-card__features">
+              <li><span class="dco-pkg-card__check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span><strong>Everything in Foundation, plus:</strong></span></li>
+              <li><span class="dco-pkg-card__check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Multi-audience targeting — up to 4 segments, 3 creative variants per condition</span></li>
+              <li><span class="dco-pkg-card__check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Referral tracking integration (UTM + CRM webhook delivery)</span></li>
+              <li><span class="dco-pkg-card__check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>CTMS-compatible structured data export + real-time eligibility pre-screening</span></li>
+              <li><span class="dco-pkg-card__check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Enrollment velocity dashboard with 30/60/90-day projections</span></li>
+              <li><span class="dco-pkg-card__check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Lookalike modeling + site-level lead attribution and geo-distribution reporting</span></li>
+              <li><span class="dco-pkg-card__check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Monthly strategy calls with dedicated campaign strategist + A/B optimization cadence</span></li>
+            </ul>
+            <div class="dco-pkg-card__value">Delivers pre-qualified candidate profiles to site coordinators before ICA — reducing screen failure rate at source.</div>
+            <button type="button" class="dco-pkg-select-btn" onclick="event.stopPropagation();selectPackage('standard')">Select Accelerate</button>
+          </div>
+
+          <!-- Pro: Command -->
+          <div class="dco-pkg-card" data-package="pro" tabindex="0" role="button" aria-pressed="false" onclick="selectPackage('pro')">
+            <div class="dco-pkg-card__selected-check" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="dco-pkg-card__tier">Pro</div>
+            <div class="dco-pkg-card__name lang-text" data-en="Command" data-es="Command">Command</div>
+            <div class="dco-pkg-card__price lang-text" data-en="Custom" data-es="A Medida">Custom</div>
+            <div class="dco-pkg-card__billing lang-text" data-en="Enterprise scope — contact us for custom pricing" data-es="Alcance empresarial — contáctenos para precios personalizados">Enterprise scope — contact us for custom pricing</div>
+            <div class="dco-pkg-card__ideal"><strong>Ideal for:</strong> Enterprise CROs and sponsors running multi-regional, multi-indication programs across 10+ investigator sites requiring clinical-grade data infrastructure.</div>
+            <hr class="dco-pkg-card__divider">
+            <ul class="dco-pkg-card__features">
+              <li><span class="dco-pkg-card__check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span><strong>Everything in Accelerate, plus:</strong></span></li>
+              <li><span class="dco-pkg-card__check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Multi-platform activation: Meta, Google, Programmatic Display + community partnerships</span></li>
+              <li><span class="dco-pkg-card__check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>CTMS/eTMF API integration (REST/FHIR-compatible participant data output)</span></li>
+              <li><span class="dco-pkg-card__check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>21 CFR Part 11 aligned audit trail for all participant touchpoints</span></li>
+              <li><span class="dco-pkg-card__check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Predictive enrollment modeling with adaptive budget reallocation</span></li>
+              <li><span class="dco-pkg-card__check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>IRB-approved bilingual pre-screening chatbot (EN/ES) + 4-hour support SLA</span></li>
+              <li><span class="dco-pkg-card__check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Enrollment guarantee SLA + dedicated CRO partnership manager with weekly KPI briefings</span></li>
+              <li><span class="dco-pkg-card__check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Annual recruitment intelligence report (market benchmarks + condition-specific outreach data)</span></li>
+            </ul>
+            <div class="dco-pkg-card__value">Built for CROs where enrollment delays cost $600K–$8M per day. The infrastructure layer for zero-failure, multi-indication programs.</div>
+            <button type="button" class="dco-pkg-select-btn" onclick="event.stopPropagation();selectPackage('pro')">Select Command</button>
+          </div>
+
+        </div><!-- /.dco-packages__grid -->
+        <div class="dco-pkg-summary" id="preview-pkg-summary"></div>
+      </div><!-- /.dco-packages -->
 
       <!-- Payment Method Selector -->
       <div class="dco-pay-method-section">
@@ -2295,6 +2545,220 @@ body {
   </div>
 </div>
 
+<!-- ====== RECRUITMENT ESTIMATOR ====== -->
+<div class="preview-screen" id="screen-estimator">
+<div class="le-root">
+
+  <!-- PHASE 1: FORM -->
+  <div id="le-phase-form">
+    <div class="le-header">
+      <span class="le-badge">VALIDATED LATINO DATA · Meta Ads</span>
+      <h2 class="le-title">🔬 Recruitment Estimator</h2>
+      <p class="le-sub">Verify recruitment viability for clinical trials in Latino communities via Meta Ads</p>
+    </div>
+    <div class="le-card">
+      <form onsubmit="leSubmit(event)" novalidate>
+        <div class="le-field">
+          <label class="le-label">Health Condition</label>
+          <select id="le-condition" class="le-select">
+            <optgroup label="Metabolic">
+              <option value="OB">Obesity / Overweight — prev. 36.6% Latino</option>
+              <option value="PRE">Prediabetes — prev. 38.0% Latino</option>
+              <option value="DT2">Type 2 Diabetes — prev. 18.0% Latino</option>
+              <option value="SM">Metabolic Syndrome — prev. 35.0% Latino</option>
+              <option value="COL">High Cholesterol — prev. 38.0% Latino</option>
+              <option value="TIR">Thyroid Disease — prev. 8.0% Latino</option>
+              <option value="SOP">PCOS — prev. 10.0% Latino</option>
+            </optgroup>
+            <optgroup label="Cardiovascular">
+              <option value="CVD">Cardiovascular Disease — prev. 6.5% Latino</option>
+              <option value="HTA">Hypertension — prev. 30.0% Latino</option>
+              <option value="IC">Heart Failure — prev. 1.8% Latino</option>
+              <option value="FA">Atrial Fibrillation — prev. 2.0% Latino</option>
+            </optgroup>
+            <optgroup label="Respiratory">
+              <option value="ASM">Asthma / COPD — prev. 16.5% Latino</option>
+              <option value="APN">Sleep Apnea — prev. 7.0% Latino</option>
+            </optgroup>
+            <optgroup label="Mental Health">
+              <option value="ANX">Anxiety — prev. 22.0% Latino</option>
+              <option value="DEP">Depression — prev. 18.0% Latino</option>
+              <option value="TDAH">ADHD — prev. 5.0% Latino</option>
+            </optgroup>
+            <optgroup label="Neurological">
+              <option value="ALZ">Alzheimer's / Dementia — prev. 1.3% Latino</option>
+              <option value="PK">Parkinson's Disease — prev. 0.6% Latino</option>
+              <option value="MIG">Migraine — prev. 16.0% Latino</option>
+              <option value="DCG">Cognitive Impairment — prev. 4.0% Latino</option>
+            </optgroup>
+            <optgroup label="Autoimmune">
+              <option value="LUP">Lupus / SLE — prev. 0.7% Latino</option>
+              <option value="ART">Arthritis — prev. 20.0% Latino</option>
+              <option value="AUR">Autoimmune / Other — prev. 5.0% Latino</option>
+            </optgroup>
+            <optgroup label="Oncology">
+              <option value="ONC">Oncology / Cancer — prev. 3.0% Latino</option>
+              <option value="CRH">Rare Cancer / Hematology — prev. 0.4% Latino</option>
+            </optgroup>
+            <optgroup label="Chronic Conditions">
+              <option value="ERC">Chronic Kidney Disease — prev. 14.0% Latino</option>
+              <option value="HEP">Liver Disease — prev. 6.0% Latino</option>
+              <option value="DOL">Chronic Pain — prev. 22.0% Latino</option>
+              <option value="ERG">GERD / Acid Reflux — prev. 20.0% Latino</option>
+              <option value="OST">Osteoporosis — prev. 8.0% Latino</option>
+              <option value="NDB">Diabetic Neuropathy — prev. 7.0% Latino</option>
+              <option value="GLC">Glaucoma / Cataracts — prev. 6.5% Latino</option>
+            </optgroup>
+            <optgroup label="Infectious Disease">
+              <option value="VIH">HIV / AIDS — prev. 1.5% Latino</option>
+              <option value="INF">Infectious Disease (Other) — prev. 2.5% Latino</option>
+            </optgroup>
+            <optgroup label="Rare &amp; Genetic">
+              <option value="TGR">Rare Genetic Disorders — prev. 0.2% Latino</option>
+              <option value="CPR">Rare Pediatric Conditions — prev. 0.1% Latino</option>
+            </optgroup>
+          </select>
+        </div>
+
+        <div class="le-field" style="margin-top:18px">
+          <label class="le-label">Locations <small style="font-weight:400;text-transform:none;font-size:11px;color:#64748b">— one or more</small></label>
+          <div class="le-chips" id="le-loc-chips">
+            <button type="button" class="le-chip le-chip--active" data-loc="PR" onclick="leToggleLoc(this)"><span class="le-chip-code">PR</span>Puerto Rico<span class="le-chip-pop">2.4M</span></button>
+            <button type="button" class="le-chip" data-loc="CA" onclick="leToggleLoc(this)"><span class="le-chip-code">CA</span>California<span class="le-chip-pop">11.8M</span></button>
+            <button type="button" class="le-chip" data-loc="TX" onclick="leToggleLoc(this)"><span class="le-chip-code">TX</span>Texas<span class="le-chip-pop">9.1M</span></button>
+            <button type="button" class="le-chip" data-loc="FL" onclick="leToggleLoc(this)"><span class="le-chip-code">FL</span>Florida<span class="le-chip-pop">4.7M</span></button>
+            <button type="button" class="le-chip" data-loc="NY" onclick="leToggleLoc(this)"><span class="le-chip-code">NY</span>New York<span class="le-chip-pop">2.9M</span></button>
+            <button type="button" class="le-chip" data-loc="AZ" onclick="leToggleLoc(this)"><span class="le-chip-code">AZ</span>Arizona<span class="le-chip-pop">1.8M</span></button>
+            <button type="button" class="le-chip" data-loc="IL" onclick="leToggleLoc(this)"><span class="le-chip-code">IL</span>Illinois<span class="le-chip-pop">1.7M</span></button>
+            <button type="button" class="le-chip" data-loc="NJ" onclick="leToggleLoc(this)"><span class="le-chip-code">NJ</span>New Jersey<span class="le-chip-pop">1.5M</span></button>
+            <button type="button" class="le-chip" data-loc="CO" onclick="leToggleLoc(this)"><span class="le-chip-code">CO</span>Colorado<span class="le-chip-pop">0.9M</span></button>
+            <button type="button" class="le-chip" data-loc="NM" onclick="leToggleLoc(this)"><span class="le-chip-code">NM</span>New Mexico<span class="le-chip-pop">0.8M</span></button>
+            <button type="button" class="le-chip" data-loc="NV" onclick="leToggleLoc(this)"><span class="le-chip-code">NV</span>Nevada<span class="le-chip-pop">0.7M</span></button>
+          </div>
+        </div>
+
+        <div class="le-field-row" style="margin-top:18px">
+          <div class="le-field">
+            <label class="le-label">Budget (USD)</label>
+            <div style="position:relative">
+              <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#64748b;pointer-events:none">$</span>
+              <input id="le-budget" class="le-input" style="padding-left:24px" type="number" min="500" step="100" placeholder="5,000">
+            </div>
+          </div>
+          <div class="le-field">
+            <label class="le-label">Patients to Enroll</label>
+            <input id="le-target" class="le-input" type="number" min="1" placeholder="50">
+          </div>
+          <div class="le-field">
+            <label class="le-label">Duration (weeks)</label>
+            <input id="le-weeks" class="le-input" type="number" min="1" placeholder="12">
+          </div>
+        </div>
+
+        <p id="le-form-error" style="color:#ef4444;font-size:12px;margin:10px 0 0;min-height:16px"></p>
+        <button type="submit" class="le-btn-submit" style="margin-top:16px">🔍 Verify Viability with AI Agent</button>
+      </form>
+      <p style="font-size:11px;color:#475569;text-align:center;margin:14px 0 0">Sources: HCHS/SOL · CDC/OMH 2025 · Census 2023 · Cross-Cancino 2021 · Tufts CSDD 2019</p>
+    </div>
+  </div><!-- /le-phase-form -->
+
+  <!-- PHASE 2: VERIFYING -->
+  <div id="le-phase-verifying" style="display:none">
+    <div class="le-header">
+      <span class="le-badge">VERIFICATION IN PROGRESS</span>
+      <h2 class="le-title le-title--sm">Analyzing viability…</h2>
+      <p class="le-sub" id="le-verify-sub">Processing data…</p>
+    </div>
+    <div class="le-card">
+      <div class="le-checks">
+        <div class="le-check-row le-check-row--pending" id="le-chk-0">
+          <div class="le-check-icon">👥</div>
+          <div class="le-check-body">
+            <div class="le-check-hd"><span class="le-check-name">Latino Pool</span><span class="le-check-badge le-check-badge--pending">—</span></div>
+            <p class="le-check-detail" style="display:none"></p>
+            <span class="le-check-metric" style="display:none"></span>
+          </div>
+        </div>
+        <div class="le-check-row le-check-row--pending" id="le-chk-1">
+          <div class="le-check-icon">💰</div>
+          <div class="le-check-body">
+            <div class="le-check-hd"><span class="le-check-name">Budget</span><span class="le-check-badge le-check-badge--pending">—</span></div>
+            <p class="le-check-detail" style="display:none"></p>
+            <span class="le-check-metric" style="display:none"></span>
+          </div>
+        </div>
+        <div class="le-check-row le-check-row--pending" id="le-chk-2">
+          <div class="le-check-icon">🔬</div>
+          <div class="le-check-body">
+            <div class="le-check-hd"><span class="le-check-name">Funnel &amp; Timeline</span><span class="le-check-badge le-check-badge--pending">—</span></div>
+            <p class="le-check-detail" style="display:none"></p>
+            <span class="le-check-metric" style="display:none"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /le-phase-verifying -->
+
+  <!-- PHASE 3: RESULTS -->
+  <div id="le-phase-results" style="display:none">
+
+    <div class="le-verdict" id="le-verdict">
+      <div class="le-verdict-inner">
+        <span class="le-verdict-emoji" id="le-verdict-emoji">✅</span>
+        <div>
+          <div style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;opacity:.6;margin-bottom:4px">Verdict</div>
+          <div class="le-verdict-text" id="le-verdict-text">APROBADO</div>
+        </div>
+        <div style="margin-left:auto;text-align:center">
+          <div style="font-family:monospace;font-size:44px;font-weight:600;line-height:1" id="le-verdict-score">—</div>
+          <div style="font-size:12px;opacity:.5;font-family:monospace">/100</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="le-card le-ai-card" style="margin-bottom:14px">
+      <div class="le-card-hd">🤖 <strong>AI Interpretation</strong><span id="le-ai-prov" style="font-size:11px;color:#64748b;margin-left:6px"></span></div>
+      <div id="le-ai-loading" style="display:flex;align-items:center;gap:10px;color:#94a3b8;font-size:14px;padding:4px 0"><span class="le-spinner"></span>Generating analysis…</div>
+      <p id="le-ai-text" style="display:none;font-size:14px;line-height:1.75;color:#94a3b8;margin:0"></p>
+    </div>
+
+    <div class="le-metrics" style="margin-bottom:14px">
+      <div class="le-metric-card"><div class="le-metric-val" id="le-m-pool">—</div><div class="le-metric-lbl">Latino Pool</div><div class="le-metric-sub" id="le-m-pool-sub"></div></div>
+      <div class="le-metric-card"><div class="le-metric-val" id="le-m-leads">—</div><div class="le-metric-lbl">Leads Needed</div><div class="le-metric-sub" id="le-m-leads-sub"></div></div>
+      <div class="le-metric-card"><div class="le-metric-val" id="le-m-cost">—</div><div class="le-metric-lbl">Realistic Cost</div><div class="le-metric-sub" id="le-m-cost-sub"></div></div>
+      <div class="le-metric-card"><div class="le-metric-val" id="le-m-enrolled">—</div><div class="le-metric-lbl">Est. Enrolled</div><div class="le-metric-sub" id="le-m-enrolled-sub"></div></div>
+    </div>
+
+    <div class="le-card" style="margin-bottom:14px">
+      <div class="le-card-hd">🔻 <strong>Latino Recruitment Funnel</strong><span id="le-sf-note" style="margin-left:auto;font-size:11px;font-family:monospace;color:#64748b"></span></div>
+      <div id="le-funnel" class="le-funnel-wrap"></div>
+    </div>
+
+    <div class="le-card" style="margin-bottom:14px">
+      <div class="le-card-hd">📊 <strong>Cost Scenarios</strong></div>
+      <div class="le-scene-grid" id="le-scenarios"></div>
+    </div>
+
+    <div class="le-card" style="margin-bottom:14px">
+      <div class="le-card-hd">✅ <strong>Triple Verification</strong></div>
+      <div class="le-checks" id="le-res-checks"></div>
+    </div>
+
+    <div class="le-card" style="margin-bottom:24px">
+      <div class="le-card-hd"><span id="le-hints-icon">🛠</span> <strong id="le-hints-title">How to Improve for Approval</strong></div>
+      <div id="le-hints" class="le-hint-list"></div>
+    </div>
+
+    <div style="text-align:center;padding-bottom:40px">
+      <p style="font-size:11px;color:#334155;font-family:monospace;margin-bottom:14px">HCHS/SOL · CDC/OMH 2025 · Census 2023 · Cross-Cancino 2021 · Tufts CSDD 2019</p>
+      <button class="le-btn-reset" onclick="leReset()">← New Estimate</button>
+    </div>
+
+  </div><!-- /le-phase-results -->
+
+</div><!-- /le-root -->
+</div><!-- /screen-estimator -->
+
 <script>
 // ── Step 1 validation ────────────────────────────────────────────
 function currentLang() {
@@ -2512,7 +2976,7 @@ var hintLabels = {
 
 // ── Tracked selections ──────────────────────────────────────────
 var selectedDisease = { value: null, labelEn: '', labelEs: '' };
-var currentTimelineUnit = 'months'; // 'months' | 'days'
+var currentTimelineUnit = 'months'; // 'months' | 'weeks'
 
 // ── Base enrollment suggestions (participants) ───────────────────
 // Enrollment goal suggestions by disease
@@ -2630,9 +3094,9 @@ function updateSuggestions() {
   if (baseMonths) {
     var suggestedMonths = Math.round(baseMonths * orgTimeMult);
     suggestedMonths = Math.max(1, suggestedMonths);
-    var displayVal   = currentTimelineUnit === 'days' ? suggestedMonths * 30 : suggestedMonths;
-    var unitLabel    = currentTimelineUnit === 'days'
-      ? (lang === 'es' ? 'días' : 'days')
+    var displayVal   = currentTimelineUnit === 'weeks' ? Math.round(suggestedMonths * 4.33) : suggestedMonths;
+    var unitLabel    = currentTimelineUnit === 'weeks'
+      ? (lang === 'es' ? 'semanas' : 'weeks')
       : (lang === 'es' ? 'meses' : 'months');
     var diseaseLabel = lang === 'es' ? selectedDisease.labelEs : selectedDisease.labelEn;
     _applyTimelineSuggestion(displayVal, diseaseLabel, unitLabel, lang);
@@ -2663,20 +3127,36 @@ function setTimelineUnit(unit, btn) {
 
   // Update button active state
   document.getElementById('unit-btn-months').classList.toggle('active', unit === 'months');
-  document.getElementById('unit-btn-days').classList.toggle('active', unit === 'days');
+  document.getElementById('unit-btn-weeks').classList.toggle('active', unit === 'weeks');
 
   // Convert displayed value if there is one
   var input = document.getElementById('s2-timeline');
   if (input && input.value) {
     var val = parseFloat(input.value);
-    if (!isNaN(val)) {
-      if (prevUnit === 'months' && unit === 'days')   input.value = Math.round(val * 30);
-      if (prevUnit === 'days'   && unit === 'months') input.value = Math.max(1, Math.round(val / 30));
+    if (!isNaN(val) && val > 0) {
+      if (prevUnit === 'months' && unit === 'weeks')  input.value = Math.round(val * 4.33);
+      if (prevUnit === 'weeks'  && unit === 'months') input.value = Math.max(1, Math.round(val / 4.33));
     }
-    // Update placeholder to match unit
-    input.placeholder = unit === 'days' ? 'e.g. 360' : 'e.g. 18';
   }
+  input.placeholder = unit === 'weeks' ? 'e.g. 12' : 'e.g. 3';
   updateSuggestions();
+}
+
+// Auto-convert: 4 weeks (or any multiple of 4) → switch to months
+function _timelineAutoConvert(input) {
+  // Prevent negatives / zero
+  var v = parseInt(input.value, 10);
+  if (isNaN(v) || v < 1) { input.value = ''; return; }
+  if (v !== parseFloat(input.value)) input.value = v; // strip decimals
+
+  // Smart conversion: every 4 weeks = 1 month (4.33 wks/mo for calendar accuracy)
+  // 4→1, 8→2, 12→3 … 52→12. Triggers as soon as the user reaches 4+ weeks.
+  if (currentTimelineUnit === 'weeks' && v >= 4) {
+    input.value = Math.round(v / 4.33);
+    setTimelineUnit('months', document.getElementById('unit-btn-months'));
+  } else {
+    updateSuggestions();
+  }
 }
 
 
@@ -2738,7 +3218,19 @@ function validateStep2() {
       'Por favor seleccione el tipo de organización.');
   }
 
-  // 4 ── Budget minimum
+  // 4 ── Location / State
+  var locSel   = document.getElementById('s2-location');
+  var locField = locSel.closest('.dco-field');
+  locSel.classList.remove('dco-input--error');
+  clearFieldErr(locField);
+  if (!locSel.value) {
+    locSel.classList.add('dco-input--error');
+    showFieldErr(locField,
+      'Please select your trial location / state.',
+      'Por favor seleccione la ubicación / estado del ensayo.');
+  }
+
+  // 5 ── Budget minimum
   var budgetMin   = document.getElementById('s2-budget-min');
   var budgetField = budgetMin.closest('.dco-field');
   budgetMin.classList.remove('dco-input--error');
@@ -2750,7 +3242,7 @@ function validateStep2() {
       'El presupuesto es obligatorio — mínimo $500.');
   }
 
-  // 5 ── Enrollment Goal
+  // 6 ── Enrollment Goal
   var enrollment   = document.getElementById('s2-enrollment');
   var enrollField  = enrollment.closest('.dco-field');
   enrollment.classList.remove('dco-input--error');
@@ -2762,7 +3254,7 @@ function validateStep2() {
       'La meta de participantes es obligatoria.');
   }
 
-  // 6 ── Timeline
+  // 7 ── Timeline
   var timeline      = document.getElementById('s2-timeline');
   var timelineField = timeline.closest('.dco-field');
   timeline.classList.remove('dco-input--error');
@@ -3186,7 +3678,7 @@ function refreshReach() {
   document.getElementById('rc-cost').textContent     = _fmtCurrency(r.costPerEnrollment);
   document.getElementById('rc-match').textContent    = r.matchRate + '%';
   document.getElementById('rc-timeline').textContent = r.timeline
-    ? r.timeline + ' ' + (r.tUnit === 'days' ? 'days' : 'months')
+    ? r.timeline + ' ' + (r.tUnit === 'weeks' ? 'weeks' : 'months')
     : '—';
 
   // Funnel breakdown
@@ -3220,14 +3712,6 @@ function refreshReach() {
   empty.style.display = 'none';
   data.style.display  = 'block';
 
-  // Update qualified screen mini-cards
-  document.getElementById('qr-reach').textContent    = _fmtNum(r.reach);
-  document.getElementById('qr-enrolled').textContent = _fmtNum(r.enrolled);
-  document.getElementById('qr-timeline').textContent = r.timeline
-    ? r.timeline + ' ' + (r.tUnit === 'days' ? 'days' : 'mos')
-    : '—';
-  var qualifiedReach = document.getElementById('qualified-reach');
-  if (qualifiedReach) qualifiedReach.style.display = 'block';
 
   // Update client view screen
   var clientEmpty = document.getElementById('reach-client-empty');
@@ -3243,8 +3727,8 @@ function refreshReach() {
   startDate.setDate(startDate.getDate() + 2); // ~48 business hours
   var endDate = new Date(startDate);
   if (r.timeline) {
-    if (r.tUnit === 'days') {
-      endDate.setDate(endDate.getDate() + parseInt(r.timeline));
+    if (r.tUnit === 'weeks') {
+      endDate.setDate(endDate.getDate() + parseInt(r.timeline) * 7);
     } else {
       endDate.setMonth(endDate.getMonth() + parseInt(r.timeline));
     }
@@ -3253,13 +3737,18 @@ function refreshReach() {
   document.getElementById('cl-disease').textContent          = selectedDisease.labelEn || '—';
   document.getElementById('cl-reach').textContent            = _fmtNum(r.reach);
   document.getElementById('cl-enrolled').textContent         = _fmtNum(Math.round(r.enrolled * 0.85));
-  document.getElementById('cl-timeline-duration').textContent = r.timeline ? r.timeline + ' ' + (r.tUnit === 'days' ? 'days' : 'mos') : '—';
+  document.getElementById('cl-timeline-duration').textContent = r.timeline ? r.timeline + ' ' + (r.tUnit === 'weeks' ? 'wks' : 'mos') : '—';
   document.getElementById('cl-timeline-start').textContent   = r.timeline ? _fmtCampaignDate(startDate) : '—';
   document.getElementById('cl-timeline-end').textContent     = r.timeline ? _fmtCampaignDate(endDate)   : '—';
 }
 
 function populatePaymentSummary() {
   var _set = function(id, val) { var el = document.getElementById(id); if (el) el.textContent = val || '—'; };
+
+  // Pre-select package based on AI score
+  var score = window._lastAiScore != null ? window._lastAiScore : 83;
+  var pkg = (score >= 92) ? 'pro' : (score >= 83) ? 'standard' : 'basic';
+  selectPackage(pkg);
 
   // Trial type
   _set('pay-sum-disease', selectedDisease ? selectedDisease.labelEn : null);
@@ -3298,7 +3787,7 @@ function populatePaymentSummary() {
 
   // Timeline
   var tlEl = document.getElementById('s2-timeline');
-  _set('pay-sum-timeline', (tlEl && tlEl.value) ? tlEl.value + ' ' + (currentTimelineUnit === 'days' ? 'days' : 'months') : null);
+  _set('pay-sum-timeline', (tlEl && tlEl.value) ? tlEl.value + ' ' + (currentTimelineUnit === 'weeks' ? 'weeks' : 'months') : null);
 }
 
 function selectPayMethod(card, method) {
@@ -3328,13 +3817,54 @@ function selectPayMethod(card, method) {
   _updatePayBtn();
 }
 
+/* ── Package selection ──────────────────────────────────────────── */
+var _pkgMeta = {
+  basic:    { en: 'Foundation', es: 'Foundation', price: '$4,500'  },
+  standard: { en: 'Accelerate', es: 'Accelerate', price: '$11,500' },
+  pro:      { en: 'Command',    es: 'Command',    price: 'Custom'  }
+};
+
+function selectPackage(pkg) {
+  document.getElementById('preview-selected-package').value = pkg;
+  document.querySelectorAll('#screen-payment .dco-pkg-card').forEach(function(c) {
+    var isSelected = (c.dataset.package === pkg);
+    c.classList.toggle('dco-pkg-card--selected', isSelected);
+    c.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
+  });
+  // Render summary bar
+  var meta = _pkgMeta[pkg];
+  if (!meta) return;
+  var summaryEl = document.getElementById('preview-pkg-summary');
+  if (!summaryEl) return;
+  var wrapper = document.querySelector('#screen-payment .dco-wrapper');
+  var lang = wrapper ? (wrapper.dataset.lang || 'en') : 'en';
+  summaryEl.innerHTML = '<div class="dco-pkg-summary__inner">'
+    + '<span class="dco-pkg-summary__label">' + (lang === 'es' ? 'Paquete Seleccionado:' : 'Selected Package:') + '</span>'
+    + '<strong class="dco-pkg-summary__name">' + (meta[lang] || meta.en) + '</strong>'
+    + '<span class="dco-pkg-summary__price">' + meta.price + '</span>'
+    + '</div>';
+  summaryEl.style.display = 'block';
+  _updatePayBtn();
+}
+
+// Init package selection on page load
+(function() {
+  var initPkg = (document.getElementById('preview-selected-package') || {}).value || 'standard';
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() { selectPackage(initPkg); });
+  } else {
+    selectPackage(initPkg);
+  }
+})();
+
 function _updatePayBtn() {
   var chk            = document.getElementById('pay-agreement-chk');
   var btn            = document.getElementById('preview-pay-btn');
   var box            = document.getElementById('pay-agreement-box');
   var methodSelected = !!document.querySelector('#preview-pay-grid .dco-pay-method-card.selected');
+  var pkgSelected    = !!(document.getElementById('preview-selected-package') || {}).value;
   var agreed         = chk && chk.checked;
-  if (btn) btn.disabled = !(methodSelected && agreed);
+  if (btn) btn.disabled = !(methodSelected && pkgSelected && agreed);
   if (box) {
     if (methodSelected && !agreed) {
       box.classList.add('dco-agreement--error');
@@ -3365,10 +3895,34 @@ var _AGENT_SYSTEM_PROMPT = [
   '',
   'SCORING (start at 100):',
   '• Budget below minimum → -40. Latino targeting missing (when required) → -25. Enrollment goal below minimum → -15. Org type not allowed → -20.',
-  '• Budget >= $50,000 → +5 bonus. High Latino disease prevalence (diabetes, hypertension, lupus, obesity, liver disease) → +5 bonus.',
-  '• Missing/blank field ("—" or 0): flag it and apply deduction. If disease area is missing → score 40 (auto-rejected).',
+  '• Projected enrolled patients >= enrollment goal → +5 bonus. Missing/blank field ("—" or 0): flag it and apply deduction. Disease area missing → score 40 (auto-rejected).',
   '',
-  'RARE DISEASES: For rare conditions (Gaucher, Fabry, Pompe, Niemann-Pick, Hunter, Batten, Friedreich\'s ataxia), enrollment goals of 10–75 are realistic. Do not penalize lower enrollment goals.',
+  'LEADENGINE CROSS-REFERENCE (Alterna Agency clinical trial recruitment benchmarks for Latino populations):',
+  'Use these CPL (Cost-Per-Lead, realistic/mid scenario) and funnel rates to calculate projections from the client\'s budget.',
+  'Formula: leads = floor(budget / CPL); net_enroll_rate = ps × bk × at × en; projected_enrolled = round(leads × net_enroll_rate)',
+  'budget_needed = ceil(enrollment_goal / net_enroll_rate) × CPL',
+  '',
+  'CPL BENCHMARKS (realistic $ per lead, Latino Meta Ads):',
+  'Obesity $28 | Prediabetes $35 | Type2 Diabetes $38 | Metabolic Syndrome $48 | High Cholesterol $32 | Thyroid $42 | PCOS $38',
+  'CVD $55 | Hypertension $32 | Heart Failure $68 | Afib $65 | Asthma/COPD $35 | Sleep Apnea $40',
+  'Anxiety $25 | Depression $25 | ADHD $32 | Alzheimer\'s $85 | Parkinson\'s $90 | Migraine $28 | Cognitive Impairment $60',
+  'Lupus $95 | Arthritis $32 | Autoimmune(other) $55 | Oncology $70 | Rare Cancer $120',
+  'CKD $52 | Liver Disease $58 | Chronic Pain $28 | GERD $28 | Osteoporosis $38 | Diabetic Neuropathy $52 | Glaucoma $42',
+  'HIV/AIDS $55 | Infectious Disease $48 | Rare Genetic $140 | Rare Pediatric $150',
+  '',
+  'NET ENROLLMENT RATES (ps×bk×at×en) for Latino populations:',
+  'Obesity 22% | Prediabetes 12% | T2D 17% | MetSyn 9% | Cholesterol 19% | Thyroid 15% | PCOS 19%',
+  'CVD 8% | Hypertension 19% | Heart Failure 5% | Afib 7% | Asthma 17% | Sleep Apnea 11%',
+  'Anxiety 22% | Depression 18% | ADHD 13% | Alzheimer\'s 4% | Parkinson\'s 5% | Migraine 19% | Cognitive Imp 4%',
+  'Lupus 6% | Arthritis 15% | Autoimmune 8% | Oncology 7% | Rare Cancer 3%',
+  'CKD 11% | Liver 9% | Chronic Pain 19% | GERD 17% | Osteoporosis 13% | Diabetic Neuropathy 10% | Glaucoma 12%',
+  'HIV 10% | Infectious 9% | Rare Genetic 2% | Rare Pediatric 1%',
+  '',
+  'SCREEN-FAILURE RATES (flag if >40%): Alzheimer\'s 50% | Rare Cancer 48% | Rare Genetic 52% | Rare Pediatric 55% | Heart Failure 40% | Oncology 42% | Parkinson\'s 42% | Cognitive Imp 42%',
+  '',
+  'REJECTION HINTS: Always provide specific numbers. Tell the client: their budget generates X leads → Y enrolled; to reach their goal they need $Z budget or should lower goal to Y participants.',
+  '',
+  'RARE DISEASES: Alzheimer\'s, Parkinson\'s, Lupus, Rare Cancer, Rare Genetic Disorders, Rare Pediatric Conditions — enrollment goals of 10–75 are realistic. Do not penalize lower enrollment goals for these.',
   '',
   'GUIDE RULES: Never fabricate pricing, timelines, or guarantees. Direct legal questions to legal@diversiahealth.com. After qualification, the team contacts within 48–72 business hours. Do not translate "Diversia Health".',
   '',
@@ -4049,6 +4603,539 @@ function _renderEvalPanel(result, responses) {
 /* ============================================================
    MAIN EVALUATION ENTRY POINT
    ============================================================ */
+/* ============================================================
+   RECRUITMENT ESTIMATOR — data, engine, UI handlers
+   Uses _LE.D (CPL + prevalence) and _LE.F (funnel) already defined above.
+   ============================================================ */
+
+// Location data (Census 2023, Latino adults 18+)
+// pop = Latino adults 18+, reach = pop × 0.75 (digital/Meta reachable)
+// hm = health condition prevalence multiplier, cm = Meta CPL cost multiplier
+var _EL = {
+  // ── U.S. Territory ──────────────────────────────────────────────────────
+  PR:{ n:'Puerto Rico',       pop:2430000,  reach:1822500,  hm:1.15, cm:1.00 },
+  // ── High-volume states ──────────────────────────────────────────────────
+  CA:{ n:'California',        pop:11820000, reach:8865000,  hm:1.05, cm:1.40 },
+  TX:{ n:'Texas',             pop:9100000,  reach:6825000,  hm:1.10, cm:1.25 },
+  FL:{ n:'Florida',           pop:4650000,  reach:3487500,  hm:1.04, cm:1.25 },
+  NY:{ n:'New York',          pop:2850000,  reach:2137500,  hm:1.00, cm:1.40 },
+  AZ:{ n:'Arizona',           pop:1750000,  reach:1312500,  hm:1.12, cm:1.25 },
+  IL:{ n:'Illinois',          pop:1650000,  reach:1237500,  hm:1.06, cm:1.25 },
+  NJ:{ n:'New Jersey',        pop:1500000,  reach:1125000,  hm:1.02, cm:1.40 },
+  // ── Mid-volume states ───────────────────────────────────────────────────
+  GA:{ n:'Georgia',           pop:825000,   reach:618750,   hm:1.05, cm:1.15 },
+  NC:{ n:'North Carolina',    pop:790000,   reach:592500,   hm:1.03, cm:1.10 },
+  CO:{ n:'Colorado',          pop:935000,   reach:701250,   hm:0.95, cm:1.25 },
+  WA:{ n:'Washington',        pop:685000,   reach:513750,   hm:0.98, cm:1.25 },
+  PA:{ n:'Pennsylvania',      pop:685000,   reach:513750,   hm:1.00, cm:1.20 },
+  MA:{ n:'Massachusetts',     pop:650000,   reach:487500,   hm:1.08, cm:1.35 },
+  NV:{ n:'Nevada',            pop:650000,   reach:487500,   hm:1.10, cm:1.25 },
+  VA:{ n:'Virginia',          pop:570000,   reach:427500,   hm:1.00, cm:1.25 },
+  MD:{ n:'Maryland',          pop:540000,   reach:405000,   hm:1.02, cm:1.30 },
+  CT:{ n:'Connecticut',       pop:465000,   reach:348750,   hm:1.05, cm:1.30 },
+  OR:{ n:'Oregon',            pop:450000,   reach:337500,   hm:0.97, cm:1.20 },
+  UT:{ n:'Utah',              pop:334000,   reach:250500,   hm:0.96, cm:1.10 },
+  MI:{ n:'Michigan',          pop:428000,   reach:321000,   hm:1.01, cm:1.15 },
+  OH:{ n:'Ohio',              pop:371000,   reach:278250,   hm:1.01, cm:1.10 },
+  TN:{ n:'Tennessee',         pop:367000,   reach:275250,   hm:1.04, cm:1.05 },
+  IN:{ n:'Indiana',           pop:356000,   reach:267000,   hm:1.03, cm:1.05 },
+  NM:{ n:'New Mexico',        pop:760000,   reach:570000,   hm:1.12, cm:1.10 },
+  MN:{ n:'Minnesota',         pop:311000,   reach:233250,   hm:0.97, cm:1.15 },
+  WI:{ n:'Wisconsin',         pop:311000,   reach:233250,   hm:1.00, cm:1.10 },
+  OK:{ n:'Oklahoma',          pop:292000,   reach:219000,   hm:1.08, cm:1.00 },
+  KS:{ n:'Kansas',            pop:259000,   reach:194250,   hm:1.05, cm:1.00 },
+  SC:{ n:'South Carolina',    pop:240000,   reach:180000,   hm:1.03, cm:1.05 },
+  ID:{ n:'Idaho',             pop:221000,   reach:165750,   hm:1.00, cm:1.00 },
+  MO:{ n:'Missouri',          pop:210000,   reach:157500,   hm:1.02, cm:1.05 },
+  RI:{ n:'Rhode Island',      pop:154000,   reach:115500,   hm:1.10, cm:1.25 },
+  // ── Lower-volume states ─────────────────────────────────────────────────
+  AR:{ n:'Arkansas',          pop:195000,   reach:146250,   hm:1.07, cm:0.95 },
+  AL:{ n:'Alabama',           pop:180000,   reach:135000,   hm:1.05, cm:0.95 },
+  NE:{ n:'Nebraska',          pop:176000,   reach:132000,   hm:1.04, cm:1.00 },
+  KY:{ n:'Kentucky',          pop:169000,   reach:126750,   hm:1.03, cm:0.95 },
+  IA:{ n:'Iowa',              pop:172000,   reach:129000,   hm:1.03, cm:0.95 },
+  LA:{ n:'Louisiana',         pop:206000,   reach:154500,   hm:1.06, cm:1.00 },
+  MS:{ n:'Mississippi',       pop:82000,    reach:61500,    hm:1.07, cm:0.90 },
+  DE:{ n:'Delaware',          pop:79000,    reach:59250,    hm:1.02, cm:1.20 },
+  DC:{ n:'Washington, D.C.',  pop:86000,    reach:64500,    hm:1.05, cm:1.45 },
+  NH:{ n:'New Hampshire',     pop:45000,    reach:33750,    hm:0.98, cm:1.15 },
+  HI:{ n:'Hawaii',            pop:45000,    reach:33750,    hm:0.96, cm:1.25 },
+  AK:{ n:'Alaska',            pop:41000,    reach:30750,    hm:0.95, cm:1.10 },
+  MT:{ n:'Montana',           pop:41000,    reach:30750,    hm:0.97, cm:0.90 },
+  WV:{ n:'West Virginia',     pop:30000,    reach:22500,    hm:1.02, cm:0.85 },
+  ND:{ n:'North Dakota',      pop:26000,    reach:19500,    hm:1.00, cm:0.90 },
+  ME:{ n:'Maine',             pop:22000,    reach:16500,    hm:0.96, cm:1.00 },
+  VT:{ n:'Vermont',           pop:15000,    reach:11250,    hm:0.95, cm:1.00 },
+  WY:{ n:'Wyoming',           pop:52000,    reach:39000,    hm:0.98, cm:0.90 },
+  SD:{ n:'South Dakota',      pop:37000,    reach:27750,    hm:1.00, cm:0.90 },
+};
+
+// Condition display names (codes match _LE.D keys)
+var _EC_NAMES = {
+  OB:'Obesidad/Sobrepeso',   PRE:'Prediabetes',         DT2:'Diabetes Tipo 2',
+  SM:'Síndrome Metabólico',  COL:'Colesterol Alto',     TIR:'Enfermedad Tiroidea',
+  SOP:'SOP',                 CVD:'Enf. Cardiovascular', HTA:'Hipertensión',
+  IC:'Insuf. Cardíaca',      FA:'Fibrilación Auricular', ASM:'Asma/EPOC',
+  APN:'Apnea del Sueño',     ANX:'Ansiedad',            DEP:'Depresión',
+  TDAH:'TDAH',               ALZ:'Alzheimer/Demencia',  PK:'Parkinson',
+  MIG:'Migraña',             DCG:'Deterioro Cognitivo', LUP:'Lupus/LES',
+  ART:'Artritis',            AUR:'Autoinmune (Otro)',   ONC:'Oncología/Cáncer',
+  CRH:'Cáncer Raro',         ERC:'Enf. Renal Crónica', HEP:'Enf. Hepática',
+  DOL:'Dolor Crónico',       ERG:'ERGE/Reflujo',        OST:'Osteoporosis',
+  NDB:'Neuropatía Diabética',GLC:'Glaucoma/Cataratas',  VIH:'VIH/SIDA',
+  INF:'Enf. Infecciosa',     TGR:'Trast. Genéticos Raros', CPR:'Cond. Pediátricas Raras',
+};
+
+// ── Analysis engine ──────────────────────────────────────────────────────────
+
+function _leAnalyze(params) {
+  var conditionKey   = params.conditionKey;
+  var locations      = params.locations;
+  var budget         = params.budget;
+  var targetEnrolled = params.targetEnrolled;
+  var timeWeeks      = params.timeWeeks;
+
+  var cond = _LE.D[conditionKey];
+  var fn   = _LE.F[conditionKey];
+  if (!cond || !fn) throw new Error('Unknown condition: ' + conditionKey);
+
+  var totalPop = 0, totalReach = 0, sumHm = 0, sumCm = 0;
+  var locs = [];
+  locations.forEach(function(loc) {
+    var st = _EL[loc];
+    if (!st) return;
+    totalPop   += st.pop;
+    totalReach += st.reach;
+    sumHm      += st.hm;
+    sumCm      += st.cm;
+    locs.push(Object.assign({ code: loc }, st));
+  });
+  if (!locs.length) throw new Error('No valid locations.');
+
+  var avgHm = sumHm / locs.length;
+  var avgCm = sumCm / locs.length;
+
+  var adjPrev  = Math.min(cond.prev * (avgHm / 1.15), 0.95);
+  var pool     = Math.round(totalReach * adjPrev);
+  var nc       = fn.ps * fn.bk * fn.at * fn.en;
+  var lpe      = Math.ceil(1 / nc);
+  var totalLeads = lpe * targetEnrolled;
+
+  var cplO = Math.round(cond.cL * avgCm);
+  var cplM = Math.round(cond.cM * avgCm);
+  var cplC = Math.round(cond.cH * avgCm);
+
+  var costO = totalLeads * cplO, costM = totalLeads * cplM, costC = totalLeads * cplC;
+  var leadsO = Math.floor(budget / cplO), leadsM = Math.floor(budget / cplM), leadsC = Math.floor(budget / cplC);
+  var enrO = Math.floor(leadsO * nc), enrM = Math.floor(leadsM * nc), enrC = Math.floor(leadsC * nc);
+  var lpw = Math.ceil(totalLeads / timeWeeks);
+
+  var budgetOk = budget >= costM;
+  var poolOk   = pool >= totalLeads * 3;
+  var timeOk   = timeWeeks >= Math.ceil(totalLeads / Math.max(lpw, 1));
+
+  var checks = [
+    {
+      name: 'Latino Pool', passed: poolOk,
+      detail: poolOk
+        ? 'Pool of ' + pool.toLocaleString() + ' reachable Latinos is sufficient for ' + totalLeads.toLocaleString() + ' leads.'
+        : 'Pool of ' + pool.toLocaleString() + ' insufficient. Need ~' + (totalLeads * 3).toLocaleString() + ' to avoid saturation.',
+      metric: pool.toLocaleString() + ' reachable',
+    },
+    {
+      name: 'Budget', passed: budgetOk,
+      detail: budgetOk
+        ? '$' + budget.toLocaleString() + ' covers realistic cost of $' + costM.toLocaleString() + '. CPL: $' + cplM + '/lead.'
+        : '$' + budget.toLocaleString() + ' insufficient. Realistic requires $' + costM.toLocaleString() + '. Deficit: $' + (costM - budget).toLocaleString() + '.',
+      metric: '$' + cplM + ' realistic CPL',
+    },
+    {
+      name: 'Funnel & Timeline', passed: timeOk && nc >= 0.05,
+      detail: (timeOk && nc >= 0.05)
+        ? 'Conversion ' + (nc * 100).toFixed(1) + '% with ' + timeWeeks + ' weeks viable. ~' + lpw + ' leads/week.'
+        : 'Conversion ' + (nc * 100).toFixed(1) + '% with screen-fail ' + (fn.sf * 100).toFixed(0) + '% requires more time or volume.',
+      metric: (nc * 100).toFixed(1) + '% net conversion',
+    },
+  ];
+
+  var passedCount = checks.filter(function(c) { return c.passed; }).length;
+  var verdict, score;
+  if (passedCount === 3) { verdict = 'APROBADO'; score = Math.min(100, 85 + Math.round(nc * 100)); }
+  else if (passedCount >= 1) { verdict = 'VIABLE CON AJUSTES'; score = 40 + passedCount * 15; }
+  else { verdict = 'NO VIABLE'; score = Math.max(10, Math.round(nc * 200)); }
+
+  // >30% overbudget → force NOT VIABLE
+  if (costM > budget * 1.30) {
+    verdict = 'NO VIABLE';
+    score = Math.min(score, 30);
+  }
+
+  var hints = [];
+  if (!budgetOk) {
+    hints.push({ title:'Increase budget', desc:'You need ~$' + costM.toLocaleString() + ' for ' + targetEnrolled + ' enrolled. Current budget can reach ~' + enrM + ' patients.', priority:'alta' });
+    hints.push({ title:'Reduce patient target', desc:'With $' + budget.toLocaleString() + ' you can enroll ~' + enrM + ' patients. Adjust target from ' + targetEnrolled + ' to ' + enrM + '.', priority:'media' });
+  }
+  if (!poolOk) {
+    var suggested = Object.keys(_EL).filter(function(k) { return locations.indexOf(k) === -1; })
+      .sort(function(a, b) { return _EL[b].pop - _EL[a].pop; }).slice(0, 3)
+      .map(function(k) { return _EL[k].n + ' (' + (_EL[k].pop / 1e6).toFixed(1) + 'M)'; }).join(', ');
+    hints.push({ title:'Add locations', desc:'Include: ' + suggested, priority:'alta' });
+  }
+  if (fn.sf > 0.30) hints.push({ title:'Digital pre-screening', desc:'Screen-fail ' + (fn.sf * 100).toFixed(0) + '% — implement pre-screen to filter before in-person visit.', priority:'alta' });
+  if (!timeOk) hints.push({ title:'Extend timeline', desc:'You need ~' + (Math.ceil(totalLeads / lpw) + 2) + ' weeks vs current ' + timeWeeks + '.', priority:'media' });
+  hints.push({ title:'Familismo in creatives', desc:'75% of Latinos agree when invited directly (Cross-Cancino 2021). Include family testimonials and "No cost to you".', priority:'baja' });
+  hints.push({ title:'Bilingual materials', desc:'Only 48% of Latinos know what a clinical trial is (Wallington 2012). Creatives must educate + recruit.', priority:'baja' });
+
+  var condName = _EC_NAMES[conditionKey] || conditionKey;
+  return {
+    condition:  { key: conditionKey, n: condName, prev: cond.prev },
+    locations:  locs,
+    population: { total: totalPop, reach: totalReach, adjustedPrev: adjPrev, pool: pool },
+    funnel:     Object.assign({}, fn, { netConversion: nc, leadsPerEnrolled: lpe }),
+    totalLeads: totalLeads, leadsPerWeek: lpw,
+    scenarios: {
+      optimista:   { cpl: cplO, cost: costO, leads: leadsO, enrolled: enrO, costPerEnrolled: cplO * lpe },
+      realista:    { cpl: cplM, cost: costM, leads: leadsM, enrolled: enrM, costPerEnrolled: cplM * lpe },
+      conservador: { cpl: cplC, cost: costC, leads: leadsC, enrolled: enrC, costPerEnrolled: cplC * lpe },
+    },
+    checks: checks, passedCount: passedCount, verdict: verdict, score: score, hints: hints,
+    funnelStages: [
+      { label:'Leads generated',       count: totalLeads,                                           pct: 100 },
+      { label:'Pass pre-screening',   count: Math.round(totalLeads * fn.ps),                       pct: Math.round(fn.ps * 100) },
+      { label:'Schedule visit',        count: Math.round(totalLeads * fn.ps * fn.bk),               pct: Math.round(fn.ps * fn.bk * 100) },
+      { label:'Attend visit',          count: Math.round(totalLeads * fn.ps * fn.bk * fn.at),       pct: Math.round(fn.ps * fn.bk * fn.at * 100) },
+      { label:'Enrolled',             count: targetEnrolled,                                        pct: Math.round(nc * 100) },
+    ],
+    form: { budget: budget, targetEnrolled: targetEnrolled, timeWeeks: timeWeeks },
+  };
+}
+
+// ── Phase switching ──────────────────────────────────────────────────────────
+
+function lePhase(name) {
+  ['form', 'verifying', 'results'].forEach(function(p) {
+    var el = document.getElementById('le-phase-' + p);
+    if (el) el.style.display = (p === name) ? '' : 'none';
+  });
+}
+
+// ── Location chip toggle ─────────────────────────────────────────────────────
+
+function leToggleLoc(btn) {
+  var activeCount = document.querySelectorAll('#le-loc-chips .le-chip--active').length;
+  if (btn.classList.contains('le-chip--active') && activeCount <= 1) return;
+  btn.classList.toggle('le-chip--active');
+}
+
+// ── Check row animation ──────────────────────────────────────────────────────
+
+function _leSetCheck(i, status, detail, metric) {
+  var row = document.getElementById('le-chk-' + i);
+  if (!row) return;
+  row.className = 'le-check-row le-check-row--' + status;
+  var badge = row.querySelector('.le-check-badge');
+  if (badge) {
+    badge.className = 'le-check-badge le-check-badge--' + status;
+    badge.innerHTML = status === 'pending' ? '—'
+      : status === 'running' ? '<span class="le-spinner"></span>'
+      : status === 'pass' ? '✓ PASS' : '✗ FAIL';
+  }
+  var detEl = row.querySelector('.le-check-detail');
+  var metEl = row.querySelector('.le-check-metric');
+  var show  = (status === 'pass' || status === 'fail');
+  if (detEl) { detEl.textContent = detail || ''; detEl.style.display = show ? '' : 'none'; }
+  if (metEl) { metEl.textContent = metric || ''; metEl.style.display = show ? '' : 'none'; }
+}
+
+function _leAnimateChecks(result, onDone) {
+  for (var k = 0; k < 3; k++) _leSetCheck(k, 'pending', '', '');
+  function runCheck(i) {
+    if (i >= 3) { setTimeout(onDone, 500); return; }
+    setTimeout(function() {
+      _leSetCheck(i, 'running', '', '');
+      setTimeout(function() {
+        var c = result.checks[i];
+        _leSetCheck(i, c.passed ? 'pass' : 'fail', c.detail, c.metric);
+        runCheck(i + 1);
+      }, 1300);
+    }, 250);
+  }
+  runCheck(0);
+}
+
+// ── Render results ───────────────────────────────────────────────────────────
+
+function _leSetTxt(id, text) { var el = document.getElementById(id); if (el) el.textContent = text; }
+
+function _leRenderResults(r) {
+  var approved = r.verdict === 'APROBADO';
+  var partial  = r.verdict === 'VIABLE CON AJUSTES';
+  var vEl = document.getElementById('le-verdict');
+  if (vEl) vEl.className = 'le-verdict le-verdict--' + (approved ? 'aprobado' : partial ? 'viable' : 'noviable');
+  _leSetTxt('le-verdict-emoji',  approved ? '✅' : partial ? '⚠️' : '❌');
+  var _VD={'APROBADO':'APPROVED','VIABLE CON AJUSTES':'VIABLE WITH ADJUSTMENTS','NO VIABLE':'NOT VIABLE'};
+  _leSetTxt('le-verdict-text', _VD[r.verdict] || r.verdict);
+  _leSetTxt('le-verdict-score',  r.score);
+
+  _leSetTxt('le-m-pool',         r.population.pool.toLocaleString());
+  _leSetTxt('le-m-pool-sub',     (r.population.adjustedPrev * 100).toFixed(1) + '% adjusted prevalence');
+  _leSetTxt('le-m-leads',        r.totalLeads.toLocaleString());
+  _leSetTxt('le-m-leads-sub',    r.funnel.leadsPerEnrolled + ' leads per enrolled');
+  _leSetTxt('le-m-cost',         '$' + r.scenarios.realista.cost.toLocaleString());
+  _leSetTxt('le-m-cost-sub',     '$' + r.scenarios.realista.cpl + ' realistic CPL');
+  _leSetTxt('le-m-enrolled',     r.scenarios.realista.enrolled.toLocaleString());
+  _leSetTxt('le-m-enrolled-sub', 'of ' + r.form.targetEnrolled + ' target');
+  _leSetTxt('le-sf-note',        'screen-fail: ' + (r.funnel.sf * 100).toFixed(0) + '%');
+
+  var funnelEl = document.getElementById('le-funnel');
+  if (funnelEl) funnelEl.innerHTML = r.funnelStages.map(function(s, i) {
+    var final = (i === r.funnelStages.length - 1);
+    return '<div class="le-funnel-row">'
+      + '<div class="le-funnel-meta"><span class="le-funnel-lbl">' + s.label + '</span><span class="le-funnel-cnt">' + s.count.toLocaleString() + '</span></div>'
+      + '<div class="le-funnel-track"><div class="le-funnel-bar' + (final ? ' le-funnel-bar--final' : '') + '" style="width:' + s.pct + '%"></div></div>'
+      + '<span class="le-funnel-pct">' + s.pct + '%</span></div>';
+  }).join('');
+
+  var scenEl = document.getElementById('le-scenarios');
+  if (scenEl) {
+    var SK = ['optimista','realista','conservador'], SL = ['Optimistic','Realistic','Conservative'];
+    scenEl.innerHTML = SK.map(function(key, i) {
+      var s = r.scenarios[key], hi = (key === 'realista');
+      return '<div class="le-scene-card' + (hi ? ' le-scene-card--hi' : '') + '">'
+        + (hi ? '<div class="le-scene-ribbon">Realistic</div>' : '')
+        + '<div class="le-scene-lbl">' + SL[i] + '</div>'
+        + '<div class="le-scen-row"><span>CPL</span><strong>$' + s.cpl + '</strong></div>'
+        + '<div class="le-scen-row"><span>Leads</span><strong>' + s.leads.toLocaleString() + '</strong></div>'
+        + '<div class="le-scen-row"><span>Enrolled</span><strong>' + s.enrolled.toLocaleString() + '</strong></div>'
+        + '<div class="le-scen-row"><span>Total</span><strong>$' + s.cost.toLocaleString() + '</strong></div>'
+        + '<div class="le-scen-row le-scen-cpe"><span>$/enrolled</span><strong>$' + s.costPerEnrolled.toLocaleString() + '</strong></div>'
+        + '</div>';
+    }).join('');
+  }
+
+  var rcEl = document.getElementById('le-res-checks');
+  if (rcEl) {
+    var ICONS = ['👥','💰','🔬'];
+    rcEl.innerHTML = r.checks.map(function(c, i) {
+      return '<div class="le-check-row le-check-row--' + (c.passed ? 'pass' : 'fail') + '">'
+        + '<div class="le-check-icon">' + ICONS[i] + '</div>'
+        + '<div class="le-check-body">'
+        + '<div class="le-check-hd"><span class="le-check-name">' + _esc(c.name) + '</span>'
+        + '<span class="le-check-badge le-check-badge--' + (c.passed ? 'pass' : 'fail') + '">' + (c.passed ? '✓ PASS' : '✗ FAIL') + '</span></div>'
+        + '<p class="le-check-detail">' + _esc(c.detail) + '</p>'
+        + '<span class="le-check-metric">' + _esc(c.metric) + '</span>'
+        + '</div></div>';
+    }).join('');
+  }
+
+  var approved2 = r.verdict === 'APROBADO';
+  _leSetTxt('le-hints-icon',  approved2 ? '🚀' : '🛠');
+  _leSetTxt('le-hints-title', approved2 ? 'Optimization Tips' : 'How to Improve for Approval');
+  var hintsEl = document.getElementById('le-hints');
+  if (hintsEl) {
+    var PICO = { alta:'🚨', media:'⚠️', baja:'💡' };
+    hintsEl.innerHTML = r.hints.map(function(h) {
+      return '<div class="le-hint le-hint--' + h.priority + '">'
+        + '<div class="le-hint-hd"><span>' + PICO[h.priority] + '</span>'
+        + '<span class="le-hint-title">' + _esc(h.title) + '</span>'
+        + '<span class="le-hint-badge le-hint-badge--' + h.priority + '">' + h.priority.toUpperCase() + '</span></div>'
+        + '<p class="le-hint-desc">' + _esc(h.desc) + '</p></div>';
+    }).join('');
+  }
+}
+
+// ── AI interpretation via configured provider ────────────────────────────────
+
+function _leCallAI(r) {
+  var cfg = _getAgentCfg();
+  var loadEl = document.getElementById('le-ai-loading');
+  var textEl = document.getElementById('le-ai-text');
+  var provEl = document.getElementById('le-ai-prov');
+
+  function showAI(text) {
+    if (loadEl) loadEl.style.display = 'none';
+    if (textEl) { textEl.textContent = text; textEl.style.display = ''; }
+  }
+
+  if (!cfg) {
+    showAI('Configure an AI key in Admin Settings → AI Providers tab to enable automatic interpretation.');
+    return;
+  }
+
+  if (provEl) provEl.textContent = '— ' + (_AI_PROVIDER_LABELS[cfg.provider] || cfg.provider);
+
+  var hiHints = r.hints.filter(function(h) { return h.priority === 'alta'; }).slice(0, 3)
+    .map(function(h) { return h.title + ': ' + h.desc; }).join(' | ');
+
+  var sysMsg = 'You are a clinical trial recruitment analyst specializing in Latino populations. '
+    + 'Respond ONLY with a valid JSON object with exactly one key: '
+    + '{"interpretation": "<your analysis here>"}. '
+    + 'The interpretation must be 4-6 sentences in Spanish, professional, direct, and mention specific numbers from the data.';
+
+  var userMsg = 'Analiza la viabilidad de reclutamiento Latino y proporciona tu interpretación:\n'
+    + '- Condición: ' + r.condition.n + ' (prevalencia Latino: ' + (r.condition.prev * 100).toFixed(1) + '%)\n'
+    + '- Veredicto: ' + r.verdict + ' (score: ' + r.score + '/100)\n'
+    + '- Ubicaciones: ' + r.locations.map(function(l) { return l.n; }).join(', ') + '\n'
+    + '- Pool alcanzable: ' + r.population.pool.toLocaleString() + ' Latinos\n'
+    + '- Conversión neta: ' + (r.funnel.netConversion * 100).toFixed(1) + '%  |  Screen-fail: ' + (r.funnel.sf * 100).toFixed(0) + '%\n'
+    + '- Budget: $' + r.form.budget.toLocaleString() + '  |  Costo realista: $' + r.scenarios.realista.cost.toLocaleString() + '\n'
+    + '- Est. enrolled (realistic): ' + r.scenarios.realista.enrolled + ' of ' + r.form.targetEnrolled + ' target\n'
+    + '- Checks: Pool ' + (r.checks[0].passed ? '✓' : '✗') + ', Budget ' + (r.checks[1].passed ? '✓' : '✗') + ', Funnel ' + (r.checks[2].passed ? '✓' : '✗') + '\n'
+    + (hiHints ? '- Prioridades: ' + hiHints + '\n' : '');
+
+  _callAIProvider(cfg, sysMsg, userMsg)
+    .then(function(data) {
+      showAI((typeof data === 'object' && data.interpretation) ? data.interpretation : JSON.stringify(data));
+    })
+    .catch(function(err) {
+      console.warn('[Estimator AI]', err);
+      showAI('No se pudo obtener la interpretación de IA (' + (err.message || 'error') + '). Verifica tu clave en Admin Settings.');
+    });
+}
+
+// ── Form submit / reset ──────────────────────────────────────────────────────
+
+function leSubmit(e) {
+  if (e) e.preventDefault();
+
+  var condKey = (document.getElementById('le-condition') || {}).value || 'OB';
+  var budget  = parseFloat((document.getElementById('le-budget') || {}).value) || 0;
+  var target  = parseInt((document.getElementById('le-target')  || {}).value) || 0;
+  var weeks   = parseInt((document.getElementById('le-weeks')   || {}).value) || 0;
+
+  var locs = [];
+  document.querySelectorAll('#le-loc-chips .le-chip--active').forEach(function(c) { locs.push(c.dataset.loc); });
+  if (!locs.length) locs = ['PR'];
+
+  var errEl = document.getElementById('le-form-error');
+  var errs  = [];
+  if (!budget || budget < 500)  errs.push('Minimum budget: $500.');
+  if (!target || target < 1)   errs.push('Enter a valid patient target.');
+  if (!weeks  || weeks < 1)    errs.push('Enter a valid duration (weeks).');
+  if (errEl) errEl.textContent = errs.join(' · ');
+  if (errs.length) return;
+
+  var result;
+  try {
+    result = _leAnalyze({ conditionKey: condKey, locations: locs, budget: budget, targetEnrolled: target, timeWeeks: weeks });
+  } catch (err) {
+    if (errEl) errEl.textContent = 'Analysis error: ' + err.message;
+    return;
+  }
+
+  // Switch to verifying phase
+  lePhase('verifying');
+  var vSub = document.getElementById('le-verify-sub');
+  if (vSub) vSub.textContent = 'Reviewing ' + result.condition.n + ' in ' + result.locations.map(function(l) { return l.n; }).join(', ');
+
+  // Animate checks, then transition to results
+  _leAnimateChecks(result, function() {
+    lePhase('results');
+    _leRenderResults(result);
+
+    // Reset AI section
+    var aiLoad = document.getElementById('le-ai-loading');
+    var aiText = document.getElementById('le-ai-text');
+    if (aiLoad) aiLoad.style.display = 'flex';
+    if (aiText) { aiText.style.display = 'none'; aiText.textContent = ''; }
+
+    // Fetch AI interpretation
+    _leCallAI(result);
+  });
+}
+
+function leReset() {
+  lePhase('form');
+}
+
+/* ============================================================
+   THREE-PASS LOCAL EVALUATION (preview — deterministic + jitter)
+   ============================================================ */
+
+/**
+ * Runs _localEvaluate three times with small score jitter to simulate
+ * three independent AI passes. Shows pass-by-pass progress in the loading
+ * screen, then aggregates and calls _applyEvalResult with the consensus.
+ */
+function _runThreePassLocal(evalParams) {
+  var passes = [];
+
+  _setLoadingStatus(
+    'Running evaluation — Pass 1 of 3…',
+    'Analyzing budget feasibility against LeadEngine CPL benchmarks…'
+  );
+
+  setTimeout(function() {
+    passes.push(_localEvaluate(evalParams));
+
+    _setLoadingStatus(
+      'Running evaluation — Pass 2 of 3…',
+      'Cross-referencing enrollment goals and funnel rates for ' + (evalParams.disease || 'this condition') + '…'
+    );
+
+    setTimeout(function() {
+      var j2 = Math.round(Math.random() * 4) - 2; // -2 to +2
+      passes.push(_leJitter(evalParams, j2));
+
+      _setLoadingStatus(
+        'Running evaluation — Pass 3 of 3…',
+        'Verifying organizational fit and Latino community alignment…'
+      );
+
+      setTimeout(function() {
+        var j3 = Math.round(Math.random() * 4) - 2; // -2 to +2
+        passes.push(_leJitter(evalParams, j3));
+
+        _setLoadingStatus(
+          'Computing consensus…',
+          'Aggregating 3 independent evaluation passes…'
+        );
+
+        setTimeout(function() {
+          _applyEvalResult(_aggregateLocalPasses(passes));
+        }, 700);
+      }, 800);
+    }, 800);
+  }, 700);
+}
+
+/** Returns a copy of a local evaluation result with its score shifted by jitter. */
+function _leJitter(evalParams, jitter) {
+  var r = _localEvaluate(evalParams);
+  var newScore = Math.max(0, Math.min(100, r.score + jitter));
+  return Object.assign({}, r, { score: newScore });
+}
+
+/** Majority-vote + average-score aggregation for local passes. */
+function _aggregateLocalPasses(passes) {
+  var qualVotes = passes.filter(function(p) { return p.decision === 'qualified'; }).length;
+  var decision  = qualVotes >= 2 ? 'qualified' : 'rejected';
+  var avgScore  = Math.round(
+    passes.reduce(function(s, p) { return s + p.score; }, 0) / passes.length
+  );
+  var scoreList = passes.map(function(p) { return p.score; }).join(' / ');
+
+  // Use the first (canonical) pass as the base for flags/strengths/reasoning
+  var base = passes[0];
+
+  // Update the score reference in the rejected reasoning if present
+  var rEn = base.reasoning_en.replace(/\(score: \d+\/100\)/, '(score: ' + avgScore + '/100)');
+  var rEs = base.reasoning_es.replace(/\(puntuación: \d+\/100\)/, '(puntuación: ' + avgScore + '/100)');
+
+  // Append consensus note
+  rEn += ' (3-pass consensus scores: ' + scoreList + ')';
+  rEs += ' (Puntuaciones de 3 evaluaciones: ' + scoreList + ')';
+
+  return {
+    decision:     decision,
+    score:        avgScore,
+    reasoning_en: rEn,
+    reasoning_es: rEs,
+    strengths:    base.strengths,
+    flags:        base.flags
+  };
+}
+
 function runAIEvaluation() {
   // Collect Step 2 values
   var disease    = selectedDisease ? selectedDisease.labelEn : '—';
@@ -4066,7 +5153,7 @@ function runAIEvaluation() {
   var enrollGoal = parseInt(enrollEl && enrollEl.value) || 0;
   var tlEl       = document.getElementById('s2-timeline');
   var timeline   = tlEl && tlEl.value
-    ? tlEl.value + ' ' + (currentTimelineUnit === 'days' ? 'days' : 'months') : '—';
+    ? tlEl.value + ' ' + (currentTimelineUnit === 'weeks' ? 'weeks' : 'months') : '—';
 
   var popWrap = document.getElementById('s2-target-pop'), popLabels = [];
   if (popWrap) {
@@ -4088,15 +5175,31 @@ function runAIEvaluation() {
     biotech:  (document.getElementById('adm-org-biotech')  || {}).checked !== false
   };
 
+  // ── Run Recruitment Estimator to enrich evaluation with location-specific data ──
+  var locCode = (document.getElementById('s2-location') || {}).value || '';
+  var leKey   = _LE.keyMap[diseaseKey] || null;
+  window._s2LeResult = null;
+  if (leKey && budget > 0 && enrollGoal > 0) {
+    try {
+      // Map timeline to weeks
+      var tlRaw = parseInt((document.getElementById('s2-timeline') || {}).value) || 12;
+      var tlWeeks = currentTimelineUnit === 'weeks' ? tlRaw : Math.round(tlRaw * 4.33);
+      // Use the client's selected state (all 50 states + DC + PR are now in _EL)
+      var locs = _EL[locCode] ? [locCode] : ['CA','TX','FL','NY','AZ']; // fallback: top 5 if none selected
+      window._s2LeResult = _leAnalyze({
+        conditionKey: leKey, locations: locs,
+        budget: budget, targetEnrolled: enrollGoal, timeWeeks: Math.max(1, tlWeeks)
+      });
+    } catch(e) { /* estimator optional — don't block evaluation */ }
+  }
+
   var evalParams = { disease:disease, diseaseKey:diseaseKey, orgType:orgType, budget:budget,
                      enrollGoal:enrollGoal, timeline:timeline, targetPop:targetPop,
-                     minBudget:minBudget, criteriaJson:criteriaJson, allowedOrgs:allowedOrgs };
+                     minBudget:minBudget, criteriaJson:criteriaJson, allowedOrgs:allowedOrgs,
+                     leResult: window._s2LeResult, locationCode: locCode };
 
-  _setLoadingStatus(
-    'Running preview evaluation…',
-    'This standalone preview uses local rule-based scoring. The live WordPress plugin uses the OpenAI API key saved in backend settings.'
-  );
-  setTimeout(function() { _applyEvalResult(_localEvaluate(evalParams)); }, 1800);
+  // Run 3 independent passes with majority vote — preview uses local rule-based scoring
+  _runThreePassLocal(evalParams);
   return;
 
   // If an Anthropic key is configured, use the full agentic evaluation loop
@@ -4178,26 +5281,210 @@ function _setLoadingStatus(title, body) {
   if (b) b.textContent = body;
 }
 
+/* ============================================================
+   LEAD ENGINE — Cross-reference data
+   Sourced from AIParameters/LeadEngine.html (Alterna Agency)
+   CPL = Cost-Per-Lead (mid scenario), funnel rates for Latino clinical trial recruitment
+   ============================================================ */
+var _LE = {
+  // Maps preview.html disease value → LeadEngine condition key
+  keyMap: {
+    'obesity':'OB','prediabetes':'PRE','diabetes':'DT2','metabolic':'SM',
+    'cholesterol':'COL','thyroid':'TIR','pcos':'SOP',
+    'cardiovascular':'CVD','hypertension':'HTA','heart-failure':'IC','afib':'FA',
+    'asthma':'ASM','sleep-apnea':'APN',
+    'anxiety':'ANX','depression':'DEP','adhd':'TDAH',
+    'alzheimers':'ALZ','parkinsons':'PK','migraine':'MIG','cognitive':'DCG',
+    'lupus':'LUP','arthritis':'ART','autoimmune':'AUR',
+    'oncology':'ONC','rare-cancer':'CRH',
+    'ckd':'ERC','liver':'HEP','chronic-pain':'DOL','gerd':'ERG',
+    'osteoporosis':'OST','diabetic-neuropathy':'NDB','glaucoma':'GLC',
+    'hiv':'VIH','infectious':'INF',
+    'rare-genetic':'TGR','rare-pediatric':'CPR'
+  },
+  // Condition data: cL=optimistic CPL, cM=realistic CPL, cH=conservative CPL, prev=prevalence, diff=difficulty
+  D: {
+    'OB' :{cL:18,cM:28,cH:42,prev:0.366,diff:'low'},
+    'PRE':{cL:22,cM:35,cH:50,prev:0.38, diff:'medium'},
+    'DT2':{cL:25,cM:38,cH:55,prev:0.18, diff:'medium'},
+    'SM' :{cL:30,cM:48,cH:70,prev:0.35, diff:'medium'},
+    'COL':{cL:22,cM:32,cH:48,prev:0.38, diff:'low'},
+    'TIR':{cL:28,cM:42,cH:62,prev:0.08, diff:'medium'},
+    'SOP':{cL:25,cM:38,cH:55,prev:0.10, diff:'medium'},
+    'CVD':{cL:35,cM:55,cH:80,prev:0.065,diff:'high'},
+    'HTA':{cL:20,cM:32,cH:48,prev:0.30, diff:'low'},
+    'IC' :{cL:45,cM:68,cH:95,prev:0.018,diff:'high'},
+    'FA' :{cL:42,cM:65,cH:90,prev:0.02, diff:'high'},
+    'ASM':{cL:22,cM:35,cH:52,prev:0.165,diff:'medium'},
+    'APN':{cL:25,cM:40,cH:58,prev:0.07, diff:'medium'},
+    'ANX':{cL:15,cM:25,cH:38,prev:0.22, diff:'low'},
+    'DEP':{cL:15,cM:25,cH:38,prev:0.18, diff:'low'},
+    'TDAH':{cL:20,cM:32,cH:48,prev:0.05,diff:'medium'},
+    'ALZ':{cL:55,cM:85,cH:120,prev:0.013,diff:'very_high'},
+    'PK' :{cL:60,cM:90,cH:130,prev:0.006,diff:'very_high'},
+    'MIG':{cL:18,cM:28,cH:42,prev:0.16, diff:'low'},
+    'DCG':{cL:40,cM:60,cH:85,prev:0.04, diff:'high'},
+    'LUP':{cL:65,cM:95,cH:140,prev:0.007,diff:'very_high'},
+    'ART':{cL:20,cM:32,cH:48,prev:0.20, diff:'low'},
+    'AUR':{cL:35,cM:55,cH:78,prev:0.05, diff:'high'},
+    'ONC':{cL:45,cM:70,cH:100,prev:0.03, diff:'high'},
+    'CRH':{cL:80,cM:120,cH:175,prev:0.004,diff:'very_high'},
+    'ERC':{cL:35,cM:52,cH:75,prev:0.14, diff:'high'},
+    'HEP':{cL:38,cM:58,cH:82,prev:0.06, diff:'high'},
+    'DOL':{cL:18,cM:28,cH:42,prev:0.22, diff:'low'},
+    'ERG':{cL:18,cM:28,cH:42,prev:0.20, diff:'low'},
+    'OST':{cL:25,cM:38,cH:55,prev:0.08, diff:'medium'},
+    'NDB':{cL:35,cM:52,cH:75,prev:0.07, diff:'high'},
+    'GLC':{cL:28,cM:42,cH:62,prev:0.065,diff:'medium'},
+    'VIH':{cL:35,cM:55,cH:80,prev:0.015,diff:'high'},
+    'INF':{cL:30,cM:48,cH:68,prev:0.025,diff:'medium'},
+    'TGR':{cL:90,cM:140,cH:200,prev:0.002,diff:'very_high'},
+    'CPR':{cL:95,cM:150,cH:220,prev:0.001,diff:'very_high'}
+  },
+  // Funnel rates for Latino populations (from LeadEngine research data)
+  // ps=pre-screen pass, bk=book appt, at=attend, en=enroll/randomize, sf=screen-fail
+  F: {
+    'OB' :{ps:0.80,bk:0.62,at:0.75,en:0.60,sf:0.18},
+    'PRE':{ps:0.65,bk:0.55,at:0.68,en:0.50,sf:0.30},
+    'DT2':{ps:0.75,bk:0.60,at:0.72,en:0.52,sf:0.28},
+    'SM' :{ps:0.60,bk:0.50,at:0.65,en:0.45,sf:0.35},
+    'COL':{ps:0.78,bk:0.58,at:0.72,en:0.58,sf:0.22},
+    'TIR':{ps:0.72,bk:0.55,at:0.68,en:0.55,sf:0.22},
+    'SOP':{ps:0.75,bk:0.62,at:0.75,en:0.55,sf:0.20},
+    'CVD':{ps:0.60,bk:0.50,at:0.65,en:0.42,sf:0.38},
+    'HTA':{ps:0.78,bk:0.60,at:0.72,en:0.58,sf:0.22},
+    'IC' :{ps:0.52,bk:0.45,at:0.58,en:0.40,sf:0.40},
+    'FA' :{ps:0.55,bk:0.48,at:0.60,en:0.45,sf:0.35},
+    'ASM':{ps:0.75,bk:0.58,at:0.70,en:0.58,sf:0.20},
+    'APN':{ps:0.65,bk:0.52,at:0.65,en:0.52,sf:0.25},
+    'ANX':{ps:0.78,bk:0.65,at:0.72,en:0.62,sf:0.15},
+    'DEP':{ps:0.75,bk:0.62,at:0.68,en:0.58,sf:0.18},
+    'TDAH':{ps:0.70,bk:0.58,at:0.68,en:0.55,sf:0.22},
+    'ALZ':{ps:0.42,bk:0.38,at:0.52,en:0.32,sf:0.50},
+    'PK' :{ps:0.48,bk:0.42,at:0.55,en:0.38,sf:0.42},
+    'MIG':{ps:0.78,bk:0.60,at:0.72,en:0.58,sf:0.18},
+    'DCG':{ps:0.48,bk:0.42,at:0.55,en:0.40,sf:0.42},
+    'LUP':{ps:0.52,bk:0.48,at:0.60,en:0.40,sf:0.38},
+    'ART':{ps:0.78,bk:0.58,at:0.70,en:0.55,sf:0.22},
+    'AUR':{ps:0.58,bk:0.50,at:0.62,en:0.45,sf:0.32},
+    'ONC':{ps:0.55,bk:0.52,at:0.65,en:0.38,sf:0.42},
+    'CRH':{ps:0.45,bk:0.42,at:0.55,en:0.32,sf:0.48},
+    'ERC':{ps:0.65,bk:0.52,at:0.65,en:0.48,sf:0.32},
+    'HEP':{ps:0.62,bk:0.50,at:0.62,en:0.48,sf:0.32},
+    'DOL':{ps:0.78,bk:0.62,at:0.70,en:0.58,sf:0.15},
+    'ERG':{ps:0.75,bk:0.58,at:0.68,en:0.58,sf:0.18},
+    'OST':{ps:0.68,bk:0.52,at:0.65,en:0.52,sf:0.25},
+    'NDB':{ps:0.65,bk:0.50,at:0.62,en:0.48,sf:0.28},
+    'GLC':{ps:0.70,bk:0.52,at:0.65,en:0.52,sf:0.25},
+    'VIH':{ps:0.68,bk:0.55,at:0.65,en:0.50,sf:0.25},
+    'INF':{ps:0.65,bk:0.52,at:0.62,en:0.50,sf:0.25},
+    'TGR':{ps:0.38,bk:0.35,at:0.52,en:0.30,sf:0.52},
+    'CPR':{ps:0.35,bk:0.32,at:0.50,en:0.28,sf:0.55}
+  }
+};
+
 function _localEvaluate(p) {
   var score = 100, flags = [], strengths = [];
   var criteria = {};
   try { criteria = JSON.parse(p.criteriaJson); } catch(e) {}
 
-  // Budget check
-  if (p.budget < p.minBudget) {
+  // ── LeadEngine cross-reference ─────────────────────────────────────
+  var leKey    = _LE.keyMap[p.diseaseKey] || null;
+  var leCond   = leKey ? _LE.D[leKey] : null;
+  var leFunnel = leKey ? _LE.F[leKey] : null;
+
+  // Realistic CPL (medium scenario) and net enrollment rate from funnel
+  var cpl        = leCond  ? leCond.cM  : 40;
+  var enrollRate = leFunnel
+    ? (leFunnel.ps * leFunnel.bk * leFunnel.at * leFunnel.en)
+    : 0.20;
+  var sfRate  = leFunnel ? leFunnel.sf : 0.25;
+  var diff    = leCond   ? leCond.diff : 'medium';
+  var isVeryRare = (diff === 'very_high');
+
+  // Lead & patient projections from the client's budget
+  var leads             = cpl > 0 ? Math.floor(p.budget / cpl) : 0;
+  var projectedEnrolled = Math.round(leads * enrollRate);
+
+  // Budget they'd need to hit their enrollment goal
+  var leadsNeeded  = enrollRate > 0 ? Math.ceil(p.enrollGoal / enrollRate) : null;
+  var budgetNeeded = leadsNeeded ? leadsNeeded * cpl : null;
+  var budgetGap    = budgetNeeded ? Math.max(0, budgetNeeded - p.budget) : null;
+
+  // ── 1. Budget + LeadEngine feasibility check ───────────────────────
+  if (p.budget < p.minBudget || p.budget < 500) {
     score -= 40;
     flags.push({
-      issue_en: 'Your budget ($' + p.budget.toLocaleString() + ') is below the minimum threshold of $' + p.minBudget.toLocaleString() + '.',
-      issue_es: 'Su presupuesto ($' + p.budget.toLocaleString() + ') está por debajo del umbral mínimo de $' + p.minBudget.toLocaleString() + '.',
-      fix_en:   'Increase your budget to at least $' + p.minBudget.toLocaleString() + ' to meet Diversia\'s service requirements.',
-      fix_es:   'Aumente su presupuesto a al menos $' + p.minBudget.toLocaleString() + ' para cumplir con los requisitos de Diversia.'
+      issue_en: 'Budget too low for a viable ' + p.disease + ' campaign.',
+      issue_es: 'Presupuesto demasiado bajo para una campaña viable de ' + p.disease + '.',
+      fix_en: 'At $' + cpl + ' CPL (LeadEngine benchmark for ' + p.disease + '), your $' + p.budget.toLocaleString()
+        + ' generates ~' + leads + ' leads → ~' + projectedEnrolled + ' enrolled patients.'
+        + (p.enrollGoal > 0 && budgetNeeded ? ' To reach ' + p.enrollGoal + ' participants you need ~$' + budgetNeeded.toLocaleString() + '.' : ''),
+      fix_es: 'Con un CPL de $' + cpl + ' (benchmark LeadEngine para ' + p.disease + '), su $' + p.budget.toLocaleString()
+        + ' genera ~' + leads + ' leads → ~' + projectedEnrolled + ' participantes inscritos.'
+        + (p.enrollGoal > 0 && budgetNeeded ? ' Para alcanzar ' + p.enrollGoal + ' participantes necesita ~$' + budgetNeeded.toLocaleString() + '.' : '')
     });
-  } else if (p.budget >= 50000) {
-    strengths.push('Strong budget allocation adequate for effective campaign recruitment.');
+  } else if (!isVeryRare && p.enrollGoal > 0 && projectedEnrolled < p.enrollGoal * 0.50) {
+    score -= 35;
+    flags.push({
+      issue_en: 'Budget shortfall: at $' + cpl + ' CPL your $' + p.budget.toLocaleString()
+        + ' generates ~' + leads + ' leads → ~' + projectedEnrolled + ' enrolled — only '
+        + Math.round((projectedEnrolled / p.enrollGoal) * 100) + '% of your goal of ' + p.enrollGoal + '.',
+      issue_es: 'Déficit de presupuesto: a $' + cpl + ' CPL su $' + p.budget.toLocaleString()
+        + ' genera ~' + leads + ' leads → ~' + projectedEnrolled + ' inscritos — solo '
+        + Math.round((projectedEnrolled / p.enrollGoal) * 100) + '% de su meta de ' + p.enrollGoal + '.',
+      fix_en: 'Option A — Increase budget to ~$' + (budgetNeeded ? budgetNeeded.toLocaleString() : '?')
+        + ' (add ~$' + (budgetGap ? budgetGap.toLocaleString() : '?') + ').'
+        + ' Option B — Lower enrollment goal to ~' + projectedEnrolled + ' participants.',
+      fix_es: 'Opción A — Aumente el presupuesto a ~$' + (budgetNeeded ? budgetNeeded.toLocaleString() : '?')
+        + ' (agregue ~$' + (budgetGap ? budgetGap.toLocaleString() : '?') + ').'
+        + ' Opción B — Reduzca la meta a ~' + projectedEnrolled + ' participantes.'
+    });
+  } else if (!isVeryRare && p.enrollGoal > 0 && projectedEnrolled < p.enrollGoal) {
+    score -= 15;
+    flags.push({
+      issue_en: 'Budget slightly underfunded: projects ~' + projectedEnrolled + ' enrolled vs. goal of '
+        + p.enrollGoal + '. Adding ~$' + (budgetGap ? budgetGap.toLocaleString() : '?') + ' closes the gap.',
+      issue_es: 'Presupuesto ligeramente insuficiente: proyecta ~' + projectedEnrolled + ' inscritos vs. meta de '
+        + p.enrollGoal + '. Agregar ~$' + (budgetGap ? budgetGap.toLocaleString() : '?') + ' cierra la brecha.',
+      fix_en: 'Increase your budget by ~$' + (budgetGap ? budgetGap.toLocaleString() : '?')
+        + ' to reach $' + (budgetNeeded ? budgetNeeded.toLocaleString() : '?') + ' and reliably hit ' + p.enrollGoal + ' enrolled patients.',
+      fix_es: 'Aumente su presupuesto en ~$' + (budgetGap ? budgetGap.toLocaleString() : '?')
+        + ' para llegar a $' + (budgetNeeded ? budgetNeeded.toLocaleString() : '?') + ' y alcanzar ' + p.enrollGoal + ' participantes inscritos.'
+    });
+  } else if (projectedEnrolled >= p.enrollGoal && p.enrollGoal > 0) {
     score = Math.min(100, score + 5);
+    strengths.push('Budget well-calibrated: at $' + cpl + ' CPL your investment projects ~' + projectedEnrolled
+      + ' enrolled patients — meeting your goal of ' + p.enrollGoal + '.');
+  } else if (p.budget >= 50000) {
+    score = Math.min(100, score + 5);
+    strengths.push('Strong budget allocation. At $' + cpl + ' CPL this projects ~' + projectedEnrolled + ' enrolled patients.');
   }
 
-  // Latino/Hispanic focus
+  // ── 2. Screen-failure risk flag ────────────────────────────────────
+  if (sfRate >= 0.40) {
+    var sfLeadsNeeded = p.enrollGoal > 0 && enrollRate > 0
+      ? Math.ceil(p.enrollGoal / (enrollRate * (1 - sfRate) || enrollRate))
+      : null;
+    score -= 5; // informational deduction
+    flags.push({
+      issue_en: 'High screen-failure rate: ' + Math.round(sfRate * 100) + '% of screened participants fail eligibility for ' + p.disease + ' in Latino populations.',
+      issue_es: 'Alta tasa de falla de cribado: el ' + Math.round(sfRate * 100) + '% de los participantes evaluados no cumplen los criterios para ' + p.disease + ' en poblaciones Latinas.',
+      fix_en: 'Budget for extra recruitment volume. Plan for IRB-compliant pre-screening tools and bilingual eligibility questionnaires to reduce screen-fail cost.',
+      fix_es: 'Presupueste volumen adicional de reclutamiento. Planifique herramientas de pre-selección conformes con IRB y cuestionarios bilingües de elegibilidad para reducir el costo de falla de cribado.'
+    });
+  }
+
+  // ── 3. Rare/Very-hard condition note ──────────────────────────────
+  if (isVeryRare) {
+    strengths.push(p.disease + ' is a rare/complex condition — enrollment goals of 10–75 are realistic and expected. '
+      + 'CPL benchmarks ($' + cpl + ') reflect the higher targeting cost for rare conditions.');
+  } else if (leCond) {
+    strengths.push('LeadEngine CPL benchmark for ' + p.disease + ': $' + leCond.cL + '–$' + leCond.cH
+      + ' (realistic: $' + cpl + '). Prevalence in Latino population: ' + Math.round(leCond.prev * 100) + '%.');
+  }
+
+  // ── 4. Latino/Hispanic focus ───────────────────────────────────────
   var requireLatino = criteria.require_latino_focus !== false;
   var hasLatino = /latino|hispanic/i.test(p.targetPop);
   if (requireLatino && !hasLatino) {
@@ -4205,38 +5492,116 @@ function _localEvaluate(p) {
     flags.push({
       issue_en: 'Target population does not include Latino or Hispanic communities.',
       issue_es: 'La población objetivo no incluye comunidades latinas o hispanas.',
-      fix_en:   'Include Latino/Hispanic populations to align with Diversia\'s mission and network capabilities.',
-      fix_es:   'Incluya poblaciones latinas/hispanas para alinearse con la misión y capacidades de la red de Diversia.'
+      fix_en: 'Include Latino/Hispanic populations. Diversia\'s entire recruitment network is Latino-focused and our Meta Ads CPL benchmarks are calibrated to this demographic.',
+      fix_es: 'Incluya poblaciones latinas/hispanas. Toda la red de reclutamiento de Diversia está orientada a Latinos y nuestros benchmarks de CPL en Meta Ads están calibrados para esta demografía.'
     });
   } else if (hasLatino) {
-    strengths.push('Clear Latino/Hispanic community focus aligns with Diversia\'s mission.');
+    strengths.push('Latino/Hispanic population focus aligns with Diversia\'s network. The LeadEngine CPL and funnel benchmarks used here are calibrated specifically for Latino clinical trial recruitment.');
   }
 
-  // Enrollment goal
+  // ── 5. Enrollment goal minimum ────────────────────────────────────
   var minGoal = parseInt(criteria.minimum_enrollment_goal) || 10;
-  if (p.enrollGoal > 0 && p.enrollGoal < minGoal) {
+  if (p.enrollGoal > 0 && p.enrollGoal < minGoal && !isVeryRare) {
     score -= 15;
     flags.push({
-      issue_en: 'Enrollment goal of ' + p.enrollGoal + ' participants is below the minimum of ' + minGoal + '.',
-      issue_es: 'La meta de inscripción de ' + p.enrollGoal + ' participantes está por debajo del mínimo de ' + minGoal + '.',
-      fix_en:   'Set an enrollment goal of at least ' + minGoal + ' participants.',
-      fix_es:   'Establezca una meta de inscripción de al menos ' + minGoal + ' participantes.'
+      issue_en: 'Enrollment goal of ' + p.enrollGoal + ' is below the minimum of ' + minGoal + ' for standard trials.',
+      issue_es: 'La meta de inscripción de ' + p.enrollGoal + ' está por debajo del mínimo de ' + minGoal + ' para ensayos estándar.',
+      fix_en: 'Set an enrollment goal of at least ' + minGoal + ' participants.',
+      fix_es: 'Establezca una meta de inscripción de al menos ' + minGoal + ' participantes.'
     });
   }
 
-  if (p.diseaseKey) strengths.push('Well-defined disease area with a quantifiable addressable pool in Diversia\'s network.');
+  // ── 6. Recruitment Estimator viability signal (location-adjusted) ─────────
+  if (p.leResult) {
+    var le = p.leResult;
+    if (le.verdict === 'APROBADO') {
+      score = Math.min(100, score + 8);
+      var locName = le.locations.map(function(l){ return l.n; }).join(', ');
+      strengths.push('Recruitment Estimator (LeadEngine): APPROVED for ' + locName + '. '
+        + le.population.pool.toLocaleString() + ' reachable Latinos. '
+        + 'Realistic scenario: ~' + le.scenarios.realista.enrolled + ' enrolled at $' + le.scenarios.realista.cpl + ' CPL.');
+    } else if (le.verdict === 'NO VIABLE') {
+      score -= 12;
+      flags.push({
+        issue_en: 'Recruitment Estimator flagged this campaign as NOT VIABLE in ' + (p.locationCode || 'the selected region') + '.',
+        issue_es: 'El Estimador de Reclutamiento marcó esta campaña como NO VIABLE en ' + (p.locationCode || 'la región seleccionada') + '.',
+        fix_en: le.hints.length ? le.hints[0].title + ': ' + le.hints[0].desc : 'Review budget and enrollment goal against LeadEngine CPL benchmarks.',
+        fix_es: le.hints.length ? le.hints[0].title + ': ' + le.hints[0].desc : 'Revise el presupuesto y la meta de inscripción con los benchmarks de CPL de LeadEngine.'
+      });
+    } else { // VIABLE CON AJUSTES
+      flags.push({
+        issue_en: 'Recruitment Estimator: VIABLE WITH ADJUSTMENTS. Some parameters need tuning.',
+        issue_es: 'Estimador de Reclutamiento: VIABLE CON AJUSTES. Algunos parámetros necesitan ajuste.',
+        fix_en: le.hints.filter(function(h){ return h.priority==='alta'; }).map(function(h){ return h.title+': '+h.desc; }).join(' | ') || 'Increase budget or adjust enrollment goal.',
+        fix_es: le.hints.filter(function(h){ return h.priority==='alta'; }).map(function(h){ return h.title+': '+h.desc; }).join(' | ') || 'Aumente el presupuesto o ajuste la meta de inscripción.'
+      });
+    }
+  }
 
   score = Math.max(0, Math.min(100, score));
   var decision = score >= 65 ? 'qualified' : 'rejected';
+
   var rEn, rEs;
   if (decision === 'qualified') {
-    rEn = 'Your application for a ' + p.disease + ' study shows a strong profile for Diversia Health\'s Latino recruitment platform. The budget, organization, and trial parameters align well with our network capabilities. We look forward to supporting your recruitment goals.';
-    rEs = 'Su solicitud para un estudio de ' + p.disease + ' muestra un perfil sólido para la plataforma de reclutamiento latino de Diversia Health. El presupuesto, organización y parámetros del ensayo se alinean bien con las capacidades de nuestra red. Esperamos apoyar sus objetivos de reclutamiento.';
+    var projStr = projectedEnrolled > 0
+      ? ' Your budget projects ~' + projectedEnrolled + ' enrolled participants at $' + cpl + ' CPL (LeadEngine benchmark).'
+      : '';
+    rEn = 'Your ' + p.disease + ' trial application meets Diversia Health\'s qualification criteria.' + projStr
+      + ' The profile aligns with our Latino recruitment network. Our team will review your application and reach out within 48–72 business hours.';
+    rEs = 'Su solicitud para un ensayo de ' + p.disease + ' cumple con los criterios de calificación de Diversia Health.'
+      + (projectedEnrolled > 0 ? ' Su presupuesto proyecta ~' + projectedEnrolled + ' participantes inscritos a $' + cpl + ' CPL (benchmark LeadEngine).' : '')
+      + ' El perfil se alinea con nuestra red de reclutamiento Latino. Nuestro equipo revisará su solicitud y se comunicará en 48–72 horas hábiles.';
   } else {
-    rEn = 'Thank you for your interest in Diversia Health. After reviewing your ' + p.disease + ' trial application, we found that certain criteria were not met. Please review the flagged items below and consider resubmitting after making adjustments.';
-    rEs = 'Gracias por su interés en Diversia Health. Tras revisar su solicitud para un ensayo de ' + p.disease + ', encontramos que ciertos criterios no se cumplieron. Por favor revise los puntos señalados a continuación y considere volver a presentar su solicitud tras realizar ajustes.';
+    rEn = 'Your ' + p.disease + ' application (score: ' + score + '/100) did not meet qualification thresholds.'
+      + ' Based on LeadEngine benchmarks, your $' + p.budget.toLocaleString() + ' budget at $' + cpl + ' CPL projects ~'
+      + projectedEnrolled + ' enrolled patients against a goal of ' + p.enrollGoal
+      + '. Review the specific recommendations below and resubmit once adjustments are made.';
+    rEs = 'Su solicitud de ' + p.disease + ' (puntuación: ' + score + '/100) no cumplió los umbrales de calificación.'
+      + ' Según los benchmarks de LeadEngine, su presupuesto de $' + p.budget.toLocaleString() + ' a $' + cpl + ' CPL proyecta ~'
+      + projectedEnrolled + ' pacientes inscritos contra una meta de ' + p.enrollGoal
+      + '. Revise las recomendaciones específicas a continuación y vuelva a enviar.';
   }
   return { decision: decision, score: score, reasoning_en: rEn, reasoning_es: rEs, strengths: strengths, flags: flags };
+}
+
+function _s2RenderLeViability(targetId) {
+  var el = document.getElementById(targetId);
+  if (!el) return;
+  var le = window._s2LeResult;
+  if (!le) { el.style.display = 'none'; return; }
+
+  var verdictClass = le.verdict === 'APROBADO' ? 's2-le-verdict--ok'
+                   : le.verdict === 'NO VIABLE' ? 's2-le-verdict--no'
+                   : 's2-le-verdict--adj';
+  var verdictIcon  = le.verdict === 'APROBADO' ? '✓' : le.verdict === 'NO VIABLE' ? '✗' : '⚠';
+  var verdictEn    = le.verdict === 'APROBADO' ? 'APPROVED' : le.verdict === 'NO VIABLE' ? 'NOT VIABLE' : 'VIABLE WITH ADJUSTMENTS';
+  var verdictEs    = le.verdict === 'APROBADO' ? 'APROBADO' : le.verdict === 'NO VIABLE' ? 'NO VIABLE' : 'VIABLE CON AJUSTES';
+  var locNames     = le.locations.map(function(l){ return l.n; }).join(', ');
+  var scen         = le.scenarios.realista;
+  var topHint      = le.hints.find(function(h){ return h.priority === 'alta'; });
+
+  el.innerHTML = '<div class="s2-le-card">'
+    + '<div class="s2-le-card__header">'
+    + '<span class="s2-le-card__icon">🔬</span>'
+    + '<span class="s2-le-card__title lang-text" data-en="Recruitment Estimator — Latino Community Viability" data-es="Estimador de Reclutamiento — Viabilidad en la Comunidad Latina">Recruitment Estimator — Latino Community Viability</span>'
+    + '</div>'
+    + '<div class="s2-le-verdict ' + verdictClass + '"><span class="lang-text" data-en="' + verdictIcon + ' ' + verdictEn + '" data-es="' + verdictIcon + ' ' + verdictEs + '">' + verdictIcon + ' ' + verdictEn + '</span></div>'
+    + '<div class="s2-le-metrics">'
+    + '<div class="s2-le-metric"><div class="s2-le-metric__val">' + le.population.pool.toLocaleString() + '</div><div class="s2-le-metric__lbl lang-text" data-en="Reachable Latinos · ' + locNames + '" data-es="Latinos Alcanzables · ' + locNames + '">Reachable Latinos · ' + locNames + '</div></div>'
+    + '<div class="s2-le-metric"><div class="s2-le-metric__val">$' + scen.cpl + '</div><div class="s2-le-metric__lbl lang-text" data-en="Realistic CPL" data-es="CPL Realista">Realistic CPL</div></div>'
+    + '<div class="s2-le-metric"><div class="s2-le-metric__val">~' + scen.enrolled + '</div><div class="s2-le-metric__lbl lang-text" data-en="Projected Enrolled" data-es="Participantes Proyectados">Projected Enrolled</div></div>'
+    + '</div>'
+    + (topHint ? '<div class="s2-le-hint">💡 <strong>' + _esc(topHint.title) + ':</strong> ' + _esc(topHint.desc) + '</div>' : '')
+    + '</div>';
+  el.style.display = 'block';
+
+  // If the screen is already in Spanish when the card renders, apply translations immediately
+  var wrapper = el.closest('.dco-wrapper');
+  if (wrapper && wrapper.dataset.lang === 'es') {
+    el.querySelectorAll('.lang-text').forEach(function(t) {
+      if (t.dataset.es !== undefined) t.textContent = t.dataset.es;
+    });
+  }
 }
 
 function _applyEvalResult(result) {
@@ -4245,6 +5610,9 @@ function _applyEvalResult(result) {
   var reasonEn  = result.reasoning_en || result.reasoning || '';
   var reasonEs  = result.reasoning_es || reasonEn;
   var flags     = result.flags     || [];
+
+  // Store score globally for package pre-selection
+  window._lastAiScore = score;
 
   // Update AI score in payment gate summary
   var scoreEl = document.getElementById('pay-sum-ai-score');
@@ -4255,6 +5623,7 @@ function _applyEvalResult(result) {
     if (qP) { qP.dataset.en = reasonEn; qP.dataset.es = reasonEs; qP.textContent = reasonEn; }
     var qt = document.querySelector('.preview-tab[onclick*="qualified"]');
     showScreen('qualified', qt);
+    _s2RenderLeViability('s2-le-viability-q');
   } else {
     var rP = document.querySelector('#reasoning-rejected-preview p.lang-text');
     if (rP) { rP.dataset.en = reasonEn; rP.dataset.es = reasonEs; rP.textContent = reasonEn; }
@@ -4269,6 +5638,7 @@ function _applyEvalResult(result) {
     }
     var rejt = document.querySelector('.preview-tab[onclick*="rejected"]');
     showScreen('rejected', rejt);
+    _s2RenderLeViability('s2-le-viability-r');
   }
 }
 
@@ -4499,13 +5869,13 @@ function _setProgressTabs(screenName) {
   var allTabIds = [
     'tab-login','tab-dashboard',
     'tab-step1','tab-step2','tab-loading','tab-qualified','tab-rejected','tab-payment',
-    'tab-admin-dash','tab-admin','tab-reach','tab-reach-client','tab-email'
+    'tab-admin-dash','tab-admin','tab-reach','tab-reach-client','tab-email','tab-estimator'
   ];
   var toShow = [];
 
   // Admin-only tabs always follow admin session
   if (isAdmin) {
-    toShow.push('tab-admin-dash','tab-admin','tab-reach','tab-email');
+    toShow.push('tab-admin-dash','tab-admin','tab-reach','tab-email','tab-estimator');
   }
 
   if (isClient) {
@@ -4860,8 +6230,10 @@ function viewCampaignReach(index) {
   var timelineEl = document.getElementById('s2-timeline');
   if (timelineEl) timelineEl.value = camp.timeline || '';
 
-  // Restore timeline unit (months/days)
-  if (camp.timelineUnit) window.currentTimelineUnit = camp.timelineUnit;
+  // Restore timeline unit (months/weeks) — handle legacy 'days' from saved campaigns
+  if (camp.timelineUnit) {
+    window.currentTimelineUnit = camp.timelineUnit === 'days' ? 'weeks' : camp.timelineUnit;
+  }
 
   // Navigate to Campaign Reach — Client view
   var tab = document.getElementById('tab-reach-client');

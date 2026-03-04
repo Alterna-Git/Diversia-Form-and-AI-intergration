@@ -24,6 +24,9 @@
         <!-- Populated by JS: shows reasoning_en or reasoning_es based on current language -->
     </div>
 
+    <!-- Recruitment Estimator Viability Card (populated by JS after AI result) -->
+    <div id="dco-le-viability-q" style="display:none;margin-bottom:20px"></div>
+
     <div class="dco-result__cta">
         <p class="dco-result__cta-text" data-i18n
            data-en="The next step is to complete your payment to activate your client account."

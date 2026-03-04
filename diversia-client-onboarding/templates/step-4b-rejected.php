@@ -23,6 +23,9 @@
         We have carefully reviewed your application.
     </p>
 
+    <!-- Recruitment Estimator Viability Card (populated by JS after AI result) -->
+    <div id="dco-le-viability-r" style="display:none;margin-bottom:20px"></div>
+
     <!-- AI reasoning -->
     <div class="dco-result__reasoning" id="dco-reasoning-rejected">
         <!-- Populated by JS -->

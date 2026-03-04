@@ -35,6 +35,7 @@ require_once DCO_PLUGIN_DIR . 'includes/class-stripe-webhook.php';
 require_once DCO_PLUGIN_DIR . 'includes/class-client-provisioner.php';
 require_once DCO_PLUGIN_DIR . 'includes/class-ajax-handlers.php';
 require_once DCO_PLUGIN_DIR . 'includes/class-shortcodes.php';
+require_once DCO_PLUGIN_DIR . 'includes/class-recruitment-estimator.php';
 
 class Diversia_Client_Onboarding {
 
@@ -59,6 +60,7 @@ class Diversia_Client_Onboarding {
         DCO_Admin_Settings::init();
         DCO_Applications_Admin::init();
         DCO_AI_Parameters::init();
+        DCO_Recruitment_Estimator::init();
 
         // Register pending_client role on init so it exists before any user creation
         add_action('init', array($this, 'register_pending_client_role'));
@@ -121,12 +123,13 @@ class Diversia_Client_Onboarding {
         );
 
         wp_localize_script('dco-frontend', 'dcoData', array(
-            'ajaxurl'        => admin_url('admin-ajax.php'),
-            'nonce_step1'    => wp_create_nonce('dco_register_step1'),
-            'nonce_step2'    => wp_create_nonce('dco_register_step2'),
-            'nonce_status'   => wp_create_nonce('dco_check_ai_status'),
-            'nonce_stripe'   => wp_create_nonce('dco_create_stripe_session'),
-            'is_logged_in'   => is_user_logged_in() ? 1 : 0,
+            'ajaxurl'            => admin_url('admin-ajax.php'),
+            'nonce_step1'        => wp_create_nonce('dco_register_step1'),
+            'nonce_step2'        => wp_create_nonce('dco_register_step2'),
+            'nonce_status'       => wp_create_nonce('dco_check_ai_status'),
+            'nonce_stripe'       => wp_create_nonce('dco_create_stripe_session'),
+            'nonce_new_campaign' => wp_create_nonce('dco_start_new_campaign'),
+            'is_logged_in'       => is_user_logged_in() ? 1 : 0,
         ));
     }
 }

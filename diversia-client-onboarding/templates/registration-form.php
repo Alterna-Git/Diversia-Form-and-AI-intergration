@@ -36,7 +36,11 @@
 
     <!-- ===== STEP 1 ===== -->
     <div class="dco-panel" id="dco-step-1">
-        <?php include DCO_PLUGIN_DIR . 'templates/step-1-account.php'; ?>
+        <?php if (!empty($dco_is_returning_client)): ?>
+            <?php include DCO_PLUGIN_DIR . 'templates/step-1-new-campaign.php'; ?>
+        <?php else: ?>
+            <?php include DCO_PLUGIN_DIR . 'templates/step-1-account.php'; ?>
+        <?php endif; ?>
     </div>
 
     <!-- ===== STEP 2 ===== -->
