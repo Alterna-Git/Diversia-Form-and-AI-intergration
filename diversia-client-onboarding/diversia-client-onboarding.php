@@ -3,7 +3,7 @@
  * Plugin Name: Diversia Client Onboarding
  * Plugin URI: https://diversiahealth.com
  * Description: Multi-step client registration with AI qualification (OpenAI GPT-4o) and Stripe payment gating. Only qualified clients gain access to payment and are provisioned as active clients.
- * Version: 1.5.0
+ * Version: 1.5.3
  * Author: Jimmy
  * Author URI: mailto:Jimmy@alternaagancy.com
  * License: GPL v2 or later
@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Plugin constants
-define('DCO_VERSION',     '1.5.0');
+define('DCO_VERSION',     '1.5.3');
 define('DCO_PLUGIN_DIR',  plugin_dir_path(__FILE__));
 define('DCO_PLUGIN_URL',  plugin_dir_url(__FILE__));
 define('DCO_TEXT_DOMAIN', 'diversia-client-onboarding');
@@ -27,7 +27,8 @@ require_once DCO_PLUGIN_DIR . 'includes/class-applications-admin.php';
 require_once DCO_PLUGIN_DIR . 'includes/class-ai-parameters.php';
 require_once DCO_PLUGIN_DIR . 'includes/class-rate-limiter.php';
 require_once DCO_PLUGIN_DIR . 'includes/class-qualification-token.php';
-require_once DCO_PLUGIN_DIR . 'includes/class-openai-client.php';
+require_once DCO_PLUGIN_DIR . 'includes/class-lead-engine.php';
+require_once DCO_PLUGIN_DIR . 'includes/class-anthropic-client.php';
 require_once DCO_PLUGIN_DIR . 'includes/class-meta-client.php';
 require_once DCO_PLUGIN_DIR . 'includes/class-meta-webhook.php';
 require_once DCO_PLUGIN_DIR . 'includes/class-stripe-client.php';
@@ -114,10 +115,19 @@ class Diversia_Client_Onboarding {
             DCO_VERSION
         );
 
+        // Estimator must load before frontend so window._leAnalyze is available
+        wp_enqueue_script(
+            'dco-estimator',
+            DCO_PLUGIN_URL . 'assets/js/dco-estimator.js',
+            array(),
+            DCO_VERSION,
+            true
+        );
+
         wp_enqueue_script(
             'dco-frontend',
             DCO_PLUGIN_URL . 'assets/js/dco-frontend.js',
-            array('jquery'),
+            array('jquery', 'dco-estimator'),
             DCO_VERSION,
             true
         );

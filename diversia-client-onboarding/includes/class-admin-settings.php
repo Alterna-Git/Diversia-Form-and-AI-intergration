@@ -4,8 +4,8 @@ if (!defined('ABSPATH')) exit;
 class DCO_Admin_Settings {
 
     // Option keys
-    const OPT_OPENAI_API_KEY           = 'dco_openai_api_key';
-    const OPT_OPENAI_MODEL             = 'dco_openai_model';
+    const OPT_ANTHROPIC_API_KEY        = 'dco_anthropic_api_key';
+    const OPT_ANTHROPIC_MODEL          = 'dco_anthropic_model';
     const OPT_STRIPE_SECRET_KEY        = 'dco_stripe_secret_key';
     const OPT_STRIPE_PUBLISHABLE_KEY   = 'dco_stripe_publishable_key';
     const OPT_STRIPE_WEBHOOK_SECRET    = 'dco_stripe_webhook_secret';
@@ -26,8 +26,8 @@ class DCO_Admin_Settings {
     public static function init(): void {
         add_action('admin_menu',  array(__CLASS__, 'add_settings_page'));
         add_action('admin_init',  array(__CLASS__, 'register_settings'));
-        add_action('admin_post_dco_test_openai_connection', array(__CLASS__, 'handle_test_openai_connection'));
-        add_action('admin_post_dco_test_meta_connection',   array(__CLASS__, 'handle_test_meta_connection'));
+        add_action('admin_post_dco_test_anthropic_connection', array(__CLASS__, 'handle_test_anthropic_connection'));
+        add_action('admin_post_dco_test_meta_connection',      array(__CLASS__, 'handle_test_meta_connection'));
     }
 
     public static function add_settings_page(): void {
@@ -44,10 +44,10 @@ class DCO_Admin_Settings {
     public static function register_settings(): void {
         // Section: API Keys
         add_settings_section('dco_api_keys', 'API Keys', array(__CLASS__, 'render_section_api_keys'), 'dco-settings');
-        register_setting('dco_settings_group', self::OPT_OPENAI_API_KEY,         array('sanitize_callback' => array(__CLASS__, 'sanitize_api_key')));
-        register_setting('dco_settings_group', self::OPT_OPENAI_MODEL,            array('sanitize_callback' => 'sanitize_text_field'));
-        add_settings_field(self::OPT_OPENAI_API_KEY,        'OpenAI API Key',  array(__CLASS__, 'render_field_openai_api_key'),  'dco-settings', 'dco_api_keys');
-        add_settings_field(self::OPT_OPENAI_MODEL,           'OpenAI Model',    array(__CLASS__, 'render_field_openai_model'),    'dco-settings', 'dco_api_keys');
+        register_setting('dco_settings_group', self::OPT_ANTHROPIC_API_KEY, array('sanitize_callback' => array(__CLASS__, 'sanitize_api_key')));
+        register_setting('dco_settings_group', self::OPT_ANTHROPIC_MODEL,   array('sanitize_callback' => 'sanitize_text_field'));
+        add_settings_field(self::OPT_ANTHROPIC_API_KEY, 'Anthropic API Key', array(__CLASS__, 'render_field_anthropic_api_key'), 'dco-settings', 'dco_api_keys');
+        add_settings_field(self::OPT_ANTHROPIC_MODEL,   'Claude Model',      array(__CLASS__, 'render_field_anthropic_model'),   'dco-settings', 'dco_api_keys');
 
         // Section: Stripe
         add_settings_section('dco_stripe', 'Stripe Configuration', array(__CLASS__, 'render_section_stripe'), 'dco-settings');
@@ -97,8 +97,8 @@ class DCO_Admin_Settings {
         if (!current_user_can('manage_options')) {
             return;
         }
-        $test_status      = sanitize_key($_GET['dco_openai_test'] ?? '');
-        $test_msg         = sanitize_text_field(wp_unslash($_GET['dco_openai_msg'] ?? ''));
+        $test_status      = sanitize_key($_GET['dco_anthropic_test'] ?? '');
+        $test_msg         = sanitize_text_field(wp_unslash($_GET['dco_anthropic_msg'] ?? ''));
         $meta_test_status = sanitize_key($_GET['dco_meta_test'] ?? '');
         $meta_test_msg    = sanitize_text_field(wp_unslash($_GET['dco_meta_msg'] ?? ''));
         ?>
@@ -134,10 +134,10 @@ class DCO_Admin_Settings {
                 ?>
             </form>
             <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" style="margin-top:12px;display:inline-block;margin-right:16px;">
-                <?php wp_nonce_field('dco_test_openai_connection'); ?>
-                <input type="hidden" name="action" value="dco_test_openai_connection">
-                <?php submit_button('Test OpenAI Connection', 'secondary', 'submit', false); ?>
-                <span class="description" style="margin-left:8px;">Tests the currently saved OpenAI API key and model.</span>
+                <?php wp_nonce_field('dco_test_anthropic_connection'); ?>
+                <input type="hidden" name="action" value="dco_test_anthropic_connection">
+                <?php submit_button('Test Anthropic Connection', 'secondary', 'submit', false); ?>
+                <span class="description" style="margin-left:8px;">Tests the currently saved Anthropic API key and model.</span>
             </form>
             <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" style="margin-top:12px;display:inline-block;">
                 <?php wp_nonce_field('dco_test_meta_connection'); ?>
@@ -172,20 +172,20 @@ class DCO_Admin_Settings {
         <?php
     }
 
-    public static function handle_test_openai_connection(): void {
+    public static function handle_test_anthropic_connection(): void {
         if (!current_user_can('manage_options')) {
             wp_die('Unauthorized');
         }
 
-        check_admin_referer('dco_test_openai_connection');
+        check_admin_referer('dco_test_anthropic_connection');
 
-        $client = new DCO_OpenAI_Client();
+        $client = new DCO_Anthropic_Client();
         $result = $client->test_connection();
 
         wp_safe_redirect(add_query_arg(array(
-            'page'            => 'dco-settings',
-            'dco_openai_test' => $result['success'] ? 'success' : 'error',
-            'dco_openai_msg'  => $result['message'],
+            'page'               => 'dco-settings',
+            'dco_anthropic_test' => $result['success'] ? 'success' : 'error',
+            'dco_anthropic_msg'  => $result['message'],
         ), admin_url('options-general.php')));
         exit;
     }
@@ -211,7 +211,7 @@ class DCO_Admin_Settings {
     // --- Section descriptions ---
 
     public static function render_section_api_keys(): void {
-        echo '<p>Enter your OpenAI API credentials for AI qualification.</p>';
+        echo '<p>Enter your Anthropic (Claude) API credentials for AI qualification.</p>';
     }
 
     public static function render_section_stripe(): void {
@@ -233,17 +233,20 @@ class DCO_Admin_Settings {
 
     // --- Field renderers ---
 
-    public static function render_field_openai_api_key(): void {
-        $val = self::get_option(self::OPT_OPENAI_API_KEY);
-        $display = $val ? str_repeat('*', 20) . substr($val, -4) : '';
-        echo '<input type="password" name="' . esc_attr(self::OPT_OPENAI_API_KEY) . '" value="' . esc_attr($val) . '" class="regular-text" autocomplete="off" placeholder="sk-proj-...">';
-        echo '<p class="description">Your OpenAI API key from platform.openai.com</p>';
+    public static function render_field_anthropic_api_key(): void {
+        $val = self::get_option(self::OPT_ANTHROPIC_API_KEY);
+        echo '<input type="password" name="' . esc_attr(self::OPT_ANTHROPIC_API_KEY) . '" value="' . esc_attr($val) . '" class="regular-text" autocomplete="off" placeholder="sk-ant-...">';
+        echo '<p class="description">Your Anthropic API key from <a href="https://console.anthropic.com" target="_blank" rel="noopener">console.anthropic.com</a></p>';
     }
 
-    public static function render_field_openai_model(): void {
-        $val = self::get_option(self::OPT_OPENAI_MODEL, 'gpt-4o');
-        $models = array('gpt-4o' => 'GPT-4o (Recommended)', 'gpt-4o-mini' => 'GPT-4o Mini (Faster, lower cost)');
-        echo '<select name="' . esc_attr(self::OPT_OPENAI_MODEL) . '">';
+    public static function render_field_anthropic_model(): void {
+        $val    = self::get_option(self::OPT_ANTHROPIC_MODEL, 'claude-sonnet-4-6');
+        $models = array(
+            'claude-sonnet-4-6'          => 'Claude Sonnet 4.6 (Recommended)',
+            'claude-opus-4-6'            => 'Claude Opus 4.6 (Most capable)',
+            'claude-haiku-4-5-20251001'  => 'Claude Haiku 4.5 (Fastest, lowest cost)',
+        );
+        echo '<select name="' . esc_attr(self::OPT_ANTHROPIC_MODEL) . '">';
         foreach ($models as $model_id => $label) {
             echo '<option value="' . esc_attr($model_id) . '"' . selected($val, $model_id, false) . '>' . esc_html($label) . '</option>';
         }

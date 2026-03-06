@@ -119,9 +119,25 @@ class DCO_Ajax_Handlers {
             return;
         }
 
-        // Log the user in automatically so Step 2 AJAX works
+        // Log the user in automatically so Step 2 AJAX works.
+        //
+        // wp_set_auth_cookie() uses setcookie() which does NOT update $_COOKIE in the
+        // same PHP request. wp_create_nonce() calls wp_get_session_token() which reads
+        // from $_COOKIE — so if called immediately after wp_set_auth_cookie(), it gets
+        // an empty session token and creates a nonce that will NEVER validate against
+        // the browser's real auth cookie. Fix: generate the session token ourselves,
+        // inject it into $_COOKIE, then create the nonce.
         wp_set_current_user($user_id);
-        wp_set_auth_cookie($user_id, false);
+
+        $expiration = time() + (2 * DAY_IN_SECONDS);
+        $manager    = WP_Session_Tokens::get_instance($user_id);
+        $token      = $manager->create($expiration);
+
+        wp_set_auth_cookie($user_id, false, '', $token);
+
+        // Inject the logged-in cookie into $_COOKIE so wp_create_nonce() uses the
+        // correct session token in this same request.
+        $_COOKIE[LOGGED_IN_COOKIE] = wp_generate_auth_cookie($user_id, $expiration, 'logged_in', $token);
 
         wp_send_json_success(array(
             'application_id' => $application_id,
@@ -134,6 +150,9 @@ class DCO_Ajax_Handlers {
     // =========================================================================
 
     public static function handle_step2(): void {
+        // Extend PHP execution time — Anthropic API can take 30–50s
+        @set_time_limit(300);
+
         self::verify_nonce('dco_register_step2');
 
         if (!is_user_logged_in()) {
@@ -155,9 +174,12 @@ class DCO_Ajax_Handlers {
         $budget_max           = intval($_POST['budget_max'] ?? 0);
         $enrollment_goal      = intval($_POST['enrollment_goal'] ?? 0);
         $timeline_value       = intval($_POST['timeline_value'] ?? 0);
-        $timeline_unit        = ($_POST['timeline_unit'] ?? 'months') === 'days' ? 'days' : 'months';
+        $raw_unit             = sanitize_text_field($_POST['timeline_unit'] ?? 'months');
+        $timeline_unit        = in_array($raw_unit, array('days', 'weeks', 'months'), true) ? $raw_unit : 'months';
         $timeline_label       = $timeline_value > 0 ? $timeline_value . ' ' . $timeline_unit : '';
-        $timeline_months      = ($timeline_unit === 'days') ? (int) ceil($timeline_value / 30) : $timeline_value;
+        $timeline_months      = $timeline_unit === 'days'  ? (int) ceil($timeline_value / 30)
+                              : ($timeline_unit === 'weeks' ? (int) ceil($timeline_value / 4.33)
+                              : $timeline_value);
         $organization_type    = sanitize_text_field($_POST['organization_type'] ?? '');
         $organization_website = esc_url_raw($_POST['organization_website'] ?? '');
         $additional_notes     = sanitize_textarea_field($_POST['additional_notes'] ?? '');
@@ -223,8 +245,39 @@ class DCO_Ajax_Handlers {
             array('%d')
         );
 
-        // Call OpenAI synchronously
-        $ai_client = new DCO_OpenAI_Client();
+        // Run LeadEngine pre-calculation to give Claude concrete viability numbers
+        $le_budget    = $budget_max > 0 ? $budget_max : $budget_min;
+        $le_locations = array();
+        if ($campaign_country_code === 'PR') {
+            $le_locations = array('PR');
+        } elseif ($campaign_country_code === 'US' && !empty($location_code)) {
+            $le_locations = array($location_code);
+        }
+
+        $lead_engine_analysis = null;
+        if (!empty($le_locations) && $le_budget > 0 && $enrollment_goal > 0 && $timeline_months > 0) {
+            $lead_engine_analysis = DCO_Lead_Engine::format_for_ai(
+                $trial_type,
+                $le_locations,
+                $le_budget,
+                $enrollment_goal,
+                $timeline_months
+            );
+        }
+
+        // Fail fast if API key is not configured — gives a clear error instead of a silent fallback
+        $anthropic_key = DCO_Admin_Settings::get_option(DCO_Admin_Settings::OPT_ANTHROPIC_API_KEY, '');
+        if (empty($anthropic_key)) {
+            error_log('[DCO] handle_step2: Anthropic API key is not configured. Go to Settings > Diversia Client Onboarding and enter your sk-ant-... key.');
+            wp_send_json_error(array(
+                'message' => 'AI evaluation is not configured. / La evaluación de IA no está configurada. Please contact the site administrator.',
+                'code'    => 'api_key_missing',
+            ));
+            return;
+        }
+
+        // Call Anthropic (Claude) synchronously
+        $ai_client = new DCO_Anthropic_Client();
         $result = $ai_client->evaluate_application(array(
             'company_name'         => $app->company_name,
             'organization_type'    => $organization_type,
@@ -238,6 +291,7 @@ class DCO_Ajax_Handlers {
             'additional_notes'     => $additional_notes,
             'campaign_country'     => $campaign_country_name,
             'campaign_regions'     => $campaign_regions,
+            'lead_engine_analysis' => $lead_engine_analysis,
         ));
 
         $qualified = (bool) $result['qualified'];
@@ -272,6 +326,7 @@ class DCO_Ajax_Handlers {
             'reasoning_es' => $result['reasoning_es'],
             'reasoning_en' => $result['reasoning_en'],
             'score'        => $result['score'],
+            '_debug'       => $result['raw'], // visible in browser DevTools → Network tab; not shown to users
         );
 
         if ($qualified && $token) {

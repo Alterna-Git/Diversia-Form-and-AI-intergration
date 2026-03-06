@@ -326,26 +326,28 @@ var _LE_KEY_MAP = {
             hideError();
             setBtnLoading($btn, true);
 
-            // Show loading screen immediately for better UX
-            goToStep(3);
-
-            // Build form data and append location_code
+            // Inject nonce and capture form data BEFORE hiding the panel via goToStep
+            $('#dco-nonce-step2').val(state.nonceStep2 || dcoData.nonce_step2);
             var formData = $form.serialize();
-            var locationCode = $('#dco-location').val() || '';
-            if (locationCode) {
-                formData += '&location_code=' + encodeURIComponent(locationCode);
-            }
+
+            // Now show loading screen
+            goToStep(3);
 
             $.ajax({
                 url:     dcoData.ajaxurl,
                 type:    'POST',
                 data:    formData,
-                timeout: 60000, // 60s timeout for AI call
+                timeout: 120000, // 120s — 3-pass AI evaluation can take 60-90s
                 success: function (res) {
                     if (res.success) {
                         handleAiResult(res.data);
                     } else {
                         var msg = (res.data && res.data.message) ? res.data.message : 'Evaluation failed. / La evaluación falló.';
+                        var code = (res.data && res.data.code) ? res.data.code : '';
+                        console.error('[DCO] Step 2 AJAX error. Code:', code, '| Message:', msg);
+                        if (code === 'api_key_missing') {
+                            msg = 'The AI evaluation is not configured yet. Please contact support. / La evaluación AI no está configurada. Contacte al soporte.';
+                        }
                         goToStep(2);
                         showError(msg);
                         setBtnLoading($btn, false);
@@ -387,12 +389,18 @@ var _LE_KEY_MAP = {
             }
         }
 
-        var budget = parseInt($form.find('#dco-budget').val(), 10) || 0;
+        var budget   = parseInt($form.find('#dco-budget').val(), 10) || 0;
+        var country  = $form.find('#dco-campaign-country').val();
+        var enroll   = parseInt($form.find('#dco-enrollment-goal').val(), 10) || 0;
+        var timeline = parseInt($form.find('#dco-timeline').val(), 10) || 0;
 
-        if (!trialType)      errors.push('Trial type / Tipo de ensayo es requerido.');
-        if (!orgType.trim()) errors.push('Organization / Organización es requerido.');
-        if (!budget)         errors.push('Budget / Presupuesto es requerido.');
-        else if (budget < 500) errors.push('Minimum budget is $500. / El presupuesto mínimo es $500.');
+        if (!trialType)         errors.push('Trial type / Tipo de ensayo es requerido.');
+        if (!orgType.trim())    errors.push('Organization / Organización es requerido.');
+        if (!country)           errors.push('Campaign location / Ubicación de campaña es requerida.');
+        if (!budget)            errors.push('Budget / Presupuesto es requerido.');
+        else if (budget < 500)  errors.push('Minimum budget is $500. / El presupuesto mínimo es $500.');
+        if (!enroll)            errors.push('Enrollment goal / Meta de participantes es requerida.');
+        if (!timeline)          errors.push('Timeline / Duración es requerida.');
 
         return errors;
     }
@@ -402,6 +410,14 @@ var _LE_KEY_MAP = {
     // ---------------------------------------------------------------------------
     function handleAiResult(data) {
         var qualified = (data.status === 'qualified');
+
+        // Log debug info so you can see what the AI returned (open DevTools → Console)
+        if (data._debug) {
+            console.info('[DCO] AI raw response:', data._debug);
+        }
+        if (!qualified) {
+            console.warn('[DCO] Application not qualified. Score:', data.score, '| Reason:', data.reasoning_en);
+        }
 
         // Store both language versions so the toggle can refresh them
         state.aiReasoningEs = data.reasoning_es || '';
@@ -864,41 +880,18 @@ var DCO_REGIONS = {
 };
 
 window.dcoUpdateCampaignRegions = function(countryCode) {
-    var wrap      = document.getElementById('dco-campaign-regions-wrap');
-    var grid      = document.getElementById('dco-regions-grid');
-    var other     = document.getElementById('dco-campaign-country-other');
-    var locWrap   = document.getElementById('dco-location-wrap');
+    var other   = document.getElementById('dco-campaign-country-other');
+    var locWrap = document.getElementById('dco-location-wrap');
 
-    // Reset
-    if (wrap)    wrap.style.display    = 'none';
     if (other)   other.style.display   = 'none';
     if (locWrap) locWrap.style.display = 'none';
-    if (grid)    grid.innerHTML        = '';
 
     if (!countryCode) return;
 
-    if (countryCode === 'OTHER') {
-        if (other) other.style.display = '';
-        return;
+    // Show state dropdown only for US
+    if (countryCode === 'US' && locWrap) {
+        locWrap.style.display = '';
     }
-
-    // Show US state select when US is chosen
-    if (countryCode === 'US') {
-        if (locWrap) locWrap.style.display = '';
-    }
-
-    // Puerto Rico and Dominican Republic have no sub-regions in our list
-    if (!DCO_REGIONS[countryCode]) return;
-
-    var regions = DCO_REGIONS[countryCode];
-    regions.forEach(function(region) {
-        var label = document.createElement('label');
-        label.className = 'dco-checkbox-label';
-        label.innerHTML = '<input type="checkbox" name="campaign_regions[]" value="' + region + '"> <span>' + region + '</span>';
-        grid.appendChild(label);
-    });
-
-    if (wrap) wrap.style.display = '';
 };
 
 // Password peek toggle
@@ -922,8 +915,28 @@ window.dcoPeekToggle = function(inputId, btnId) {
  * Reads current Step 2 field values and updates #dco-enrollment-hint
  * and #dco-timeline-hint with smart recommendations.
  */
+// Map full English labels → internal suggestion keys
+var _LABEL_TO_KEY = {
+    'Obesity / Overweight':'obesity', 'Prediabetes':'prediabetes', 'Type 2 Diabetes':'diabetes',
+    'Metabolic Syndrome':'metabolic', 'High Cholesterol':'cholesterol',
+    'Thyroid Disease / Hypothyroidism':'thyroid', 'PCOS (Polycystic Ovary Syndrome)':'pcos',
+    'Cardiovascular Disease (CVD)':'cardiovascular', 'Hypertension':'hypertension',
+    'Heart Failure':'heart-failure', 'Atrial Fibrillation':'afib', 'Asthma / COPD':'asthma',
+    'Sleep Apnea':'sleep-apnea', 'Anxiety':'anxiety', 'Depression':'depression', 'ADHD':'adhd',
+    "Alzheimer's / Dementia":'alzheimers', "Parkinson's Disease":'parkinsons',
+    'Migraine':'migraine', "Cognitive Impairment (non-Alzheimer's)":'cognitive',
+    'Lupus / SLE':'lupus', 'Arthritis':'arthritis', 'Autoimmune / Rheumatology (Other)':'autoimmune',
+    'Oncology / Cancer':'oncology', 'Rare Cancer / Hematology':'rare-cancer',
+    'Chronic Kidney Disease (CKD)':'ckd', 'Liver Disease':'liver', 'Chronic Pain':'chronic-pain',
+    'GERD / Acid Reflux':'gerd', 'Osteoporosis':'osteoporosis',
+    'Diabetic Neuropathy':'diabetic-neuropathy', 'Glaucoma / Cataracts':'glaucoma',
+    'HIV / AIDS':'hiv', 'Infectious Disease (Other)':'infectious',
+    'Rare Genetic Disorders':'rare-genetic', 'Rare Pediatric Conditions':'rare-pediatric'
+};
+
 function updateSuggestions() {
-    var diseaseKey = (document.getElementById('dco-trial-type-value') || {}).value || '';
+    var rawLabel  = (document.getElementById('dco-trial-type-value') || {}).value || '';
+    var diseaseKey = _LABEL_TO_KEY[rawLabel] || '';
     if (!diseaseKey || !enrollmentSuggestions[diseaseKey]) return;
 
     var lang = (document.getElementById('dco-lang-btn') &&

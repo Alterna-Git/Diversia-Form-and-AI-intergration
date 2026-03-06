@@ -126,13 +126,7 @@
                 required onchange="dcoUpdateCampaignRegions(this.value)">
             <option value="" data-i18n data-en="— Select country —" data-es="— Seleccione país —">— Select country —</option>
             <option value="US">United States / Estados Unidos</option>
-            <option value="MX">Mexico / México</option>
-            <option value="CO">Colombia</option>
             <option value="PR">Puerto Rico</option>
-            <option value="DO">Dominican Republic / República Dominicana</option>
-            <option value="AR">Argentina</option>
-            <option value="ES">Spain / España</option>
-            <option value="OTHER">Other / Otro</option>
         </select>
 
         <!-- Primary US state for viability analysis (shown when US is selected) -->
@@ -207,14 +201,6 @@
                     <option value="PR">Puerto Rico</option>
                 </optgroup>
             </select>
-        </div>
-
-        <!-- State / region checkboxes (populated by JS) -->
-        <div id="dco-campaign-regions-wrap" style="display:none;margin-top:14px;">
-            <p class="dco-hint" style="margin-bottom:8px;font-weight:600;"
-               data-i18n data-en="Select states / regions (optional — leave blank for all)"
-               data-es="Seleccione estados / regiones (opcional — deje en blanco para todos)">Select states / regions (optional)</p>
-            <div class="dco-checkboxes dco-checkboxes--regions" id="dco-regions-grid"></div>
         </div>
 
         <!-- Other country text input -->
